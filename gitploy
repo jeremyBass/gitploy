@@ -1,0 +1,68 @@
+#!/bin/bash
+#===============================================================================
+#          FILE: gitploy
+#
+#   DESCRIPTION: Repo integration and deployment
+#
+#          BUGS: https://github.com/jeremyBass/gitploy/issues
+#
+#     COPYRIGHT: (c) 2014 by the Pleasures, see AUTHORS.rst for more
+#                details.
+#
+#       LICENSE: Apache 2.0
+#  ORGANIZATION: pleasures llc
+#       CREATED: 1/1/2014
+#===============================================================================
+set -o nounset                              # Treat unset variables as an error
+__ScriptVersion="0.1.0"
+__ScriptName="gitploy"
+
+#===  FUNCTION  ================================================================
+#         NAME:  usage
+#  DESCRIPTION:  Display usage information.
+#===============================================================================
+usage() {
+    cat << EOT
+
+
+  Usage :  ${__ScriptName} [<command>] [options]
+
+  Examples:
+    $ ${__ScriptName} <module> <repository>        Install a module by cloning specified git repository
+    $ ${__ScriptName} init                         Initialize .modgit/ folder
+    $ ${__ScriptName} ls                           List installed modules
+    $ ${__ScriptName} rm <module>                  Remove specified module
+    $ ${__ScriptName} up <module>                  Update specified module
+    $ ${__ScriptName} info <module>                Show information about a specific module
+    $ ${__ScriptName} files <module>               List deployed files of specified module
+    $ ${__ScriptName} proxy <module> <git_args>    Run git command into specified module
+
+  Options:
+  -d   (Dry run) Dry run mode (show what would be done)
+  -i   (Include) Only deploys items that match the filters
+       Example: $SCRIPT $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) my_module https://github.com/account/repository.git
+                => will deploy only lib/ (to lib/) and foo/ (to bar/)
+  -e   (Exclude) Filters out listed items
+       Example: $SCRIPT $(tput bold)-e lib/tests/ -e *.txt$(tput sgr0) my_module https://github.com/account/repository.git
+                => will exclude both directory lib/tests/ and file lib/README.txt
+  -b   (Branch) Specify a repository branch (only for add command)
+       Example: $SCRIPT $(tput bold)-b 1.0-stable$(tput sgr0) my_module https://github.com/account/repository.git
+                => will checkout 1.0-stable branch of specified repository
+  -t   (Tag) Specify a repository tag (only for add and update command)
+       Example: $SCRIPT $(tput bold)-t 1.2.0$(tput sgr0) my_module https://github.com/account/repository.git
+                => will checkout 1.2.0 tag of specified repository
+  -r   (Reqursive) Move through the modules tracked reqursively
+       Example: $ ${__ScriptName} rm <module>
+  -u   (Unattended) Unattended
+       Example: $ ${__ScriptName} rm <module>
+
+EOT
+}   # ----------  end of function usage  ----------
+
+
+#-----------------------------------------------------------------------
+#  Handle command line arguments
+#-----------------------------------------------------------------------
+#fill out
+
+
