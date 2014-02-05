@@ -38,6 +38,9 @@ usage() {
     $ ${__ScriptName} proxy <module> <git_args>    Run git command into specified module
 
   Options:
+  -n   Dry run mode (show what would be done)
+  -v   Show modgit version
+  -h   Show this help
   -d   (Dry run) Dry run mode (show what would be done)
   -i   (Include) Only deploys items that match the filters
        Example: $SCRIPT $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) my_module https://github.com/account/repository.git
@@ -65,4 +68,38 @@ EOT
 #-----------------------------------------------------------------------
 #fill out
 
+
+
+# Show help if asked or if no argument specified
+if [ "$1" = "help" ] || [ -z "$1" ]; then
+  show_help
+  exit 0
+fi
+
+
+
+# Handle options
+while getopts ":h:" opt; do
+  case $opt in
+    h)
+      show_help
+      exit 0
+      ;;
+  esac
+done
+
+
+
+# Handle action
+case "$ACTION" in
+
+
+
+  *)
+    show_help
+    echo_b "Invalid action: $ACTION"
+    exit 1
+
+
+esac
 
