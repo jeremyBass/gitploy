@@ -28,54 +28,80 @@ usage() {
     
   Usage :  ${__ScriptName} [<command>] [options]
 
-  Examples:
-    $ ${__ScriptName} <module> <repository>        Install a module by cloning specified git repository
-    $ ${__ScriptName} init                         Initialize .modgit/ folder
-    $ ${__ScriptName} ls                           List installed modules
-    $ ${__ScriptName} rm <module>                  Remove specified module
-    $ ${__ScriptName} up <module>                  Update specified module
-    $ ${__ScriptName} info <module>                Show information about a specific module
-    $ ${__ScriptName} files <module>               List deployed files of specified module
-    $ ${__ScriptName} proxy <module> <git_args>    Run git command into specified module
+  Command Examples:
+    $ ${__ScriptName} $(tput bold)$(tput sgr0)<module> <repository>
+                => Install a module by cloning specified git repository
+    $ ${__ScriptName} $(tput bold)init$(tput sgr0)
+                => Initialize .modgit/ folder
+    $ ${__ScriptName} $(tput bold)ls$(tput sgr0)
+                => List installed modules
+    $ ${__ScriptName} $(tput bold)rm$(tput sgr0) <module>
+                => Remove specified module
+    $ ${__ScriptName} $(tput bold)up$(tput sgr0) <module>
+                => Update specified module
+    $ ${__ScriptName} $(tput bold)info$(tput sgr0) <module>
+                => Show information about a specific module
+    $ ${__ScriptName} $(tput bold)files$(tput sgr0) <module>
+                => List deployed files of specified module
+    $ ${__ScriptName} $(tput bold)proxy$(tput sgr0) <module> <git_args>
+                => Run git command into specified module
 
   Options:
-  -v   Show modgit version
+  -v   Show gitploy version
   
   -h   Show this help
   
   -d   (Dry run) Dry run mode (show what would be done)
   
   -i   (Include) Only deploys items that match the filters
-       Example: $SCRIPT $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) my_module https://github.com/account/repository.git
+       EX:
+       $SCRIPT $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) my_module https://github.com/account/repository.git
                 => will deploy only lib/ (to lib/) and foo/ (to bar/)
                 
-  -e   (Exclude) Filters out listed items
-       Example: $SCRIPT $(tput bold)-e lib/tests/ -e *.txt$(tput sgr0) my_module https://github.com/account/repository.git
+  -e   (Exclude) Filters out listed items.  May use regex syntax
+       EX:
+       $SCRIPT $(tput bold)-e lib/tests/ -e *.txt$(tput sgr0) my_module https://github.com/account/repository.git
                 => will exclude both directory lib/tests/ and file lib/README.txt
                 
   -b   (Branch) Specify a repository branch (only for add command)
-       Example: $SCRIPT $(tput bold)-b 1.0-stable$(tput sgr0) my_module https://github.com/account/repository.git
-                => will checkout 1.0-stable branch of specified repository
+       EX:
+       $SCRIPT $(tput bold)-b 1.0-stable$(tput sgr0) my_module https://github.com/account/repository.git
+                => will checkout 1.0-stable branch of 
+                    specified repository
                 
   -t   (Tag) Specify a repository tag (only for add and update command)
-       Example: $SCRIPT $(tput bold)-t 1.2.0$(tput sgr0) my_module https://github.com/account/repository.git
+       EX:
+       $SCRIPT $(tput bold)-t 1.2.0$(tput sgr0) my_module https://github.com/account/repository.git
                 => will checkout 1.2.0 tag of specified repository
                 
   -r   (Reqursive) Move through the modules tracked reqursively
-       Example: $ ${__ScriptName} rm $(tput bold)-r$(tput sgr0)
-                => will remove all repositories logged $(tput bold)NOTE::$(tput sgr0) all repo removals will be meet with a prompt
+       EX:
+       $ ${__ScriptName} rm $(tput bold)-r$(tput sgr0)
+                => will remove all repositories logged
+                   $(tput bold)NOTE::$(tput sgr0) all repo removals will be meet with a prompt
        
-  -u   (Unattended) This flag will accept all promots.  Use wisely as unattended in this form, `$ rm -r -u`, would be wiping all logged repos
-       Example: $ ${__ScriptName} $(tput bold)-u$(tput sgr0) rm <module>
-                => will remove named repository $(tput bold) WITHOUT a prompt$(tput sgr0)
+  -u   (Unattended) This flag will accept all promots.  Use wisely as 
+                    unattended in this form, `$ rm -r -u`, would be wiping
+                    all logged repos
+       EX:
+       $ ${__ScriptName} $(tput bold)-u$(tput sgr0) rm <module>
+                => will remove named repository $(tput bold) 
+                   WITHOUT a prompt$(tput sgr0)
        
-  -q   (Quite) If you must hide the verbose output, this flag will block all stdout
-       Example: $ ${__ScriptName} $(tput bold)-q$(tput sgr0) <module> <repository>
+  -q   (Quite) If you must hide the verbose output,
+                this flag will block all stdout
+       EX:
+       $ ${__ScriptName} $(tput bold)-q$(tput sgr0) <module> <repository>
                 => will add a new repository with out any stdout messaging
                 
-  -w   (Wall Broadcasting) Some times it's important that you don't have others doing anything while you upgrade which wall will let them know you doing something
-       Example: $ ${__ScriptName} $(tput bold)-w$(tput sgr0) <module> <repository>
-                => will add a new repository and let everyone that is logged in know about it               
+  -w   (Wall Broadcasting) Some times it's important that you
+                            don't have others doing anything 
+                            while you upgrade which wall will let
+                            them know you doing something
+       EX:
+       $ ${__ScriptName} $(tput bold)-w$(tput sgr0) <module> <repository>
+                => will add a new repository and let 
+                    everyone that is logged in know about it               
                 
 END
 }
