@@ -22,42 +22,63 @@ __ScriptName="gitploy"
 #  DESCRIPTION:  Display usage information.
 #===============================================================================
 SCRIPT=${0##*/}
-IFS=$'\n'
-USAGE="\
-\n
-  Usage :  ${__ScriptName} [<command>] [options]\n
-\n
-  Examples:\n
-    $ ${__ScriptName} <module> <repository>        Install a module by cloning specified git repository\n
-    $ ${__ScriptName} init                         Initialize .modgit/ folder\n
-    $ ${__ScriptName} ls                           List installed modules\n
-    $ ${__ScriptName} rm <module>                  Remove specified module\n
-    $ ${__ScriptName} up <module>                  Update specified module\n
-    $ ${__ScriptName} info <module>                Show information about a specific module\n
-    $ ${__ScriptName} files <module>               List deployed files of specified module\n
-    $ ${__ScriptName} proxy <module> <git_args>    Run git command into specified module\n
-\n
-  Options:\n
-  -v   Show modgit version\n
-  -h   Show this help\n
-  -d   (Dry run) Dry run mode (show what would be done)\n
-  -i   (Include) Only deploys items that match the filters\n
-       Example: $SCRIPT $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) my_module https://github.com/account/repository.git\n
-                => will deploy only lib/ (to lib/) and foo/ (to bar/)\n
-  -e   (Exclude) Filters out listed items\n
-       Example: $SCRIPT $(tput bold)-e lib/tests/ -e *.txt$(tput sgr0) my_module https://github.com/account/repository.git\n
-                => will exclude both directory lib/tests/ and file lib/README.txt\n
-  -b   (Branch) Specify a repository branch (only for add command)\n
-       Example: $SCRIPT $(tput bold)-b 1.0-stable$(tput sgr0) my_module https://github.com/account/repository.git\n
-                => will checkout 1.0-stable branch of specified repository\n
-  -t   (Tag) Specify a repository tag (only for add and update command)\n
-       Example: $SCRIPT $(tput bold)-t 1.2.0$(tput sgr0) my_module https://github.com/account/repository.git\n
-                => will checkout 1.2.0 tag of specified repository\n
-  -r   (Reqursive) Move through the modules tracked reqursively\n
-       Example: $ ${__ScriptName} rm <module>\n
-  -u   (Unattended) Unattended\n
-       Example: $ ${__ScriptName} rm <module>\n
-"
+IFS=$''
+usage() {
+    cat << END
+    
+  Usage :  ${__ScriptName} [<command>] [options]
+
+  Examples:
+    $ ${__ScriptName} <module> <repository>        Install a module by cloning specified git repository
+    $ ${__ScriptName} init                         Initialize .modgit/ folder
+    $ ${__ScriptName} ls                           List installed modules
+    $ ${__ScriptName} rm <module>                  Remove specified module
+    $ ${__ScriptName} up <module>                  Update specified module
+    $ ${__ScriptName} info <module>                Show information about a specific module
+    $ ${__ScriptName} files <module>               List deployed files of specified module
+    $ ${__ScriptName} proxy <module> <git_args>    Run git command into specified module
+
+  Options:
+  -v   Show modgit version
+  
+  -h   Show this help
+  
+  -d   (Dry run) Dry run mode (show what would be done)
+  
+  -i   (Include) Only deploys items that match the filters
+       Example: $SCRIPT $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) my_module https://github.com/account/repository.git
+                => will deploy only lib/ (to lib/) and foo/ (to bar/)
+                
+  -e   (Exclude) Filters out listed items
+       Example: $SCRIPT $(tput bold)-e lib/tests/ -e *.txt$(tput sgr0) my_module https://github.com/account/repository.git
+                => will exclude both directory lib/tests/ and file lib/README.txt
+                
+  -b   (Branch) Specify a repository branch (only for add command)
+       Example: $SCRIPT $(tput bold)-b 1.0-stable$(tput sgr0) my_module https://github.com/account/repository.git
+                => will checkout 1.0-stable branch of specified repository
+                
+  -t   (Tag) Specify a repository tag (only for add and update command)
+       Example: $SCRIPT $(tput bold)-t 1.2.0$(tput sgr0) my_module https://github.com/account/repository.git
+                => will checkout 1.2.0 tag of specified repository
+                
+  -r   (Reqursive) Move through the modules tracked reqursively
+       Example: $ ${__ScriptName} rm $(tput bold)-r$(tput sgr0)
+                => will remove all repositories logged $(tput bold)NOTE::$(tput sgr0) all repo removals will be meet with a prompt
+       
+  -u   (Unattended) This flag will accept all promots.  Use wisely as unattended in this form, `$ rm -r -u`, would be wiping all logged repos
+       Example: $ ${__ScriptName} $(tput bold)-u$(tput sgr0) rm <module>
+                => will remove named repository $(tput bold) WITHOUT a prompt$(tput sgr0)
+       
+  -q   (Quite) If you must hide the verbose output, this flag will block all stdout
+       Example: $ ${__ScriptName} $(tput bold)-q$(tput sgr0) <module> <repository>
+                => will add a new repository with out any stdout messaging
+                
+  -w   (Wall Broadcasting) Some times it's important that you don't have others doing anything while you upgrade which wall will let them know you doing something
+       Example: $ ${__ScriptName} $(tput bold)-w$(tput sgr0) <module> <repository>
+                => will add a new repository and let everyone that is logged in know about it               
+                
+END
+}
 # ----------  end of usage  ----------
 
 
@@ -71,15 +92,14 @@ USAGE="\
 # Handle options
 while getopts "h" opt; do
   case $opt in
-    h )  echo -e $USAGE; exit 0                                  ;;
+    h )  usage; exit 0                                  ;;
 
 
     \?)  echo
          echoerror "Option does not exist : $OPTARG"
-         echo -e $USAGE
+         usage
          exit 1
          ;;
-
   esac
 done
 
