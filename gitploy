@@ -137,6 +137,14 @@ composer\.json"
 BRANCH="master"
 TAG=""
 
+#===  FUNCTION  ================================================================
+#          NAME:  echoerr
+#   DESCRIPTION:  Echo errors to stderr.
+#===============================================================================
+echoerror() {
+    printf "${RC} * ERROR${EC}: $@\n" 1>&2;
+}
+
 
 
 
