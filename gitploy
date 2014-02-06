@@ -118,7 +118,24 @@ shopt -s nocasematch
 GD_TRUE=1
 GD_FALSE=0
 
-
+DRY_RUN=GD_FALSE
+ACTION=""
+INCLUDES=""
+EXCLUDES=""
+GITEXCLUDES="\
+readme.*
+about.*
+license.*
+copyright.*
+changelog.*
+credit.*
+faq.*
+\.travis.*
+\.git.*
+modman
+composer\.json"
+BRANCH="master"
+TAG=""
 
 
 
