@@ -203,6 +203,15 @@ if [ "$1" = "help" ] || [ -z "$1" ]; then
   exit 0
 fi
 
+#-----------------------------------------------------------------------
+#  Accept action as first argument or as add | note: add is default
+#-----------------------------------------------------------------------
+REGEX_ACTION="(list|ls|info|files|clone|add|update|up|remove|rm|proxy)"
+if [[ "$1" =~ $REGEX_ACTION ]]; then
+  ACTION="$1"; shift
+elif [[ "$1" =~ "-" ]]; then
+  ACTION="add";
+fi
 
 
 
