@@ -114,7 +114,9 @@ END
 # Case-insensitive for regex matching
 shopt -s nocasematch
 
-
+# Some truth values
+GD_TRUE=1
+GD_FALSE=0
 
 
 
