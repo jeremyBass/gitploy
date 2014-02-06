@@ -183,6 +183,18 @@ merge_include() {
   fi
 }
 
+#===  FUNCTION  ================================================================
+#          NAME:  merge_exclude
+#   DESCRIPTION:  Merge the GITEXCLUDES with agrs for github stuff not needed.
+#===============================================================================
+merge_exclude() {
+  if [ -z "$GITEXCLUDES" ]; then
+    EXCLUDES="$1"
+  else
+    EXCLUDES="$GITEXCLUDES\n$1"
+  fi
+}
+
 
 
 
