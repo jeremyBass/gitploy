@@ -145,6 +145,13 @@ echoerror() {
     printf "${RC} * ERROR${EC}: $@\n" 1>&2;
 }
 
+#===  FUNCTION  ================================================================
+#          NAME:  echoinfo
+#   DESCRIPTION:  Echo information to stdout.
+#===============================================================================
+echoinfo() {
+    printf "${GC} *  INFO${EC}: %s\n" "$@";
+}
 
 
 
