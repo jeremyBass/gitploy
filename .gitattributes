@@ -1,0 +1,5 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Force provisioning script to use LF, even on Windows
+*    eol=lf
