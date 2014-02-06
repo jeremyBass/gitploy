@@ -161,6 +161,19 @@ echowarn() {
     printf "${YC} *  WARN${EC}: %s\n" "$@";
 }
 
+#===  FUNCTION  ================================================================
+#          NAME:  echodebug
+#   DESCRIPTION:  Echo debug information to stdout.
+#===============================================================================
+echodebug() {
+    if [ $_ECHO_DEBUG -eq $GD_TRUE ]; then
+        printf "${BC} * DEBUG${EC}: %s\n" "$@";
+    fi
+}
+
+
+
+
 
 
 
