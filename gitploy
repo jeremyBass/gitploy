@@ -171,6 +171,17 @@ echodebug() {
     fi
 }
 
+#===  FUNCTION  ================================================================
+#          NAME:  merge_include
+#   DESCRIPTION:  Merge the INCLUDES with agrs for stuff not needed.
+#===============================================================================
+merge_include() {
+  if [ -z "$INCLUDES" ]; then
+    INCLUDES="$1"
+  else
+    INCLUDES="$INCLUDES\n$1"
+  fi
+}
 
 
 
