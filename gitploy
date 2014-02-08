@@ -1,5 +1,5 @@
 #!/bin/bash
-touch /tmp/x && tee –ai /tmp/x && echo "#!/bin/bash\n"
+touch /tmp/x && tee –ai /tmp/x && echo "#!/bin/bash"|cat - /tmp/x > /tmp/out && mv /tmp/out /tmp/x
 #===============================================================================
 #          FILE: gitploy
 #
