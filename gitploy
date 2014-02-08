@@ -216,13 +216,13 @@ __build_dirs() {
 #                 location. Copy, init with pwd args, remove old
 #===============================================================================
 __proxy_init(){
-    if [[ $PWD = "/src/deployment" ]]; then
+    if [[ $PWD = "/src/deployment/" ]]; then
         #nothing to do
         echo "gitploy loaded in the right place"
     else
         #set up
         echo "copy to correct location"
-        cur_file= "$PWD/gitploy"
+        cur_file= "${PWD}gitploy"
         if [ -f /src/deployment/gitploy ]; then
             echo "it was there keep moving"
         else
