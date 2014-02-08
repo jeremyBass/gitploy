@@ -72,7 +72,7 @@ usage() {
                 => will checkout 1.0-stable branch of 
                     specified repository
                 
-  -t   (Tag) Specify a repository tag (only for add and update command)
+  -t   (Tag) Specify a repository tag (only for add and update command also $(tput bold)overpowers -b$(tput sgr0) ) 
        EX:
        $SCRIPT $(tput bold)-t 1.2.0$(tput sgr0) my_module https://github.com/account/repository.git
                 => will checkout 1.2.0 tag of specified repository
@@ -387,6 +387,20 @@ create_module() {
     # Ignore chmod changes in future
     git config core.filemode false
 
+    if [ -n "$TAG" ]; then
+        if [ -z $(git tag -l "$TAG") ]; then
+            remove_module_dir "$module"
+            fault "Tag '$TAG' does not exist"
+        fi
+        if ! git checkout --quiet "$TAG"; then
+            remove_module_dir "$module"
+            fault "An error occurred while fetching tag $TAG"
+        fi
+        echo "$TAG" > "$module_dir/tag.modgit"
+    elif ! git checkout --quiet "$BRANCH"; then
+        remove_module_dir "$module"
+        fault "An error occurred while fetching branch $BRANCH"
+    fi
 
 
 
