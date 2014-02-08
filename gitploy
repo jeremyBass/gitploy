@@ -223,14 +223,23 @@ __proxy_init(){
     else
         #set up
         echo "copy to correct location"
-        cur_file= "${PWD}/gitploy"
+        
         
         if [ -f /src/deployment/gitploy ]; then
             echo "it was there keep moving"
         else
-            #copy it over
-            cp -fL $cur_file /src/deployment/gitploy
+        
+            if [ ${PWD} ]; then
+                cur_file= "${PWD}/gitploy"
+                cp -fL $cur_file /src/deployment/gitploy
+            else
+                #copy it over if not stream
+                #PROMPT_COMMAND='LAST="`cat /tmp/x`"; exec >/dev/tty; exec > >(tee /tmp/x)'
+                :%! [cmd] >> /src/deployment/gitploy
+            fi
+            
         fi
+        
         echo "call to it and reinit with current location as arg"
         ./src/deployment/gitploy | sudo sh -s -- init
         if [ -f /usr/sbin/gitploy ]; then
