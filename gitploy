@@ -222,7 +222,7 @@ __proxy_init(){
     else
         #set up
         echo "copy to correct location"
-        cur_file = $PWD/gitploy
+        cur_file = "$PWD/gitploy"
         if [ -f /src/deployment/gitploy ]; then
             echo "it was there keep moving"
         else
@@ -233,7 +233,7 @@ __proxy_init(){
         ./src/deployment/gitploy | sudo sh -s -- init
         if [ -f /usr/sbin/gitploy ]; then
             echo "remove current"
-            rm -f $PWD/gitploy && exit 0 || echo "Failed to clean up" && exit 1
+            rm -f $cur_file && exit 0 || echo "Failed to clean up" && exit 1
         else        
             echo "failed to proxy the init, try to run in /src/deployment" 
             exit 1
