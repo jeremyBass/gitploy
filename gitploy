@@ -1,5 +1,7 @@
 #!/bin/bash
-touch /tmp/x && tee –i /tmp/x && echo "#!/bin/bash"|cat - /tmp/x > /tmp/out && mv /tmp/out /tmp/x && touch /src/deployment/gitploy && cat - /tmp/x > /src/deployment/gitploy && ln -s /src/deployment/gitploy /usr/sbin/gitploy && chmod a=r+w+x /usr/sbin/gitploy && gitploy init
+#note that this section is only present when you curl it in and run it.  
+#after that you will not see this block
+touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x > /tmp/out && mv /tmp/out /tmp/x && touch /src/deployment/gitploy && cat - /tmp/x > /src/deployment/gitploy && ln -s /src/deployment/gitploy /usr/sbin/gitploy && chmod a=r+w+x /usr/sbin/gitploy && gitploy init
 #===============================================================================
 #          FILE: gitploy
 #
