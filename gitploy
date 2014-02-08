@@ -396,13 +396,19 @@ create_module() {
             remove_module_dir "$module"
             fault "An error occurred while fetching tag $TAG"
         fi
-        echo "$TAG" > "$module_dir/tag.modgit"
+        echo "$TAG" > "$module_dir/tag.gitploy"
     elif ! git checkout --quiet "$BRANCH"; then
         remove_module_dir "$module"
         fault "An error occurred while fetching branch $BRANCH"
     fi
 
+    echo "$BRANCH" > "$module_dir/branch.gitploy"
 
+    echo "Fetching submodules..."
+        if ! git submodule --quiet update --init --recursive; then
+        remove_module_dir "$module"
+        fault "An error occurred while cloning submodules of $repo"
+    fi
 
 
 
