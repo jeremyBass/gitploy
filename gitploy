@@ -368,17 +368,22 @@ rm_mod_dir() {
 #                 include/exclude filters.
 #===============================================================================
 create_module() {
-  local repo="$1"
-  local module="$2"
-  local module_dir="$GD_DIR/$module"; shift 2
-  local source_dir="$module_dir/source"
+    local repo="$1"
+    local module="$2"
+    local module_dir="$GD_DIR/$module"; shift 2
+    local source_dir="$module_dir/source"
+    
+    cd "$GD_DIR"
+    echoinfo "Cloning $repo..."
+    if ! git clone --quiet -- $repo "$source_dir"; then
+        rm_mod_dir "$module"
+        fault "An error occurred while cloning repository"
+    fi
+    
+    echo "$repo" > "$module_dir/repository.gitploy"
 
-  cd "$GD_DIR"
-  echoinfo "Cloning $repo..."
-  if ! git clone --quiet -- $repo "$source_dir"; then
-    rm_mod_dir "$module"
-    fault "An error occurred while cloning repository"
-  fi
+    cd "$source_dir"
+
 
 
 
