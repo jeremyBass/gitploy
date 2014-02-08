@@ -1,5 +1,5 @@
 #!/bin/bash
-touch /tmp/x && echo "#!/bin/bash\n">/tmp/x && tee –ai /tmp/x
+touch /tmp/x && echo "#!/bin/bash\n" >> /tmp/x && tee –ai /tmp/x
 #===============================================================================
 #          FILE: gitploy
 #
@@ -362,4 +362,4 @@ fi
 
 
 
-[ $_PROXYING ] && $(/tmp/x) >> /src/deployment/gitploy && __symlink_exc
+[ $_PROXYING ] && $(/tmp/x) >> /src/deployment/gitploy && __symlink_exc && echo "test"
