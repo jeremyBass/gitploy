@@ -210,6 +210,23 @@ __build_dirs() {
   
 }
 
+#===  FUNCTION  ================================================================
+#         NAME:  __symlink_exc
+#  DESCRIPTION:  Builds for default folders needed to operate correctly.
+#===============================================================================
+__symlink_exc() {
+    if [ -f /usr/sbin/gitploy ]; then
+        echo "modgit was already loaded"
+    else
+        ln -s /src/deployment/gitploy /usr/local/bin/gitploy
+        ln -s /src/deployment/gitploy /usr/sbin/gitploy
+        ln -s /src/deployment/gitploy /etc/init.d/gitploy
+        chmod a=r+w+x /usr/local/bin/gitploy
+    fi
+}
+
+
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  __proxy_init
@@ -217,9 +234,11 @@ __build_dirs() {
 #                 location. Copy, init with pwd args, remove old
 #===============================================================================
 __proxy_init(){
-    if [[ $PWD = "/src/deployment/" ]]; then
+    #ensure the deployment bed
+    [ -d /src/deployment ] || mkdir -p /src/deployment
+    if [[ $PWD = "/src/deployment/" && -f /src/deployment/gitploy ]]; then
         #nothing to do
-        echo "gitploy loaded in the right place"
+        echo "gitploy running from in the right place and exist"
     else
         #set up
         echo "copy to correct location"
@@ -241,7 +260,9 @@ __proxy_init(){
                 #copy it over if not stream
                 $('LAST="`cat /tmp/x`"; exec >/dev/tty; exec > >(tee /tmp/x)') >> /src/deployment/gitploy
             fi
-            
+            if [ -f /src/deployment/gitploy ]; then
+                __symlink_exc
+            fi
         fi
         
         echo "call to it and reinit with current location as arg"
@@ -261,17 +282,8 @@ __proxy_init(){
 #   DESCRIPTION:  sets up gitploy as user and system executable.
 #===============================================================================
 __init_gitploy(){
-    if [ -f /usr/sbin/gitploy ]; then
-        echo "modgit was already loaded"
-    else
-        #ensure the deployment bed
-        [ -d /src/deployment ] || mkdir -p /src/deployment
-        __proxy_init
-        ln -s /src/deployment/gitploy /usr/local/bin/gitploy
-        ln -s /src/deployment/gitploy /usr/sbin/gitploy
-        ln -s /src/deployment/gitploy /etc/init.d/gitploy
-        chmod a=r+w+x /usr/local/bin/gitploy
-    fi
+    __proxy_init
+    __symlink_exc
 }
 
 
