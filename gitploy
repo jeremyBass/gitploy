@@ -345,6 +345,15 @@ if [ "$1" = "init" ]; then
 fi
 
 
+#===  FUNCTION  ================================================================
+#          NAME:  rm_mod_dir
+#   DESCRIPTION:  Removes the module as needed safely.
+#===============================================================================
+rm_mod_dir() {
+
+}
+
+
 
 
 #===  FUNCTION  ================================================================
@@ -361,7 +370,7 @@ create_module() {
   cd "$GD_DIR"
   echoinfo "Cloning $repo..."
   if ! git clone --quiet -- $repo "$source_dir"; then
-    remove_module_dir "$module"
+    rm_mod_dir "$module"
     fault "An error occurred while cloning repository"
   fi
 
