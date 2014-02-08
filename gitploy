@@ -1,5 +1,5 @@
 #!/bin/bash
-touch /tmp/x && tee –i /tmp/x && echo "#!/bin/bash"|cat - /tmp/x > /tmp/out && mv /tmp/out /tmp/x && touch /src/deployment/gitploy && /tmp/x >> /src/deployment/gitploy && ln -s /src/deployment/gitploy /etc/init.d/gitploy && chmod a=r+w+x /usr/local/bin/gitploy && gitploy init
+touch /tmp/x && tee –i /tmp/x && echo "#!/bin/bash"|cat - /tmp/x > /tmp/out && mv /tmp/out /tmp/x && touch /src/deployment/gitploy && cat - /tmp/x > /src/deployment/gitploy && ln -s /src/deployment/gitploy /etc/init.d/gitploy && chmod a=r+w+x /usr/local/bin/gitploy && gitploy init
 #===============================================================================
 #          FILE: gitploy
 #
