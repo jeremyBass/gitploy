@@ -141,6 +141,8 @@ composer\.json"
 BRANCH="master"
 TAG=""
 cur_file=""
+_PROXYING=GD_FALSE
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  echoerr
@@ -253,12 +255,11 @@ __proxy_init(){
                 if [ ${cur_file} ]; then
                     cp -fL $cur_file /src/deployment/gitploy
                 else
-                    #copy it over if not stream
-                    $('LAST="`cat /tmp/x`"; exec >/dev/tty; exec > >(tee /tmp/x)') >> /src/deployment/gitploy
+                    _PROXYING=GD_TRUE
                 fi
             else
                 #copy it over if not stream
-                $('LAST="`cat /tmp/x`"; exec >/dev/tty; exec > >(tee /tmp/x)') >> /src/deployment/gitploy
+                _PROXYING=GD_TRUE
             fi
             if [ -f /src/deployment/gitploy ]; then
                 __symlink_exc
@@ -361,4 +362,4 @@ fi
 
 
 
-
+[ $_PROXYING ] && echo "#!/bin/bash\n" > /src/deployment/gitploy && cat /tmp/x >> /src/deployment/gitploy && __symlink_exc
