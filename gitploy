@@ -122,6 +122,8 @@ GD_TRUE=1
 GD_FALSE=0
 
 GD_FOLDER=".gitploy"
+GD_ROOT=$(pwd -P)
+GD_DIR="$GD_ROOT/$GD_FOLDER"
 
 
 DRY_RUN=GD_FALSE
@@ -349,6 +351,17 @@ fi
 #  Handle action
 #-----------------------------------------------------------------------
 case "$ACTION" in
+
+
+  list|ls)
+    # List all installed modules
+    count=$(ls -A "$GD_DIR" | wc -l | sed 's/ //g')
+    for module in $(ls -1 "$GD_DIR"); do
+      [ -d "$GD_DIR/$module" ] || continue;
+      module_info_inline "$module"
+    done
+    echo "$count module(s) found"
+    ;;
 
   *)
     show_help
