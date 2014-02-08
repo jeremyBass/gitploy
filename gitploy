@@ -471,7 +471,21 @@ case "$ACTION" in
   update|up) echo "updateing"                           ;;
   remove|rm) echo "removing"                            ;;
   info) echo "infoming"                                 ;;
-  files) echo "files"                                   ;;
+  
+  files)
+    # List deployed files of specified module
+    module="$1"; shift
+    [ -z "$module" ] && fault "No module specified"
+
+    require_module_dir "$module"
+
+    echo_b "Deployed files of '$module' module:"
+    sleep 1
+    module_dir="$GD_DIR/$module"
+    cat "$module_dir/deployed.gitploy"
+    ;;
+
+  
   proxy)
     # Run git command into specified module
     module="$1"; shift
@@ -479,7 +493,7 @@ case "$ACTION" in
 
     require_module_dir "$module"
 
-    cd "$MODGIT_DIR/$module/source"
+    cd "$GD_DIR/$module/source"
 
     git "$@"
     ;;
