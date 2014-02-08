@@ -373,9 +373,15 @@ case "$ACTION" in
       
     [ -d "$repo_dir" ] && fault "A module with this name already exists"
   
+    success=1
+    repo="$1"; shift
+    create_module "$repo" "$module" || success=0
+  
+  
   
     echo "cloning"
     ;;
+    
   update|up) echo "updateing"                           ;;
   remove|rm) echo "removing"                            ;;
   info) echo "infoming"                                 ;;
