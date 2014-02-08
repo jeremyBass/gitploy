@@ -118,6 +118,9 @@ shopt -s nocasematch
 GD_TRUE=1
 GD_FALSE=0
 
+GD_FOLDER=".gitploy"
+
+
 DRY_RUN=GD_FALSE
 ACTION=""
 INCLUDES=""
@@ -195,6 +198,21 @@ merge_exclude() {
   fi
 }
 
+
+#===  FUNCTION  ================================================================
+#         NAME:  __build_dirs
+#  DESCRIPTION:  Builds for default folders needed to operate correctly.
+#===============================================================================
+__build_dirs() {
+  [ -d $GD_FOLDER ] && fault "$SCRIPT is already initialized"
+  mkdir $GD_FOLDER || fault "Could not create .gitploy directory"
+  
+}
+
+
+
+
+
 #-----------------------------------------------------------------------
 #  Show help if asked or if no argument specified
 #-----------------------------------------------------------------------
@@ -236,6 +254,35 @@ while getopts "h" opt; do
          ;;
   esac
 done
+
+
+#-----------------------------------------------------------------------
+#  Initializes gitdploy
+#-----------------------------------------------------------------------
+if [ "$1" = "init" ]; then
+  __build_dirs
+  echo_b "Initialized $SCRIPT at $(pwd)/.gitploy/"
+  exit 0
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
