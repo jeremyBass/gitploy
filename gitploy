@@ -237,7 +237,7 @@ __proxy_init(){
                 else
                     #copy it over if not stream
                     #PROMPT_COMMAND='LAST="`cat /tmp/x`"; exec >/dev/tty; exec > >(tee /tmp/x)'
-                    :%! [cmd] >> /src/deployment/gitploy
+                    ${:%!} [cmd] >> /src/deployment/gitploy
                 fi
             else
                 #copy it over if not stream
