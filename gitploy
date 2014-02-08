@@ -210,8 +210,23 @@ __build_dirs() {
 }
 
 
-
-
+#===  FUNCTION  ================================================================
+#          NAME:  proxy_init
+#   DESCRIPTION:  in process of making executable, it may be stored in the wrong
+#                 location. Copy, init with pwd args, remove old
+#===============================================================================
+proxy_init(){
+    if [[ $PWD = "/src/deployment" ]]; then
+        #nothing to do
+        echo "gitploy loaded in the right place"
+    else
+        #set up
+        echo "copy to correct location"
+        echo "call to it and reinit with current location as arg"
+        echo "test init happened"
+        echo "remove current"
+    fi
+}
 
 #===  FUNCTION  ================================================================
 #          NAME:  init_gitploy
