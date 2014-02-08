@@ -222,7 +222,7 @@ __proxy_init(){
     else
         #set up
         echo "copy to correct location"
-        cur_file = "$PWD/gitploy"
+        cur_file= "$PWD/gitploy"
         if [ -f /src/deployment/gitploy ]; then
             echo "it was there keep moving"
         else
