@@ -409,9 +409,14 @@ create_module() {
         remove_module_dir "$module"
         fault "An error occurred while cloning submodules of $repo"
     fi
+    
+    # Save includes filter if not empty
+    [ -z "$INCLUDES" ] || echo -e "$INCLUDES" > "$module_dir/includes.gitploy"
 
+    # Save excludes filter if not empty
+    [ -z "$EXCLUDES" ] || echo -e "$EXCLUDES" > "$module_dir/excludes.gitploy"
 
-
+    return 0
 }
 
 
