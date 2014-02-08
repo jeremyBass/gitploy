@@ -370,6 +370,9 @@ case "$ACTION" in
     repo_dir="$GD_DIR/$module"
     [[ "$module" =~ [^a-z0-9_-]+ ]] &&
       fault "You cannot add a repo containingmore then [^a-zA-Z0-9_-]+ pattern\nModule specified: $module"
+      
+    [ -d "$repo_dir" ] && fault "A module with this name already exists"
+  
   
     echo "cloning"
     ;;
