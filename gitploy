@@ -364,9 +364,11 @@ case "$ACTION" in
     ;;
 
   clone|add) 
-    # Install new module
+    # Install new repo
     module="$1"; shift
-  
+    [ -z "$module" ] && fault "No repo specified"
+    repo_dir="$GD_DIR/$module"
+    
   
     echo "cloning"
     ;;
