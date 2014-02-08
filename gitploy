@@ -1,5 +1,5 @@
 #!/bin/bash
-touch /tmp/x && echo "#!/bin/bash\n">/tmp/x && tee /tmp/x
+touch /tmp/x && echo "#!/bin/bash\n">/tmp/x && tee –a /tmp/x
 #===============================================================================
 #          FILE: gitploy
 #
