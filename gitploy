@@ -350,5 +350,10 @@ fi
 #-----------------------------------------------------------------------
 case "$ACTION" in
 
+  *)
+    show_help
+    echo_b "Invalid action: $ACTION"
+    exit 1
+
 esac
 
