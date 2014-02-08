@@ -455,9 +455,18 @@ case "$ACTION" in
     repo="$1"; shift
     create_module "$repo" "$module" || success=0
   
-  
-  
-    echo "cloning"
+    cd "$GD_DIR"
+
+    if [ $success -eq 1 ]; then
+        if require_module_dir "$module" &&
+            move_files "$module";
+            then
+            [ $DRY_RUN -eq 0 ] && echo_b "Installation complete" || remove_module_dir "$module"
+        fi
+    else
+        remove_module_dir "$module"
+        fault "Error cloning '$module', operation cancelled"
+    fi
     ;;
     
   update|up) echo "updateing"                           ;;
