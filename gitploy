@@ -228,10 +228,17 @@ __proxy_init(){
         if [ -f /src/deployment/gitploy ]; then
             echo "it was there keep moving"
         else
-        
+            
             if [ ${PWD} ]; then
                 cur_file= "${PWD}/gitploy"
-                cp -fL $cur_file /src/deployment/gitploy
+                if [ ${cur_file} ]; then
+                    
+                    cp -fL $cur_file /src/deployment/gitploy
+                else
+                    #copy it over if not stream
+                    #PROMPT_COMMAND='LAST="`cat /tmp/x`"; exec >/dev/tty; exec > >(tee /tmp/x)'
+                    :%! [cmd] >> /src/deployment/gitploy
+                fi
             else
                 #copy it over if not stream
                 #PROMPT_COMMAND='LAST="`cat /tmp/x`"; exec >/dev/tty; exec > >(tee /tmp/x)'
