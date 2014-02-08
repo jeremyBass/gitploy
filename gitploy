@@ -230,7 +230,7 @@ __proxy_init(){
             cp -fL $cur_file /src/deployment/gitploy
         fi
         echo "call to it and reinit with current location as arg"
-        ./src/deployment/gitploy init
+        ./src/deployment/gitploy | sudo sh -s -- init
         if [ -f /usr/sbin/gitploy ]; then
             echo "remove current"
             rm -f $PWD/gitploy && exit 0 || echo "Failed to clean up" && exit 1
