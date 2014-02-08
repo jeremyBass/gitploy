@@ -211,11 +211,11 @@ __build_dirs() {
 
 
 #===  FUNCTION  ================================================================
-#          NAME:  proxy_init
+#          NAME:  __proxy_init
 #   DESCRIPTION:  in process of making executable, it may be stored in the wrong
 #                 location. Copy, init with pwd args, remove old
 #===============================================================================
-proxy_init(){
+__proxy_init(){
     if [[ $PWD = "/src/deployment" ]]; then
         #nothing to do
         echo "gitploy loaded in the right place"
@@ -225,6 +225,7 @@ proxy_init(){
         echo "call to it and reinit with current location as arg"
         echo "test init happened"
         echo "remove current"
+        exit 0
     fi
 }
 
@@ -236,6 +237,7 @@ init_gitploy(){
     if [ -f /usr/sbin/gitploy ]; then
         echo "modgit was already loaded"
     else
+        __proxy_init
         #ensure the deployment bed
         [ -d /src/deployment ] || mkdir -p /src/deployment
         ln -s /src/deployment/gitploy /usr/local/bin/gitploy
