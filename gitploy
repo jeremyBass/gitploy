@@ -145,7 +145,7 @@ TAG=""
 #   DESCRIPTION:  Echo errors to stderr.
 #===============================================================================
 echoerror() {
-    printf "${RC} * ERROR${EC}: $@\n" 1>&2;
+    printf "ERROR: $@\n" 1>&2;
 }
 
 #===  FUNCTION  ================================================================
@@ -233,7 +233,7 @@ __proxy_init(){
         ./src/deployment/gitploy "$PWD"
         if [ -f /usr/sbin/gitploy ]; then
             echo "remove current"
-            exit 0
+            rm -f $PWD/gitploy && exit 0 || echo "Failed to clean up" && exit 1
         else        
             echo "failed to proxy the init, try to run in /src/deployment" 
             exit 1
