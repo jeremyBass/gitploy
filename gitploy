@@ -344,6 +344,19 @@ if [ "$1" = "init" ]; then
     exit 0
 fi
 
+#===  FUNCTION  ================================================================
+#          NAME:  require_mod_dir
+#   DESCRIPTION:  Checks if module dir exists or quit.
+#===============================================================================
+require_mod_dir() {
+  [ -d "$GD_DIR/$1" ] || fault "Module '$1' does not exist"
+
+  return 0
+}
+
+
+
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  rm_mod_dir
@@ -457,13 +470,13 @@ case "$ACTION" in
     cd "$GD_DIR"
 
     if [ $success -eq 1 ]; then
-        if require_module_dir "$module" &&
+        if require_mod_dir "$module" &&
             move_files "$module";
             then
             [ $DRY_RUN -eq 0 ] && echo_b "Installation complete" || remove_module_dir "$module"
         fi
     else
-        remove_module_dir "$module"
+        require_mod_dir "$module"
         fault "Error cloning '$module', operation cancelled"
     fi
     ;;
@@ -483,7 +496,7 @@ case "$ACTION" in
     module="$1"; shift
     [ -z "$module" ] && fault "No module specified"
 
-    require_module_dir "$module"
+    require_mod_dir "$module"
 
     echo_b "Deployed files of '$module' module:"
     sleep 1
@@ -497,7 +510,7 @@ case "$ACTION" in
     module="$1"; shift
     [ -z "$module" ] && fault "No module specified"
 
-    require_module_dir "$module"
+    require_mod_dir "$module"
 
     cd "$GD_DIR/$module/source"
 
