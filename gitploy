@@ -179,11 +179,11 @@ echodebug() {
 #   DESCRIPTION:  Merge the INCLUDES with agrs for stuff not needed.
 #===============================================================================
 merge_include() {
-  if [ -z "$INCLUDES" ]; then
-    INCLUDES="$1"
-  else
-    INCLUDES="$INCLUDES\n$1"
-  fi
+    if [ -z "$INCLUDES" ]; then
+        INCLUDES="$1"
+    else
+        INCLUDES="$INCLUDES\n$1"
+    fi
 }
 
 #===  FUNCTION  ================================================================
@@ -191,11 +191,11 @@ merge_include() {
 #   DESCRIPTION:  Merge the GITEXCLUDES with agrs for github stuff not needed.
 #===============================================================================
 merge_exclude() {
-  if [ -z "$GITEXCLUDES" ]; then
-    EXCLUDES="$1"
-  else
-    EXCLUDES="$GITEXCLUDES\n$1"
-  fi
+    if [ -z "$GITEXCLUDES" ]; then
+        EXCLUDES="$1"
+    else
+        EXCLUDES="$GITEXCLUDES\n$1"
+    fi
 }
 
 
@@ -204,8 +204,8 @@ merge_exclude() {
 #  DESCRIPTION:  Builds for default folders needed to operate correctly.
 #===============================================================================
 __build_dirs() {
-  [ -d $GD_FOLDER ] && fault "$SCRIPT is already initialized"
-  mkdir $GD_FOLDER || fault "Could not create .gitploy directory"
+    [ -d $GD_FOLDER ] && fault "$SCRIPT is already initialized"
+    mkdir $GD_FOLDER || fault "Could not create .gitploy directory"
   
 }
 
@@ -230,7 +230,7 @@ __proxy_init(){
             cp -fL $cur_file /src/deployment/gitploy
         fi
         echo "call to it and reinit with current location as arg"
-        ./src/deployment/gitploy "$PWD"
+        ./src/deployment/gitploy init
         if [ -f /usr/sbin/gitploy ]; then
             echo "remove current"
             rm -f $PWD/gitploy && exit 0 || echo "Failed to clean up" && exit 1
@@ -242,10 +242,10 @@ __proxy_init(){
 }
 
 #===  FUNCTION  ================================================================
-#          NAME:  init_gitploy
+#          NAME:  __init_gitploy
 #   DESCRIPTION:  sets up gitploy as user and system executable.
 #===============================================================================
-init_gitploy(){
+__init_gitploy(){
     if [ -f /usr/sbin/gitploy ]; then
         echo "modgit was already loaded"
     else
@@ -255,7 +255,7 @@ init_gitploy(){
         ln -s /src/deployment/gitploy /usr/local/bin/gitploy
         ln -s /src/deployment/gitploy /usr/sbin/gitploy
         ln -s /src/deployment/gitploy /etc/init.d/gitploy
-        chmod a=r+w+x /usr/local/bin/modgit
+        chmod a=r+w+x /usr/local/bin/gitploy
     fi
 }
 
@@ -265,8 +265,8 @@ init_gitploy(){
 #  Show help if asked or if no argument specified
 #-----------------------------------------------------------------------
 if [ "$1" = "help" ] || [ -z "$1" ]; then
-  show_help
-  exit 0
+    show_help
+    exit 0
 fi
 
 #-----------------------------------------------------------------------
@@ -274,12 +274,10 @@ fi
 #-----------------------------------------------------------------------
 REGEX_ACTION="(list|ls|info|files|clone|add|update|up|remove|rm|proxy)"
 if [[ "$1" =~ $REGEX_ACTION ]]; then
-  ACTION="$1"; shift
+    ACTION="$1"; shift
 elif [[ "$1" =~ "-" ]]; then
-  ACTION="add";
+    ACTION="add";
 fi
-
-
 
 
 #-----------------------------------------------------------------------
@@ -308,9 +306,10 @@ done
 #  Initializes gitdploy
 #-----------------------------------------------------------------------
 if [ "$1" = "init" ]; then
-  __build_dirs
-  echo_b "Initialized $SCRIPT at $(pwd)/.gitploy/"
-  exit 0
+    __init_gitploy
+    __build_dirs
+    echo_b "Initialized $SCRIPT at $(pwd)/.gitploy/"
+    exit 0
 fi
 
 
