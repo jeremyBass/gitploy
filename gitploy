@@ -470,7 +470,13 @@ case "$ACTION" in
     
   update|up) echo "updateing"                           ;;
   remove|rm) echo "removing"                            ;;
-  info) echo "infoming"                                 ;;
+  info)
+    # Show information about specified module
+    module="$1"; shift
+    [ -z "$module" ] && fault "No module specified"
+
+    module_info "$module"
+    ;;
   
   files)
     # List deployed files of specified module
