@@ -430,7 +430,6 @@ create_module() {
 #-----------------------------------------------------------------------
 case "$ACTION" in
 
-
   list|ls)
     # List all installed modules
     count=$(ls -A "$GD_DIR" | wc -l | sed 's/ //g')
@@ -473,7 +472,18 @@ case "$ACTION" in
   remove|rm) echo "removing"                            ;;
   info) echo "infoming"                                 ;;
   files) echo "files"                                   ;;
-  proxy) echo "proxying"                                ;;
+  proxy)
+    # Run git command into specified module
+    module="$1"; shift
+    [ -z "$module" ] && fault "No module specified"
+
+    require_module_dir "$module"
+
+    cd "$MODGIT_DIR/$module/source"
+
+    git "$@"
+    ;;
+
 
   *)
     show_help
