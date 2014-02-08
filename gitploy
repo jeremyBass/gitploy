@@ -350,7 +350,13 @@ fi
 #   DESCRIPTION:  Removes the module as needed safely.
 #===============================================================================
 rm_mod_dir() {
+  local module="$1"
+  local module_dir="$GD_DIR/$module"
+  if [ -n "$module" ] && [ -d "$module_dir" ]; then
+    rm -rf "$module_dir" 2>/dev/null
+  fi
 
+  return 0
 }
 
 
