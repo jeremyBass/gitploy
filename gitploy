@@ -213,6 +213,25 @@ __build_dirs() {
 
 
 
+#===  FUNCTION  ================================================================
+#          NAME:  init_gitploy
+#   DESCRIPTION:  sets up gitploy as user and system executable.
+#===============================================================================
+init_gitploy(){
+    if [ -f /usr/sbin/gitploy ]; then
+        echo "modgit was already loaded"
+    else
+        #ensure the deployment bed
+        [ -d /src/deployment ] || mkdir -p /src/deployment
+        ln -s /src/deployment/gitploy /usr/local/bin/gitploy
+        ln -s /src/deployment/gitploy /usr/sbin/gitploy
+        ln -s /src/deployment/gitploy /etc/init.d/gitploy
+        chmod a=r+w+x /usr/local/bin/modgit
+    fi
+}
+
+
+
 #-----------------------------------------------------------------------
 #  Show help if asked or if no argument specified
 #-----------------------------------------------------------------------
