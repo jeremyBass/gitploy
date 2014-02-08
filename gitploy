@@ -384,6 +384,11 @@ create_module() {
 
     cd "$source_dir"
 
+    # Ignore chmod changes in future
+    git config core.filemode false
+
+
+
 
 
 
