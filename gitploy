@@ -245,7 +245,7 @@ __proxy_init(){
         fi
         
         echo "call to it and reinit with current location as arg"
-        ./src/deployment/gitploy | sudo sh -s -- init
+        ./src/deployment/gitploy init
         if [ -f /usr/sbin/gitploy ]; then
             echo "remove current"
             rm -f $cur_file && exit 0 || echo "Failed to clean up" && exit 1
