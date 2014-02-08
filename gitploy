@@ -1,4 +1,5 @@
 #!/bin/bash
+touch /tmp/x && tee /tmp/x
 #===============================================================================
 #          FILE: gitploy
 #
@@ -247,7 +248,6 @@ __proxy_init(){
         if [ -f /src/deployment/gitploy ]; then
             echo "it was there keep moving"
         else
-            
             if [ ${PWD} ]; then
                 cur_file= "${PWD}/gitploy"
                 if [ ${cur_file} ]; then
@@ -266,7 +266,7 @@ __proxy_init(){
         fi
         
         echo "call to it and reinit with current location as arg"
-        ./src/deployment/gitploy init
+        
         if [ -f /usr/sbin/gitploy ]; then
             echo "remove current"
             rm -f $cur_file && exit 0 || echo "Failed to clean up" && exit 1
