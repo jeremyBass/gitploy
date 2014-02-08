@@ -161,7 +161,7 @@ echoerror() {
 #   DESCRIPTION:  Echo information to stdout.
 #===============================================================================
 echoinfo() {
-    printf "${GC} *  INFO${EC}: %s\n" "$@";
+    printf "INFO: %s\n" "$@";
 }
 
 #===  FUNCTION  ================================================================
@@ -169,7 +169,7 @@ echoinfo() {
 #   DESCRIPTION:  Echo warning informations to stdout.
 #===============================================================================
 echowarn() {
-    printf "${YC} *  WARN${EC}: %s\n" "$@";
+    printf "WARN$: %s\n" "$@";
 }
 
 #===  FUNCTION  ================================================================
@@ -178,7 +178,7 @@ echowarn() {
 #===============================================================================
 echodebug() {
     if [ $_ECHO_DEBUG -eq $GD_TRUE ]; then
-        printf "${BC} * DEBUG${EC}: %s\n" "$@";
+        printf "DEBUG: %s\n" "$@";
     fi
 }
 
@@ -358,6 +358,12 @@ create_module() {
   local module_dir="$GD_DIR/$module"; shift 2
   local source_dir="$module_dir/source"
 
+  cd "$GD_DIR"
+  echoinfo "Cloning $repo..."
+  if ! git clone --quiet -- $repo "$source_dir"; then
+    remove_module_dir "$module"
+    fault "An error occurred while cloning repository"
+  fi
 
 
 
