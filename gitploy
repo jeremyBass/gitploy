@@ -363,6 +363,13 @@ case "$ACTION" in
     echo "$count module(s) found"
     ;;
 
+  clone|add) echo "cloning"                             ;
+  update|up) echo "updateing"                           ;
+  remove|rm) echo "removing"                            ;
+  info) echo "infoming"                                 ;
+  files) echo "files"                                   ;
+  proxy) echo "proxying"                                ;
+
   *)
     show_help
     echo_b "Invalid action: $ACTION"
