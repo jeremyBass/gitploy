@@ -222,10 +222,22 @@ __proxy_init(){
     else
         #set up
         echo "copy to correct location"
+        cur_file = $PWD/gitploy
+        if[ -f /src/deployment/gitploy ]; then
+            echo "it was there keep moving"
+        else
+            #copy it over
+            cp -fL $cur_file /src/deployment/gitploy
+        fi
         echo "call to it and reinit with current location as arg"
-        echo "test init happened"
-        echo "remove current"
-        exit 0
+        ./src/deployment/gitploy "$PWD"
+        if [ -f /usr/sbin/gitploy ]; then
+            echo "remove current"
+            exit 0
+        else        
+            echo "failed to proxy the init, try to run in /src/deployment" 
+            exit 1
+        fi
     fi
 }
 
@@ -237,9 +249,9 @@ init_gitploy(){
     if [ -f /usr/sbin/gitploy ]; then
         echo "modgit was already loaded"
     else
-        __proxy_init
         #ensure the deployment bed
         [ -d /src/deployment ] || mkdir -p /src/deployment
+        __proxy_init
         ln -s /src/deployment/gitploy /usr/local/bin/gitploy
         ln -s /src/deployment/gitploy /usr/sbin/gitploy
         ln -s /src/deployment/gitploy /etc/init.d/gitploy
