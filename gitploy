@@ -366,6 +366,15 @@ __init_gitploy(){
 }
 
 
+#===  FUNCTION  ================================================================
+#          NAME:  require_mods
+#   DESCRIPTION:  checks that there are mods.
+#===============================================================================
+require_mods() {
+  count=$(ls -A "$GD_DIR" | wc -l | sed 's/ //g')
+  [ $count -eq 0 ] && echoerr "There is no module installed"
+}
+
 
 #-----------------------------------------------------------------------
 #  Show help if asked or if no argument specified
