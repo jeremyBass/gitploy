@@ -296,7 +296,7 @@ filter_exclude() {
 #  DESCRIPTION:  Builds for default folders needed to operate correctly.
 #===============================================================================
 __build_dirs() {
-    [ -d $GD_FOLDER ] && echoerr "$SCRIPT is already initialized"
+    [ -d $GD_DIR ] && echoerr "$SCRIPT is already initialized"
     mkdir $GD_FOLDER || echoerr "Could not create .gitploy directory"
   
 }
