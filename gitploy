@@ -826,7 +826,33 @@ mod_info() {
     return 0
 }
 
+#===  FUNCTION  ================================================================
+#          NAME:  mod_info_inline
+#   DESCRIPTION:  print out file info.
+#===============================================================================
+mod_info_inline(){
+    local module="$1"
+    local module_dir="$GD_DIR/$module"
+    local info=""
 
+    require_module_dir "$module"
+
+    if [ -s "$module_dir/repository.gitploy" ]; then
+        local repo=$(cat "$module_dir/repository.gitploy")
+        info="$info $repo"
+    fi
+
+    if [ -s "$module_dir/tag.gitploy" ]; then
+        local current_tag=$(cat "$module_dir/tag.gitploy")
+        info="$info (tag: $current_tag)"
+    else
+        local current_branch="master"
+        [ -s "$module_dir/branch.gitploy" ] && current_branch=$(cat "$module_dir/branch.gitploy")
+        info="$info (branch: $current_branch)"
+    fi
+    printf "$(tput bold)%-20s$(tput sgr0) $info\n" "$module"
+    return 0
+}
 
 
 
