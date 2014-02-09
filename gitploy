@@ -142,8 +142,11 @@ faq.*
 \.git.*
 modman
 composer\.json"
-BRANCH="master"
-TAG=""
+
+_OWNER="washingtonstateuniversity"
+_BRANCH="master"
+_TAG=""
+
 cur_file=""
 _PROXYING=GD_FALSE
 
@@ -303,7 +306,7 @@ __init_gitploy(){
 #  Show help if asked or if no argument specified
 #-----------------------------------------------------------------------
 if [ "$1" = "help" ] || [ -z "$1" ]; then
-    show_help
+    usage
     exit 0
 fi
 
@@ -326,10 +329,14 @@ fi
 
 
 # Handle options
-while getopts "h" opt; do
+while getopts "h:o:e:b:" opt; do
   case $opt in
     h )  usage; exit 0                                  ;;
 
+
+    o ) _OWNER=$OPTARG                                  ;;
+    b ) _BRANCH=$OPTARG                                 ;;
+    t ) _TAG=$OPTARG                                    ;;
 
     \?)  echo
          echoerr "Option does not exist : $OPTARG"
@@ -414,22 +421,22 @@ create_module() {
     # Ignore chmod changes in future
     git config core.filemode false
 
-    if [ -n "$TAG" ]; then
-        if [ -z $(git tag -l "$TAG") ]; then
+    if [ -n "$_TAG" ]; then
+        if [ -z $(git tag -l "$_TAG") ]; then
             remove_module_dir "$module"
-            echoerr "Tag '$TAG' does not exist"
+            echoerr "Tag '$_TAG' does not exist"
         fi
-        if ! git checkout --quiet "$TAG"; then
+        if ! git checkout --quiet "$_TAG"; then
             remove_module_dir "$module"
-            echoerr "An error occurred while fetching tag $TAG"
+            echoerr "An error occurred while fetching tag $_TAG"
         fi
-        echo "$TAG" > "$module_dir/tag.gitploy"
-    elif ! git checkout --quiet "$BRANCH"; then
+        echo "$_TAG" > "$module_dir/tag.gitploy"
+    elif ! git checkout --quiet "$_BRANCH"; then
         remove_module_dir "$module"
-        echoerr "An error occurred while fetching branch $BRANCH"
+        echoerr "An error occurred while fetching branch $_BRANCH"
     fi
 
-    echo "$BRANCH" > "$module_dir/branch.gitploy"
+    echo "$_BRANCH" > "$module_dir/branch.gitploy"
 
     echo "Fetching submodules..."
         if ! git submodule --quiet update --init --recursive; then
