@@ -772,12 +772,22 @@ update_mod() {
         if ! [ -z "$line" ]; then
             # copy the file 
             if [ $DRY_RUN -eq $GD_TRUE ]; then
-            mkdir -p $(dirname "$ROOT/$line") && cp "$line" "$ROOT/$line"
-            echo "Updating: $line"
+                mkdir -p $(dirname "$ROOT/$line") && cp "$line" "$ROOT/$line"
+                echostd "Updating: $line"
+            fi
         fi
-    fi
     done
 
+    # delete delete.gitploy files
+    for line in $(cat "$module_dir/delete.gitploy" 2>/dev/null); do
+        if ! [ -z "$line" ] && [ -f "$ROOT/$line" ]; then
+            # delete the file 
+            if [ $DRY_RUN -eq $GD_TRUE ]; then
+                rm "$ROOT/$line" 2>/dev/null
+                echostd "Deleting: $line"
+            fi
+        fi
+    done
 
 
 
