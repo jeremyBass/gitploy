@@ -463,6 +463,9 @@ rm_mod() {
   local module="$1"
   local module_dir="$GD_DIR/$module"
 
+  require_mod_dir "$module"
+
+
   return $?
 }
 
