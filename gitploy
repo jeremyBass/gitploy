@@ -126,7 +126,7 @@ GD_ROOT=$(pwd -P)
 GD_DIR="$GD_ROOT/$GD_FOLDER"
 
 GD_UNATTENDED=GD_FALSE
-
+GD_RECURSIVE=GD_FALSE
 
 DRY_RUN=GD_FALSE
 ACTION=""
@@ -807,8 +807,35 @@ case "$ACTION" in
     fi
     ;;
     
-  update|up) echostd "updateing"                           ;;
+  update|up)
+  
+    if [ $GD_RECURSIVE = $GD_TRUE ] 
+        # Update all installed modules
+        #[ -n "$2" ] && echoerr "Too many arguments for '$ACTION' command"
+        require_mods
+        errors=0
+        for module in $(ls -1 "$GD_DIR"); do
+            [ -d "$GD_DIR/$module" ] || continue;
+            if ! update_mod "$module"; then
+                echoinfo "-e" "Error occurred while updating '$module'"
+                errors=$((errors+1))
+            fi
+        done
+        [ $DRY_RUN -eq $GD_FALSE ] && echoinfo "Updated all modules with $errors error(s)"
+    else
+        # Update specified module
+        module="$1"; shift
+        [ -z "$module" ] && echoerr "No module specified"
+        if ! update_mod "$module"; then
+            echoerr "Error updating '$module', operation cancelled"
+        fi
+    fi
+    
+    
+    ;;
+
   remove|rm) echostd "removing"                            ;;
+  
   info)
     # Show information about specified module
     module="$1"; shift
