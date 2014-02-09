@@ -409,8 +409,6 @@ fi
 REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy)"
 if [[ "$1" =~ $REGEX_ACTION ]]; then
     ACTION="$1"; shift
-elif [[ "$1" =~ "-" ]]; then
-    ACTION="add";
 fi
 
 
@@ -488,6 +486,9 @@ while getopts "hvdurqw:i:e:o:b:t:" opt; do
 done
 
 
+
+
+
 #-----------------------------------------------------------------------
 # Alert everyone there is going to be some action done
 #-----------------------------------------------------------------------
@@ -497,6 +498,12 @@ done
 #-----------------------------------------------------------------------
 # Start the real process
 #-----------------------------------------------------------------------
+
+#-----------------------------------------------------------------------
+# Assume if there are options, that it was not help or init that it's 
+# the add action.  We should be only left with that possiblity by now
+#-----------------------------------------------------------------------
+[ $( -z "$1" || [[ "$1" =~ "-" ]]) ] || ACTION="add";
 
 #-----------------------------------------------------------------------
 # Initializes Dry run
