@@ -799,6 +799,37 @@ update_mod() {
 
 }
 
+#===  FUNCTION  ================================================================
+#          NAME:  mod_info
+#   DESCRIPTION:  echo out file info.
+#===============================================================================
+mod_info() {
+    local module="$1"
+    local module_dir="$GD_DIR/$module"
+    
+    require_module_dir "$module"
+    
+    echo_b "Information about '$module' module:"
+    if [ -s "$module_dir/repository.gitploy" ]; then
+        local repo=$(cat "$module_dir/repository.gitploy")
+        echostd "Repository: $repo"
+    fi
+
+    if [ -s "$module_dir/tag.gitploy" ]; then
+        local current_tag=$(cat "$module_dir/tag.gitploy")
+        echostd "Tag: $current_tag"
+    else
+        local current_branch="master"
+        [ -s "$module_dir/branch.gitploy" ] && current_branch=$(cat "$module_dir/branch.gitploy")
+        echostd "Branch: $current_branch"
+    fi
+    return 0
+}
+
+
+
+
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  create_module
