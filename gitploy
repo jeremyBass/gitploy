@@ -531,7 +531,12 @@ mv_files() {
     cd "$source_dir" || return 1
     
     for file in $(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///'); do
-    
+        # Copy file by default
+        copy=$GD_TRUE
+        target="$file"
+
+
+
     done
     return 0
 }
