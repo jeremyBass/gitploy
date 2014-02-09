@@ -333,10 +333,6 @@ __proxy_init(){
         #nothing to do
         echostd "gitploy running from in the right place and exist"
     else
-        #set up
-        echostd "copy to correct location"
-        
-        
         if [ -f /src/deployment/gitploy ]; then
             echostd "it was there keep moving"
         else
@@ -354,14 +350,10 @@ __proxy_init(){
             if [ -f /src/deployment/gitploy ]; then
                 __symlink_exc
             fi
-        fi
-
-        if [ -f /usr/sbin/gitploy ]; then
             echostd "removing current"
             rm -f $cur_file && exit 0 || echoerr "Failed to clean up"
-        else        
-            echoerr "failed to proxy the init, try to run in /src/deployment"
         fi
+        [ -f /usr/sbin/gitploy ] || echoerr "failed to proxy the init, try to run in /src/deployment"
     fi
 }
 
