@@ -130,6 +130,10 @@ GD_UNATTENDED=GD_FALSE
 
 DRY_RUN=GD_FALSE
 ACTION=""
+
+declare -A _TMP_INC_FLT=()
+
+
 INCLUDES=""
 EXCLUDES=""
 GITEXCLUDES="\
@@ -243,7 +247,9 @@ filter_include() {
             fi
         done
     fi
-    echo $copy
+    _TMP_INC_FLT["copy"]=$copy
+    _TMP_INC_FLT["target"]=$target
+    return 0
 }
 
 
@@ -590,31 +596,10 @@ mv_files() {
         target="$file"
 
         # Include filter
-        if [ -s "$includes_file" ]; then
-            copy=$GD_FALSE
-            for filter in $(cat "$includes_file"); do
-                src=$(echo $filter | cut -d: -f1)
-                if [ -z "$src" ]; then
-                    continue
-                fi
-                if [[ "$file" =~ ^$src ]]; then
-                    copy=$GD_TRUE
-                    # Handle optional different target
-                    real=$(echo $filter | cut -d: -f2)
-                    if [ "$src" != "$real" ]; then
-                        tmp_src=$(echo $src | sed 's/^[\/]*//;s/[\/]*$//')
-                        tmp_src="$tmp_src/"
-                        tmp_src="${tmp_src//\//\\/}"
-                        tmp_real=$(echo $real | sed 's/^[\/]*//;s/[\/]*$//')
-                        tmp_real="$tmp_real/"
-                        tmp_real="${tmp_real//\//\\/}"
-                        target=$(echo $file | sed "s/$tmp_src/$tmp_real/g")
-                    fi
-                    break
-                fi
-            done
-        fi
-
+        filter_include "$file" "$includes_file" $copy    
+        copy=${_TMP_INC_FLT["copy"]}
+        target=${_TMP_INC_FLT["target"]}
+    
         # Exclude filter
         copy=filter_exclude "$file" "$excludes_file" $copy
 
