@@ -229,7 +229,7 @@ merge_include() {
 filter_include() {
     file="$1"
     includes_file="$2"
-    copy="$2"
+    copy=$2
     if [ -s "$includes_file" ]; then
         copy=$GD_FALSE
         for filter in $(cat "$includes_file"); do
