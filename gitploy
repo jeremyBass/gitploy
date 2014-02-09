@@ -661,10 +661,33 @@ build_deploy_file() {
     
         # Exclude filter
         copy=$(filter_exclude "$file" "$excludes_file" $copy)
-        
+
+        if [ $copy -eq $GD_TRUE ]; then
+            # Handle modman file
+            if [ -s "$modman_file" ]; then
+                IFS=$'\n'
+                for line in $(cat "$modman_file"); do
+                    if [ -z "$line" ] || [[ $line =~ ^# ]] || [[ $line =~ ^@ ]]; then
+                        continue
+                    fi
+                    IFS=$' \t'
+                    line="${line/\*/}" # remove * char
+                    set -- $line       # set $1 and $2
+                    if [[ "$file" =~ ^$1 ]]; then
+                        # Remove trailing slashes and escape paths for sed
+                        src=$(echo $1 | sed 's/^[\/]*//;s/[\/]*$//')
+                        dest=$(echo $2 | sed 's/^[\/]*//;s/[\/]*$//')
+                        src="${src//\//\\/}"
+                        dest="${dest//\//\\/}"
+                        target=$(echo $file | sed "s/$src/$dest/g")
+                        echo "$target" >> "$deployed_file"
+                    fi
+                done
+            else
+                echo "$target" >> "$deployed_file"
+            fi
+        fi
     done
-    
-    
     return 0
 }
 
