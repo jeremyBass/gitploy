@@ -1004,7 +1004,7 @@ case "$ACTION" in
     ;;
     
   update|up)
-    if [ $GD_RECURSIVE = $GD_TRUE ] 
+    if [ $GD_RECURSIVE = $GD_TRUE ]; then
         # Update all installed modules
         #[ -n "$2" ] && echoerr "Too many arguments for '$ACTION' command"
         require_mods
@@ -1028,7 +1028,7 @@ case "$ACTION" in
     ;;
 
   remove|rm)
-    if [ $GD_RECURSIVE = $GD_TRUE ] 
+    if [ $GD_RECURSIVE = $GD_TRUE ]; then
         # Remove all installed modules
         #[ -n "$1" ] && echoerr "Too many arguments for '$ACTION' command"
         require_mods
