@@ -382,7 +382,7 @@ require_mods() {
 #  If not installed, do so
 #-----------------------------------------------------------------------
 if [ "$1" = "install" ]; then
-    [ $(which git 2>&1 | grep -qi "no git") ] && $PKG_MANAGER install -y git
+    $(git -v 2>&1 | grep -qi "command not found") && $PKG_MANAGER install -y git
     if [ $(gitploy -v 2>&1 | grep -qi "Version") ];then
         echoerr "gitploy seems to be already installed"
     else
