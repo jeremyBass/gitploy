@@ -974,7 +974,7 @@ case "$ACTION" in
       [ -d "$GD_DIR/$module" ] || continue;
       mod_info_inline "$module"
     done
-    echosdt "$count module(s) found"
+    echostd "$count module(s) found"
     ;;
 
   clone|add) 
