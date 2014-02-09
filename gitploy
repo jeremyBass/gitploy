@@ -386,6 +386,12 @@ require_mods() {
 
 
 #-----------------------------------------------------------------------
+#  If not installed, do so
+#-----------------------------------------------------------------------
+[ $(which gitploy 2>&1 | grep -qi "/usr/sbin/gitploy") ] || __init_gitploy
+
+
+#-----------------------------------------------------------------------
 #  Show help if asked or if no argument specified
 #-----------------------------------------------------------------------
 if [ "$1" = "help" ] || [ -z "$1" ]; then
@@ -490,7 +496,6 @@ done
 # Initializes gitdploy
 #-----------------------------------------------------------------------
 if [ "$1" = "init" ]; then
-    __init_gitploy
     __build_dirs
     echoinfo "Initialized $SCRIPT at $(pwd)/.gitploy/"
     exit 0
