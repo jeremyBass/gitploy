@@ -736,14 +736,18 @@ update_mod() {
         fi
         local old_tag=$(cat "$module_dir/tag.gitploy")
         echostd "Switching from tag $old_tag to $_TAG"
-        [ $DRY_RUN -eq 0 ] && echo "$_TAG" > "$module_dir/tag.gitploy"
+        [ $DRY_RUN -eq $GD_FALSE ] && echo "$_TAG" > "$module_dir/tag.gitploy"
     else
         # Ignoring -b option (switching branch) because not yet supported
         [ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
         git pull --quiet origin "$_BRANCH" && git submodule --quiet update --init --recursive || return 1
         git diff --stat --name-only "$_BRANCH" "$_BRANCH"@{1} > "$module_dir/diff.gitploy" 2> /dev/null
     fi
-
+    
+    local new_commit=$(git rev-parse HEAD)
+    local count=$(git diff --shortstat "$old_commit" "$new_commit" | cut -d" " -f2)
+    [ $DRY_RUN -eq $GD_TRUE ] && git checkout --quiet "$old_commit"
+    [ "$count" = "" ] && echostd "No changes found" && return 0
 
 
 
