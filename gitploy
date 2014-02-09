@@ -223,6 +223,24 @@ merge_exclude() {
     fi
 }
 
+#===  FUNCTION  ================================================================
+#          NAME:  filter_exclude
+#   DESCRIPTION:  checks if the items should be filtered out.
+#===============================================================================
+filter_exclude() {
+    file="$1"
+    excludes_file="$2"
+    copy="$2"
+    if [ -s "$excludes_file" ] && [ $copy -eq $GD_TRUE ]; then
+      for filter in $(cat "$excludes_file"); do
+        if [[ "$file" =~ ^$filter ]]; then
+          copy=$GD_FALSE
+          break
+        fi
+      done
+    fi
+    echo "$copy"
+}
 
 #===  FUNCTION  ================================================================
 #         NAME:  __build_dirs
