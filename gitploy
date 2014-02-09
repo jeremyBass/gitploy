@@ -719,7 +719,30 @@ update_mod() {
     > "$module_dir/diff.gitploy"
     local old_commit=$(git rev-parse HEAD)
 
-
+    # If module was fetched with a specific tag
+    if [ -s "$module_dir/tag.gitploy" ]; then
+        if [ -z "$_TAG" ]; then
+        local repo_tag=$(cat "$module_dir/tag.gitploy")
+            echostd "'$module' module was fetched from tag '$repo_tag' and thus cannot be updated without -t option"
+            return 1
+        fi
+        if [ -z $(git tag -l "$_TAG") ]; then
+            echostd "Tag '$_TAG' does not exist"
+            return 1
+        fi
+        if ! git checkout --quiet "$_TAG"; then
+            echostd "An error occurred while fetching tag $_TAG"
+            return 1
+        fi
+        local old_tag=$(cat "$module_dir/tag.gitploy")
+        echostd "Switching from tag $old_tag to $_TAG"
+        [ $DRY_RUN -eq 0 ] && echo "$_TAG" > "$module_dir/tag.gitploy"
+    else
+        # Ignoring -b option (switching branch) because not yet supported
+        [ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
+        git pull --quiet origin "$_BRANCH" && git submodule --quiet update --init --recursive || return 1
+        git diff --stat --name-only "$_BRANCH" "$_BRANCH"@{1} > "$module_dir/diff.gitploy" 2> /dev/null
+    fi
 
 
 
