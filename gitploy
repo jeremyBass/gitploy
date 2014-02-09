@@ -759,6 +759,13 @@ update_mod() {
 
     > "$module_dir/update.gitploy"
     > "$module_dir/delete.gitploy"
+    for line in $(cat "$module_dir/diff.gitploy" 2>/dev/null); do
+        if ! [ -z "$line" ] && [ -f "$line" ]; then
+            echostd "$line" >> "$module_dir/update.gitploy"
+        elif ! [ -z "$line" ]; then
+            echostd "$line" >> "$module_dir/delete.gitploy" 
+        fi
+    done
 
 
 
