@@ -24,7 +24,7 @@ __ScriptName="gitploy"
 #         NAME:  usage
 #  DESCRIPTION:  Display usage information.
 #===============================================================================
-SCRIPT=${0##*/}
+#SCRIPT=${0##*/}
 IFS=$''
 usage() {
     cat << END
