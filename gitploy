@@ -366,8 +366,12 @@ __proxy_init(){
 #   DESCRIPTION:  sets up gitploy as user and system executable.
 #===============================================================================
 __init_gitploy(){
-    __proxy_init
-    __symlink_exc
+    #this is what everything works around
+    which git 2>&1 | grep -qi "no git" && yum install -y git
+    if [ $(which gitploy 2>&1 | grep -qi "/usr/sbin/gitploy") ]; then
+        __proxy_init
+        __symlink_exc
+    fi
 }
 
 
