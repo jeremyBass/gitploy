@@ -429,10 +429,15 @@ rm_mod_dir() {
 #===============================================================================
 # 
 rm_mod_files() {
-  local module="$1"
-  local module_dir="$GD_DIR/$module"
-  local deployed_file="$module_dir/deployed.gitploy"
-
+    local module="$1"
+    local module_dir="$GD_DIR/$module"
+    local deployed_file="$module_dir/deployed.gitploy"
+    
+    [ $DRY_RUN -eq 1 ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
+    for line in $(cat "$deployed_file" 2>/dev/null); do
+    
+    done
+    return 0
 }
 
 
