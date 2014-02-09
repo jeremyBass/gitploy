@@ -519,8 +519,16 @@ deploy_file() {
 #                 deployed files for easy removal later
 #===============================================================================
 mv_files() {
-
-  return 0
+    local module="$1"
+    local module_dir="$GD_DIR/$module"
+    local source_dir="$module_dir/source"
+    local includes_file="$module_dir/includes.gitploy"
+    local excludes_file="$module_dir/excludes.gitploy"
+    local modman_file="$source_dir/modman"
+    local deployed_file="$module_dir/deployed.gitploy"
+    
+    
+    return 0
 }
 
 
