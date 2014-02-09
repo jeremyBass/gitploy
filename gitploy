@@ -306,13 +306,15 @@ __build_dirs() {
 #  DESCRIPTION:  Builds for default folders needed to operate correctly.
 #===============================================================================
 __symlink_exc() {
-    if [ -h /usr/sbin/gitploy ]; then
-        echostd "gitploy was already loaded"
-    else
-        [ -h /usr/local/bin/gitploy ] || ln -s /src/deployment/gitploy /usr/local/bin/gitploy
-        [ -h /usr/sbin/gitploy ] || ln -s /src/deployment/gitploy /usr/sbin/gitploy
-        [ -h /etc/init.d/gitploy ] || ln -s /src/deployment/gitploy /etc/init.d/gitploy
-        chmod a=r+w+x /usr/local/bin/gitploy
+    if [ -f /src/deployment/gitploy ]; then
+        if [ -h /usr/sbin/gitploy ]; then
+            echostd "gitploy was already loaded"
+        else
+            [ -h /usr/local/bin/gitploy ]   || ln -s /src/deployment/gitploy /usr/local/bin/gitploy
+            [ -h /usr/sbin/gitploy ]        || ln -s /src/deployment/gitploy /usr/sbin/gitploy
+            [ -h /etc/init.d/gitploy ]      || ln -s /src/deployment/gitploy /etc/init.d/gitploy
+            chmod a=r+w+x /usr/local/bin/gitploy
+        fi
     fi
 }
 
