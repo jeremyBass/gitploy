@@ -601,7 +601,7 @@ rm_mod() {
     local module_dir="$GD_DIR/$module"
     
     require_mod_dir "$module"
-    if [ $DRY_RUN -eq 0 && $GD_UNATTENDED -eq $GD_FALSE ]; then
+    if [ $DRY_RUN -eq $GD_FALSE && $GD_UNATTENDED -eq $GD_FALSE ]; then
         read -p "Are you sure you want to remove '$module' module? (y/n): " confirm
         [ "$confirm" != "y" ] && [ "$confirm" != "" ] && echo "Aborting..." && return 0
     fi
