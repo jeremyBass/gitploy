@@ -415,7 +415,7 @@ fi
 #-----------------------------------------------------------------------
 #  Accept action as first argument or as add | note: add is default
 #-----------------------------------------------------------------------
-REGEX_ACTION="(list|ls|info|files|clone|add|update|up|remove|rm|proxy)"
+REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy)"
 if [[ "$1" =~ $REGEX_ACTION ]]; then
     ACTION="$1"; shift
 elif [[ "$1" =~ "-" ]]; then
@@ -506,14 +506,6 @@ done
 #-----------------------------------------------------------------------
 # Start the real process
 #-----------------------------------------------------------------------
-# Initializes gitdploy
-#-----------------------------------------------------------------------
-if [ "$1" = "init" ]; then
-    __build_dirs
-    echoinfo "Initialized $SCRIPT at $(pwd)/.gitploy/"
-    exit 0
-fi
-
 
 #-----------------------------------------------------------------------
 # Initializes Dry run
@@ -1097,7 +1089,14 @@ case "$ACTION" in
     git "$@"
     ;;
 
+  
+  init)
+    __build_dirs
+    echoinfo "Initialized $SCRIPT at $(pwd)/.gitploy/"
+    exit 0
+    ;;
 
+  
   *)
     show_help
     echoerr "Invalid action: $ACTION"
