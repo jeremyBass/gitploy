@@ -403,7 +403,7 @@ fi
 
 
 # Handle options
-while getopts "hvdu:i:e:o:b:t:" opt; do
+while getopts "hvdur:i:e:o:b:t:" opt; do
   case $opt in
   
     #flag----------------------
@@ -421,6 +421,10 @@ while getopts "hvdu:i:e:o:b:t:" opt; do
       ;;
     u)
       GD_UNATTENDED=1
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
+    r)
+      GD_RECURSIVE=1
       shift $((OPTIND-1)); OPTIND=1
       ;;
 
@@ -477,13 +481,20 @@ fi
 
 
 #-----------------------------------------------------------------------
-# Initializes Dry run
+# Initializes UNATTENDED use
 #-----------------------------------------------------------------------
 if [ $GD_UNATTENDED -eq $GD_TRUE ]; then
   echoinfo "UNATTENDED MODE ON"
   sleep 1
 fi
 
+#-----------------------------------------------------------------------
+# Initializes RECURSIVE use
+#-----------------------------------------------------------------------
+if [ $GD_RECURSIVE -eq $GD_TRUE ]; then
+  echoinfo "RECURSIVE MODE ON"
+  sleep 1
+fi
 
 
 
