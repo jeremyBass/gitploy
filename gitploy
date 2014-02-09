@@ -369,11 +369,9 @@ __proxy_init(){
 #===============================================================================
 __install_gitploy(){
     #this is what everything works around
-    which git 2>&1 | grep -qi "no git" && $PKG_MANAGER install -y git
-    if [ $(which gitploy 2>&1 | grep -qi "/usr/sbin/gitploy") ]; then
-        __proxy_init
-        __symlink_exc
-    fi
+    if [ $(which git 2>&1 | grep -qi "no git") ] && $PKG_MANAGER install -y git
+    __proxy_init
+    __symlink_exc
 }
 
 
