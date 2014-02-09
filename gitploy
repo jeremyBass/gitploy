@@ -279,7 +279,7 @@ merge_exclude() {
 filter_exclude() {
     file="$1"
     excludes_file="$2"
-    copy="$2"
+    copy=$2
     if [ -s "$excludes_file" ] && [ $copy -eq $GD_TRUE ]; then
       for filter in $(cat "$excludes_file"); do
         if [[ "$file" =~ ^$filter ]]; then
