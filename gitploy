@@ -167,7 +167,7 @@ _PROXYING=GD_FALSE
 #   DESCRIPTION:  Echo stdout.  Basicly a proxy is what is done
 #===============================================================================
 echostd() {
-    [ $GD_QUIET = $GD_TRUE ] && printf "%s\n" "$@";
+    [ $GD_QUIET = $GD_FALSE ] && printf "%s\n" "$@";
     [ $GD_WALL = $GD_TRUE ] && wall -n "$@"
 }
 
@@ -185,7 +185,7 @@ echoerr() {
 #   DESCRIPTION:  Echo information to stdout.
 #===============================================================================
 echoinfo() {
-    [ $GD_QUIET = $GD_TRUE ] && printf "INFO: %s\n" "$@";
+    [ $GD_QUIET = $GD_FALSE ] && printf "INFO: %s\n" "$@";
     [ $GD_WALL = $GD_TRUE ] && wall -n "$@"
 }
 
@@ -194,7 +194,7 @@ echoinfo() {
 #   DESCRIPTION:  Echo warning informations to stdout.
 #===============================================================================
 echowarn() {
-    [ $GD_QUIET = $GD_TRUE ] && printf "WARN$: %s\n" "$@";
+    [ $GD_QUIET = $GD_FALSE ] && printf "WARN$: %s\n" "$@";
 }
 
 #===  FUNCTION  ================================================================
