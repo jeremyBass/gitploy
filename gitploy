@@ -411,13 +411,16 @@ if [[ "$1" =~ $REGEX_ACTION ]]; then
     ACTION="$1"; shift
 fi
 
+#-----------------------------------------------------------------------
+# Assume if there are options, that it was not help or init that it's 
+# the add action.  We should be only left with that possiblity by now
+#-----------------------------------------------------------------------
+[[ $# -eq 0 ]] || ACTION="add";
 
 #-----------------------------------------------------------------------
 #  Handle command line arguments
 #-----------------------------------------------------------------------
 #fill out
-
-
 
 # Handle options
 while getopts "hvdurqw:i:e:o:b:t:" opt; do
@@ -499,11 +502,7 @@ done
 # Start the real process
 #-----------------------------------------------------------------------
 
-#-----------------------------------------------------------------------
-# Assume if there are options, that it was not help or init that it's 
-# the add action.  We should be only left with that possiblity by now
-#-----------------------------------------------------------------------
-[ $( [[ -z "$1" ]] || [[ "$1" =~ "-" ]]) ] || ACTION="add";
+
 
 #-----------------------------------------------------------------------
 # Initializes Dry run
