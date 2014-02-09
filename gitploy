@@ -993,7 +993,7 @@ case "$ACTION" in
 
     if [ $success -eq $GD_TRUE ]; then
         if require_mod_dir "$module" &&
-            move_files "$module";
+            mv_files "$module";
             then
             [ $DRY_RUN -eq $GD_FALSE ] && echo_b "Installation complete" || remove_module_dir "$module"
         fi
