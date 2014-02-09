@@ -48,7 +48,9 @@ usage() {
                 => List deployed files of specified module
     \$ ${__ScriptName} $(tput bold)proxy$(tput sgr0) <module> <git_args>
                 => Run git command into specified module
-
+    \$ ${__ScriptName} $(tput bold)install$(tput sgr0)
+                => Install gitploy
+                
   Options:
   -v   Show gitploy version
   
@@ -365,7 +367,7 @@ __proxy_init(){
 #          NAME:  __init_gitploy
 #   DESCRIPTION:  sets up gitploy as user and system executable.
 #===============================================================================
-__init_gitploy(){
+__install_gitploy(){
     #this is what everything works around
     which git 2>&1 | grep -qi "no git" && $PKG_MANAGER install -y git
     if [ $(which gitploy 2>&1 | grep -qi "/usr/sbin/gitploy") ]; then
@@ -388,13 +390,14 @@ require_mods() {
 #-----------------------------------------------------------------------
 #  If not installed, do so
 #-----------------------------------------------------------------------
-[ $(which gitploy 2>&1 | grep -qi "/usr/sbin/gitploy") ] || __init_gitploy
-
+if [ "$1" = "install" ]; then
+    [ $(which gitploy 2>&1 | grep -qi "/usr/sbin/gitploy") ] || __install_gitploy
+fi
 
 #-----------------------------------------------------------------------
 #  Show help if asked or if no argument specified
 #-----------------------------------------------------------------------
-if [ "$1" = "help" ] || [ -z "$1" ]; then
+if [ "$1" = "help" ]; then
     usage
     exit 0
 fi
