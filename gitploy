@@ -412,11 +412,7 @@ if [[ "$1" =~ $REGEX_ACTION ]]; then
     ACTION="$1"; shift
 fi
 
-#-----------------------------------------------------------------------
-# Assume if there are options, that it was not help or init that it's 
-# the add action.  We should be only left with that possiblity by now
-#-----------------------------------------------------------------------
-$( [ -z $ACTION ] && [[ $# -eq 0 ]] ) || ACTION="add"
+
 
 #-----------------------------------------------------------------------
 #  Handle command line arguments
@@ -502,7 +498,15 @@ done
 #-----------------------------------------------------------------------
 # Start the real process
 #-----------------------------------------------------------------------
-
+#-----------------------------------------------------------------------
+# Assume if there are options, that it was not help or init that it's 
+# the add action.  We should be only left with that possiblity by now
+#-----------------------------------------------------------------------
+if [ -z $ACTION ];then
+    if [[ $# -gt 0 ]];then
+        ACTION="add"
+    fi
+fi
 
 
 #-----------------------------------------------------------------------
@@ -854,7 +858,7 @@ mod_info() {
     
     require_mod_dir "$module"
     
-    echo_b "Information about '$module' module:"
+    echostd "Information about '$module' module:"
     if [ -s "$module_dir/repository.gitploy" ]; then
         local repo=$(cat "$module_dir/repository.gitploy")
         echostd "Repository: $repo"
@@ -977,6 +981,7 @@ case "$ACTION" in
 
   clone|add) 
     # Install new repo
+    echostd "Starting repo clone"
     module="$1"; shift
     [ -z "$module" ] && echoerr "No repo specified"
     repo_dir="$GD_DIR/$module"
@@ -995,7 +1000,7 @@ case "$ACTION" in
         if require_mod_dir "$module" &&
             mv_files "$module";
             then
-            [ $DRY_RUN -eq $GD_FALSE ] && echo_b "Installation complete" || remove_module_dir "$module"
+            [ $DRY_RUN -eq $GD_FALSE ] && echostd "Installation complete" || remove_module_dir "$module"
         fi
     else
         require_mod_dir "$module"
@@ -1004,6 +1009,7 @@ case "$ACTION" in
     ;;
     
   update|up)
+    echostd "Starting repo update"
     if [ $GD_RECURSIVE = $GD_TRUE ]; then
         # Update all installed modules
         #[ -n "$2" ] && echoerr "Too many arguments for '$ACTION' command"
@@ -1028,6 +1034,7 @@ case "$ACTION" in
     ;;
 
   remove|rm)
+    echostd "Starting repo removal"
     if [ $GD_RECURSIVE = $GD_TRUE ]; then
         # Remove all installed modules
         #[ -n "$1" ] && echoerr "Too many arguments for '$ACTION' command"
