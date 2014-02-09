@@ -333,10 +333,25 @@ while getopts "h:o:e:b:" opt; do
   case $opt in
     h )  usage; exit 0                                  ;;
 
+    i)
+      merge_include "$OPTARG"
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
+    e)
+      merge_exclude "$OPTARG"
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
 
-    o ) _OWNER=$OPTARG                                  ;;
-    b ) _BRANCH=$OPTARG                                 ;;
-    t ) _TAG=$OPTARG                                    ;;
+    o ) _OWNER=$OPTARG
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
+    b ) _BRANCH=$OPTARG
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
+    t ) _TAG=$OPTARG
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
+
 
     \?)  echo
          echoerr "Option does not exist : $OPTARG"
