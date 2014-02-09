@@ -503,7 +503,7 @@ done
 # Assume if there are options, that it was not help or init that it's 
 # the add action.  We should be only left with that possiblity by now
 #-----------------------------------------------------------------------
-[ $( -z "$1" || [[ "$1" =~ "-" ]]) ] || ACTION="add";
+[ $( [[ -z "$1" ]] || [[ "$1" =~ "-" ]]) ] || ACTION="add";
 
 #-----------------------------------------------------------------------
 # Initializes Dry run
