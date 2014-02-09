@@ -134,7 +134,7 @@ DRY_RUN=$GD_FALSE
 ACTION=""
 
 declare -A _TMP_INC_FLT=()
-
+PKG_MANAGER=$( command -v yum || command -v apt-get ) || echo "Neither yum nor apt-get found"
 
 INCLUDES=""
 EXCLUDES=""
@@ -367,7 +367,7 @@ __proxy_init(){
 #===============================================================================
 __init_gitploy(){
     #this is what everything works around
-    which git 2>&1 | grep -qi "no git" && yum install -y git
+    which git 2>&1 | grep -qi "no git" && PKG_MANAGER install -y git
     if [ $(which gitploy 2>&1 | grep -qi "/usr/sbin/gitploy") ]; then
         __proxy_init
         __symlink_exc
