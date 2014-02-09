@@ -416,7 +416,7 @@ fi
 # Assume if there are options, that it was not help or init that it's 
 # the add action.  We should be only left with that possiblity by now
 #-----------------------------------------------------------------------
-[[ $# -eq 0 || ACTION -ne "" ]] || ACTION="add";
+[[ $# -eq 0 || $ACTION -ne "" ]] || ACTION="add";
 
 #-----------------------------------------------------------------------
 #  Handle command line arguments
