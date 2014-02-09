@@ -526,7 +526,9 @@ mv_files() {
     local excludes_file="$module_dir/excludes.gitploy"
     local modman_file="$source_dir/modman"
     local deployed_file="$module_dir/deployed.gitploy"
-    
+
+    > "$deployed_file" #creat empty file
+    cd "$source_dir" || return 1
     
     return 0
 }
