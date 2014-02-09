@@ -435,7 +435,23 @@ rm_mod_files() {
     
     [ $DRY_RUN -eq 1 ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
     for line in $(cat "$deployed_file" 2>/dev/null); do
-    
+    if ! [ -z "$line" ] && [ -f "$ROOT/$line" ]; then
+        echostd $line
+        # Remove deployed file and empty dirs
+        if [ $DRY_RUN -eq 0 ]; then
+            rm "$ROOT/$line" 2>/dev/null
+            prev_dir=""
+            dir=$(dirname $line)
+            while [ "$dir" != "$prev_dir" ]; do
+                prev_dir=$dir
+                test_dir="$ROOT/$dir"
+                if ! [ "$(ls -A $test_dir)" ]; then
+                    rmdir $test_dir
+                fi
+                dir=${dir%/*}
+            done
+        fi
+    fi    
     done
     return 0
 }
