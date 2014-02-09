@@ -168,7 +168,6 @@ _PROXYING=GD_FALSE
 #===============================================================================
 echostd() {
     [ $GD_QUIET -eq $GD_FALSE ] && printf "%s\n" "$@";
-    [ $GD_WALL -eq $GD_TRUE ] && wall -n "$@"
 }
 
 #===  FUNCTION  ================================================================
@@ -186,7 +185,6 @@ echoerr() {
 #===============================================================================
 echoinfo() {
     [ $GD_QUIET -eq $GD_FALSE ] && printf "INFO: %s\n" "$@";
-    [ $GD_WALL -eq $GD_TRUE ] && wall -n "$@"
 }
 
 #===  FUNCTION  ================================================================
@@ -496,7 +494,7 @@ fi
 #-----------------------------------------------------------------------
 # Alert everyone there is going to be some action done
 #-----------------------------------------------------------------------
-[ $GD_WALL = $GD_TRUE ] && wall -n "$(tput bold)PLEASE NOTE:$(tput sgr0) action ${ACTION} is being run from ${USER}, \n and you should pause what you are doing.  If you believe you need some time run command \n \$ wall \"STOP ACTION\" with in the next 10 secs" && sleep 10
+[ $GD_WALL -eq $GD_TRUE ] && wall -n "$(tput bold)PLEASE NOTE:$(tput sgr0) action ${ACTION} is being run from ${USER}, \n and you should pause what you are doing.  If you believe you need some time run command \n \$ wall \"STOP ACTION\" with in the next 10 secs" && sleep 10
 
 
 
@@ -1090,3 +1088,7 @@ case "$ACTION" in
 
 esac
 
+#-----------------------------------------------------------------------
+# Alert everyone the action is done
+#-----------------------------------------------------------------------
+[ $GD_WALL -eq $GD_TRUE ] && wall -n "$(tput bold)PLEASE NOTE:$(tput sgr0) action ${ACTION} is being run from ${USER}, \n has finished.  Thank you for your patience"
