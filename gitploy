@@ -149,6 +149,14 @@ _PROXYING=GD_FALSE
 
 
 #===  FUNCTION  ================================================================
+#          NAME:  echostd
+#   DESCRIPTION:  Echo stdout.  Basicly a proxy is what is done
+#===============================================================================
+echostd() {
+    printf "%s\n" "$@";
+}
+
+#===  FUNCTION  ================================================================
 #          NAME:  echoerr
 #   DESCRIPTION:  Echo errors to stderr.
 #===============================================================================
@@ -223,7 +231,7 @@ __build_dirs() {
 #===============================================================================
 __symlink_exc() {
     if [ -f /usr/sbin/gitploy ]; then
-        echo "modgit was already loaded"
+        echostd "modgit was already loaded"
     else
         ln -s /src/deployment/gitploy /usr/local/bin/gitploy
         ln -s /src/deployment/gitploy /usr/sbin/gitploy
@@ -245,14 +253,14 @@ __proxy_init(){
     [ -d /src/deployment ] || mkdir -p /src/deployment
     if [[ $PWD = "/src/deployment/" && -f /src/deployment/gitploy ]]; then
         #nothing to do
-        echo "gitploy running from in the right place and exist"
+        echostd "gitploy running from in the right place and exist"
     else
         #set up
-        echo "copy to correct location"
+        echostd "copy to correct location"
         
         
         if [ -f /src/deployment/gitploy ]; then
-            echo "it was there keep moving"
+            echostd "it was there keep moving"
         else
             if [ ${PWD} ]; then
                 cur_file= "${PWD}/gitploy"
@@ -270,13 +278,13 @@ __proxy_init(){
             fi
         fi
         
-        echo "call to it and reinit with current location as arg"
+        echostd "call to it and reinit with current location as arg"
         
         if [ -f /usr/sbin/gitploy ]; then
-            echo "remove current"
+            echostd "remove current"
             rm -f $cur_file && exit 0 || echo "Failed to clean up" && exit 1
         else        
-            echo "failed to proxy the init, try to run in /src/deployment" 
+            echostd "failed to proxy the init, try to run in /src/deployment" 
             exit 1
         fi
     fi
@@ -333,16 +341,28 @@ while getopts "h" opt; do
   esac
 done
 
-
 #-----------------------------------------------------------------------
-#  Initializes gitdploy
+# Start the real process
+#-----------------------------------------------------------------------
+# Initializes gitdploy
 #-----------------------------------------------------------------------
 if [ "$1" = "init" ]; then
     __init_gitploy
     __build_dirs
-    echo_b "Initialized $SCRIPT at $(pwd)/.gitploy/"
+    echoinfo "Initialized $SCRIPT at $(pwd)/.gitploy/"
     exit 0
 fi
+
+
+#-----------------------------------------------------------------------
+# Initializes Dry run
+#-----------------------------------------------------------------------
+if [ $DRY_RUN -eq $GD_TRUE ]; then
+  echoinfo "DRY RUN MODE ON"
+  sleep 1
+fi
+
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  require_mod_dir
@@ -353,10 +373,6 @@ require_mod_dir() {
 
   return 0
 }
-
-
-
-
 
 #===  FUNCTION  ================================================================
 #          NAME:  rm_mod_dir
@@ -393,7 +409,7 @@ create_module() {
         fault "An error occurred while cloning repository"
     fi
     
-    echo "$repo" > "$module_dir/repository.gitploy"
+    echostd "$repo" > "$module_dir/repository.gitploy"
 
     cd "$source_dir"
 
@@ -450,7 +466,7 @@ case "$ACTION" in
       [ -d "$GD_DIR/$module" ] || continue;
       module_info_inline "$module"
     done
-    echo "$count module(s) found"
+    echosdt "$count module(s) found"
     ;;
 
   clone|add) 
@@ -481,8 +497,8 @@ case "$ACTION" in
     fi
     ;;
     
-  update|up) echo "updateing"                           ;;
-  remove|rm) echo "removing"                            ;;
+  update|up) echostd "updateing"                           ;;
+  remove|rm) echostd "removing"                            ;;
   info)
     # Show information about specified module
     module="$1"; shift
@@ -498,7 +514,7 @@ case "$ACTION" in
 
     require_mod_dir "$module"
 
-    echo_b "Deployed files of '$module' module:"
+    echoinfo "Deployed files of '$module' module:"
     sleep 1
     module_dir="$GD_DIR/$module"
     cat "$module_dir/deployed.gitploy"
@@ -520,7 +536,7 @@ case "$ACTION" in
 
   *)
     show_help
-    echo_b "Invalid action: $ACTION"
+    echoinfo "Invalid action: $ACTION"
     exit 1
 
 esac
