@@ -817,7 +817,6 @@ case "$ACTION" in
     ;;
     
   update|up)
-  
     if [ $GD_RECURSIVE = $GD_TRUE ] 
         # Update all installed modules
         #[ -n "$2" ] && echoerr "Too many arguments for '$ACTION' command"
@@ -839,11 +838,33 @@ case "$ACTION" in
             echoerr "Error updating '$module', operation cancelled"
         fi
     fi
-    
-    
     ;;
 
-  remove|rm) echostd "removing"                            ;;
+  remove|rm)
+    if [ $GD_RECURSIVE = $GD_TRUE ] 
+        # Remove all installed modules
+        #[ -n "$1" ] && echoerr "Too many arguments for '$ACTION' command"
+        require_mods
+        errors=0
+        for module in $(ls -1 "$GD_DIR"); do
+          [ -d "$GD_DIR/$module" ] || continue
+          if ! rm_mod "$module"; then
+            echoinfo "Error occurred while removing '$module' module"
+            errors=$((errors+1))
+          fi
+        done
+        [ $DRY_RUN -eq $GD_FALSE ] && echoinfo "Removed desired modules with $errors error(s)"
+    else
+        # Remove specified module
+        module="$1"; shift
+        [ -z "$module" ] && echoerr "No module specified"
+
+        if ! require_mod_dir "$module" || ! rm_mod "$module"; then
+          echoinfo "Error removing '$module', operation cancelled"
+        fi
+    fi    
+    ;;
+
   
   info)
     # Show information about specified module
