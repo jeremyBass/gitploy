@@ -212,6 +212,42 @@ merge_include() {
 }
 
 #===  FUNCTION  ================================================================
+#          NAME:  filter_include
+#   DESCRIPTION:  checks if the items should be included.
+#===============================================================================
+filter_include() {
+    file="$1"
+    includes_file="$2"
+    copy="$2"
+    if [ -s "$includes_file" ]; then
+        copy=$GD_FALSE
+        for filter in $(cat "$includes_file"); do
+            src=$(echo $filter | cut -d: -f1)
+            if [ -z "$src" ]; then
+                continue
+            fi
+            if [[ "$file" =~ ^$src ]]; then
+                copy=$GD_TRUE
+                # Handle optional different target
+                real=$(echo $filter | cut -d: -f2)
+                if [ "$src" != "$real" ]; then
+                    tmp_src=$(echo $src | sed 's/^[\/]*//;s/[\/]*$//')
+                    tmp_src="$tmp_src/"
+                    tmp_src="${tmp_src//\//\\/}"
+                    tmp_real=$(echo $real | sed 's/^[\/]*//;s/[\/]*$//')
+                    tmp_real="$tmp_real/"
+                    tmp_real="${tmp_real//\//\\/}"
+                    target=$(echo $file | sed "s/$tmp_src/$tmp_real/g")
+                fi
+                break
+            fi
+        done
+    fi
+    echo $copy
+}
+
+
+#===  FUNCTION  ================================================================
 #          NAME:  merge_exclude
 #   DESCRIPTION:  Merge the GITEXCLUDES with agrs for github stuff not needed.
 #===============================================================================
@@ -239,7 +275,7 @@ filter_exclude() {
         fi
       done
     fi
-    echo "$copy"
+    echo $copy
 }
 
 #===  FUNCTION  ================================================================
