@@ -601,7 +601,7 @@ mv_files() {
         target=${_TMP_INC_FLT["target"]}
     
         # Exclude filter
-        copy=filter_exclude "$file" "$excludes_file" $copy
+        copy=$(filter_exclude "$file" "$excludes_file" $copy)
 
         #start the process
         if [ $copy -eq $GD_TRUE ]; then
