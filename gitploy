@@ -499,6 +499,22 @@ rm_mod() {
     return $?
 }
 
+#===  FUNCTION  ================================================================
+#          NAME:  deploy_file
+#   DESCRIPTION:  Copies specified file to root directory
+#===============================================================================
+deploy_file() {
+  local root_tmp="${ROOT//\//\\/}\\/"
+  echostd $(echo "$2" | sed "s/^$root_tmp//g")
+
+  if [ $DRY_RUN -eq 0 ]; then
+    mkdir -p $(dirname $2) && cp "$1" "$2"
+  fi
+}
+
+
+
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  create_module
