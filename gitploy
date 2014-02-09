@@ -530,6 +530,9 @@ mv_files() {
     > "$deployed_file" #creat empty file
     cd "$source_dir" || return 1
     
+    for file in $(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///'); do
+    
+    done
     return 0
 }
 
