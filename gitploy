@@ -513,6 +513,15 @@ deploy_file() {
 }
 
 
+#===  FUNCTION  ================================================================
+#          NAME:  mv_files
+#   DESCRIPTION:  Synchronizes files from mod dir to root dir, then stores
+#                 deployed files for easy removal later
+#===============================================================================
+mv_files() {
+
+  return 0
+}
 
 
 
