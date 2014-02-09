@@ -370,10 +370,10 @@ __proxy_init(){
 #   DESCRIPTION:  sets up gitploy as user and system executable.
 #===============================================================================
 __install_gitploy(){
-    #this is what everything works around
-    [ $(which git 2>&1 | grep -qi "no git") ] || $PKG_MANAGER install -y git
+
     __proxy_init
     __symlink_exc
+    return 0
 }
 
 
@@ -392,6 +392,8 @@ require_mods() {
 #-----------------------------------------------------------------------
 if [ "$1" = "install" ]; then
     if [ $(which gitploy 2>&1 | grep -qi "/usr/sbin/gitploy") ];then
+        #this is what everything works around
+        [ $(which git 2>&1 | grep -qi "no git") ] || $PKG_MANAGER install -y git
         __install_gitploy && echostd "gitploy was installed" && exit 0
         echoerr "gitploy failed install"
     else
