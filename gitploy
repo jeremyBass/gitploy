@@ -423,6 +423,17 @@ rm_mod_dir() {
   return 0
 }
 
+#===  FUNCTION  ================================================================
+#          NAME:  rm_mod_dir
+#   DESCRIPTION:  Deletes deployed files of specified module. Could be not safe
+#===============================================================================
+# 
+rm_mod_files() {
+  local module="$1"
+  local module_dir="$GD_DIR/$module"
+  local deployed_file="$module_dir/deployed.gitploy"
+
+}
 
 
 
