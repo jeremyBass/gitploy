@@ -807,7 +807,7 @@ mod_info() {
     local module="$1"
     local module_dir="$GD_DIR/$module"
     
-    require_module_dir "$module"
+    require_mod_dir "$module"
     
     echo_b "Information about '$module' module:"
     if [ -s "$module_dir/repository.gitploy" ]; then
@@ -835,7 +835,7 @@ mod_info_inline(){
     local module_dir="$GD_DIR/$module"
     local info=""
 
-    require_module_dir "$module"
+    require_mod_dir "$module"
 
     if [ -s "$module_dir/repository.gitploy" ]; then
         local repo=$(cat "$module_dir/repository.gitploy")
@@ -915,11 +915,6 @@ create_module() {
 }
 
 
-
-
-
-
-
 #-----------------------------------------------------------------------
 #  Handle action
 #-----------------------------------------------------------------------
@@ -930,7 +925,7 @@ case "$ACTION" in
     count=$(ls -A "$GD_DIR" | wc -l | sed 's/ //g')
     for module in $(ls -1 "$GD_DIR"); do
       [ -d "$GD_DIR/$module" ] || continue;
-      module_info_inline "$module"
+      mod_info_inline "$module"
     done
     echosdt "$count module(s) found"
     ;;
@@ -1018,7 +1013,7 @@ case "$ACTION" in
     module="$1"; shift
     [ -z "$module" ] && echoerr "No module specified"
 
-    module_info "$module"
+    mod_info "$module"
     ;;
   
   files)
