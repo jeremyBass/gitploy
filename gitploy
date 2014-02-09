@@ -451,12 +451,12 @@ rm_mod_files() {
     local module_dir="$GD_DIR/$module"
     local deployed_file="$module_dir/deployed.gitploy"
     
-    [ $DRY_RUN -eq 1 ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
+    [ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
     for line in $(cat "$deployed_file" 2>/dev/null); do
     if ! [ -z "$line" ] && [ -f "$ROOT/$line" ]; then
         echostd $line
         # Remove deployed file and empty dirs
-        if [ $DRY_RUN -eq 0 ]; then
+        if [ $DRY_RUN -eq $GD_FALSE ]; then
             rm "$ROOT/$line" 2>/dev/null
             prev_dir=""
             dir=$(dirname $line)
@@ -488,6 +488,14 @@ rm_mod() {
         [ "$confirm" != "y" ] && [ "$confirm" != "" ] && echo "Aborting..." && return 0
     fi
     
+    echostd "Removing '$module' module..."
+    sleep 1  
+
+    rm_mod_files "$module" || return 1
+
+    [ $DRY_RUN -eq $GD_TRUE ] && return 0
+    rm_mod_dir "$module"
+
     return $?
 }
 
@@ -580,17 +588,17 @@ case "$ACTION" in
       
     [ -d "$repo_dir" ] && echoerr "A module with this name already exists"
   
-    success=1
+    success=$GD_TRUE
     repo="$1"; shift
-    create_module "$repo" "$module" || success=0
+    create_module "$repo" "$module" || success=$GD_FALSE
   
     cd "$GD_DIR"
 
-    if [ $success -eq 1 ]; then
+    if [ $success -eq $GD_TRUE ]; then
         if require_mod_dir "$module" &&
             move_files "$module";
             then
-            [ $DRY_RUN -eq 0 ] && echo_b "Installation complete" || remove_module_dir "$module"
+            [ $DRY_RUN -eq $GD_FALSE ] && echo_b "Installation complete" || remove_module_dir "$module"
         fi
     else
         require_mod_dir "$module"
