@@ -535,7 +535,31 @@ mv_files() {
         copy=$GD_TRUE
         target="$file"
 
-
+        # Include filters
+        if [ -s "$includes_file" ]; then
+            copy=$GD_FALSE
+            for filter in $(cat "$includes_file"); do
+                src=$(echo $filter | cut -d: -f1)
+                if [ -z "$src" ]; then
+                    continue
+                fi
+                if [[ "$file" =~ ^$src ]]; then
+                    copy=$GD_TRUE
+                    # Handle optional different target
+                    real=$(echo $filter | cut -d: -f2)
+                    if [ "$src" != "$real" ]; then
+                        tmp_src=$(echo $src | sed 's/^[\/]*//;s/[\/]*$//')
+                        tmp_src="$tmp_src/"
+                        tmp_src="${tmp_src//\//\\/}"
+                        tmp_real=$(echo $real | sed 's/^[\/]*//;s/[\/]*$//')
+                        tmp_real="$tmp_real/"
+                        tmp_real="${tmp_real//\//\\/}"
+                        target=$(echo $file | sed "s/$tmp_src/$tmp_real/g")
+                    fi
+                    break
+                fi
+            done
+        fi
 
     done
     return 0
