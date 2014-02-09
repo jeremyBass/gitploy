@@ -127,6 +127,8 @@ GD_DIR="$GD_ROOT/$GD_FOLDER"
 
 GD_UNATTENDED=GD_FALSE
 GD_RECURSIVE=GD_FALSE
+GD_QUIET=GD_FALSE
+
 
 DRY_RUN=GD_FALSE
 ACTION=""
@@ -165,7 +167,7 @@ _PROXYING=GD_FALSE
 #   DESCRIPTION:  Echo stdout.  Basicly a proxy is what is done
 #===============================================================================
 echostd() {
-    printf "%s\n" "$@";
+    [ $GD_QUIET = $GD_TRUE ] && printf "%s\n" "$@";
 }
 
 #===  FUNCTION  ================================================================
@@ -182,7 +184,7 @@ echoerr() {
 #   DESCRIPTION:  Echo information to stdout.
 #===============================================================================
 echoinfo() {
-    printf "INFO: %s\n" "$@";
+    [ $GD_QUIET = $GD_TRUE ] && printf "INFO: %s\n" "$@";
 }
 
 #===  FUNCTION  ================================================================
@@ -190,7 +192,7 @@ echoinfo() {
 #   DESCRIPTION:  Echo warning informations to stdout.
 #===============================================================================
 echowarn() {
-    printf "WARN$: %s\n" "$@";
+    [ $GD_QUIET = $GD_TRUE ] && printf "WARN$: %s\n" "$@";
 }
 
 #===  FUNCTION  ================================================================
@@ -198,7 +200,7 @@ echowarn() {
 #   DESCRIPTION:  Echo debug information to stdout.
 #===============================================================================
 echodebug() {
-    if [ $_ECHO_DEBUG -eq $GD_TRUE ]; then
+    if [ $GD_DEBUG -eq $GD_TRUE ]; then
         printf "DEBUG: %s\n" "$@";
     fi
 }
@@ -420,14 +422,18 @@ while getopts "hvdur:i:e:o:b:t:" opt; do
       shift $((OPTIND-1)); OPTIND=1
       ;;
     u)
-      GD_UNATTENDED=1
+      GD_UNATTENDED=$GD_TRUE
       shift $((OPTIND-1)); OPTIND=1
       ;;
     r)
-      GD_RECURSIVE=1
+      GD_RECURSIVE=$GD_TRUE
       shift $((OPTIND-1)); OPTIND=1
       ;;
-
+    q)
+      GD_QUIET=$GD_TRUE
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
+      
     #data----------------------
     i)
       merge_include "$OPTARG"
