@@ -160,7 +160,7 @@ echostd() {
 #          NAME:  echoerr
 #   DESCRIPTION:  Echo errors to stderr.
 #===============================================================================
-echoerror() {
+echoerr() {
     printf "ERROR: $@\n" 1>&2;
     exit 1
 }
@@ -221,8 +221,8 @@ merge_exclude() {
 #  DESCRIPTION:  Builds for default folders needed to operate correctly.
 #===============================================================================
 __build_dirs() {
-    [ -d $GD_FOLDER ] && echoerror "$SCRIPT is already initialized"
-    mkdir $GD_FOLDER || echoerror "Could not create .gitploy directory"
+    [ -d $GD_FOLDER ] && echoerr "$SCRIPT is already initialized"
+    mkdir $GD_FOLDER || echoerr "Could not create .gitploy directory"
   
 }
 
@@ -278,15 +278,12 @@ __proxy_init(){
                 __symlink_exc
             fi
         fi
-        
-        echostd "call to it and reinit with current location as arg"
-        
+
         if [ -f /usr/sbin/gitploy ]; then
-            echostd "remove current"
-            rm -f $cur_file && exit 0 || echo "Failed to clean up" && exit 1
+            echostd "removing current"
+            rm -f $cur_file && exit 0 || echoerr "Failed to clean up"
         else        
-            echostd "failed to proxy the init, try to run in /src/deployment" 
-            exit 1
+            echoerr "failed to proxy the init, try to run in /src/deployment"
         fi
     fi
 }
@@ -335,7 +332,7 @@ while getopts "h" opt; do
 
 
     \?)  echo
-         echoerror "Option does not exist : $OPTARG"
+         echoerr "Option does not exist : $OPTARG"
          usage
          exit 1
          ;;
@@ -370,7 +367,7 @@ fi
 #   DESCRIPTION:  Checks if module dir exists or quit.
 #===============================================================================
 require_mod_dir() {
-  [ -d "$GD_DIR/$1" ] || echoerror "Module '$1' does not exist"
+  [ -d "$GD_DIR/$1" ] || echoerr "Module '$1' does not exist"
 
   return 0
 }
@@ -407,7 +404,7 @@ create_module() {
     echoinfo "Cloning $repo..."
     if ! git clone --quiet -- $repo "$source_dir"; then
         rm_mod_dir "$module"
-        echoerror "An error occurred while cloning repository"
+        echoerr "An error occurred while cloning repository"
     fi
     
     echostd "$repo" > "$module_dir/repository.gitploy"
@@ -420,16 +417,16 @@ create_module() {
     if [ -n "$TAG" ]; then
         if [ -z $(git tag -l "$TAG") ]; then
             remove_module_dir "$module"
-            echoerror "Tag '$TAG' does not exist"
+            echoerr "Tag '$TAG' does not exist"
         fi
         if ! git checkout --quiet "$TAG"; then
             remove_module_dir "$module"
-            echoerror "An error occurred while fetching tag $TAG"
+            echoerr "An error occurred while fetching tag $TAG"
         fi
         echo "$TAG" > "$module_dir/tag.gitploy"
     elif ! git checkout --quiet "$BRANCH"; then
         remove_module_dir "$module"
-        echoerror "An error occurred while fetching branch $BRANCH"
+        echoerr "An error occurred while fetching branch $BRANCH"
     fi
 
     echo "$BRANCH" > "$module_dir/branch.gitploy"
@@ -437,7 +434,7 @@ create_module() {
     echo "Fetching submodules..."
         if ! git submodule --quiet update --init --recursive; then
         remove_module_dir "$module"
-        echoerror "An error occurred while cloning submodules of $repo"
+        echoerr "An error occurred while cloning submodules of $repo"
     fi
     
     # Save includes filter if not empty
@@ -473,12 +470,12 @@ case "$ACTION" in
   clone|add) 
     # Install new repo
     module="$1"; shift
-    [ -z "$module" ] && echoerror "No repo specified"
+    [ -z "$module" ] && echoerr "No repo specified"
     repo_dir="$GD_DIR/$module"
     [[ "$module" =~ [^a-z0-9_-]+ ]] &&
-      echoerror "You cannot add a repo containingmore then [^a-zA-Z0-9_-]+ pattern\nModule specified: $module"
+      echoerr "You cannot add a repo containingmore then [^a-zA-Z0-9_-]+ pattern\nModule specified: $module"
       
-    [ -d "$repo_dir" ] && echoerror "A module with this name already exists"
+    [ -d "$repo_dir" ] && echoerr "A module with this name already exists"
   
     success=1
     repo="$1"; shift
@@ -494,7 +491,7 @@ case "$ACTION" in
         fi
     else
         require_mod_dir "$module"
-        echoerror "Error cloning '$module', operation cancelled"
+        echoerr "Error cloning '$module', operation cancelled"
     fi
     ;;
     
@@ -503,7 +500,7 @@ case "$ACTION" in
   info)
     # Show information about specified module
     module="$1"; shift
-    [ -z "$module" ] && echoerror "No module specified"
+    [ -z "$module" ] && echoerr "No module specified"
 
     module_info "$module"
     ;;
@@ -511,7 +508,7 @@ case "$ACTION" in
   files)
     # List deployed files of specified module
     module="$1"; shift
-    [ -z "$module" ] && echoerror "No module specified"
+    [ -z "$module" ] && echoerr "No module specified"
 
     require_mod_dir "$module"
 
@@ -525,7 +522,7 @@ case "$ACTION" in
   proxy)
     # Run git command into specified module
     module="$1"; shift
-    [ -z "$module" ] && echoerror "No module specified"
+    [ -z "$module" ] && echoerr "No module specified"
 
     require_mod_dir "$module"
 
@@ -537,7 +534,7 @@ case "$ACTION" in
 
   *)
     show_help
-    echoerror "Invalid action: $ACTION"
+    echoerr "Invalid action: $ACTION"
 
 esac
 
