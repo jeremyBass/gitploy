@@ -331,13 +331,22 @@ fi
 # Handle options
 while getopts "hvd:i:e:o:b:t:" opt; do
   case $opt in
-    h )  usage; exit 0                                  ;;
-
+  
+    #flag----------------------
+    h )  
+      usage;
+      exit 0
+      ;;
+    v )
+      echostd "$0 -- Version $__ScriptVersion";
+      exit 0
+      ;;
     d)
       DRY_RUN=1
       shift $((OPTIND-1)); OPTIND=1
       ;;
 
+    #data----------------------
     i)
       merge_include "$OPTARG"
       shift $((OPTIND-1)); OPTIND=1
@@ -347,7 +356,7 @@ while getopts "hvd:i:e:o:b:t:" opt; do
       shift $((OPTIND-1)); OPTIND=1
       ;;
 
-
+    #git options---------------
     o ) _OWNER=$OPTARG
       shift $((OPTIND-1)); OPTIND=1
       ;;
