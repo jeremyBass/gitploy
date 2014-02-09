@@ -136,7 +136,7 @@ DRY_RUN=$GD_FALSE
 ACTION=""
 
 declare -A _TMP_INC_FLT=()
-PKG_MANAGER=$( command -v yum || command -v apt-get ) || echo "Neither yum nor apt-get found"
+
 
 INCLUDES=""
 EXCLUDES=""
@@ -382,6 +382,7 @@ require_mods() {
 #  If not installed, do so
 #-----------------------------------------------------------------------
 if [ "$1" = "install" ]; then
+    PKG_MANAGER=$( command -v yum || command -v apt-get ) || echo "Neither yum nor apt-get found"
     $(git -v 2>&1 | grep -qi "command not found") && $PKG_MANAGER install -y git
     if [ $(gitploy -v 2>&1 | grep -qi "Version") ];then
         echoerr "gitploy seems to be already installed"
