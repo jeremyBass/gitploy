@@ -580,15 +580,8 @@ mv_files() {
         fi
 
         # Exclude filter
-        if [ -s "$excludes_file" ] && [ $copy -eq $GD_TRUE ]; then
-            for filter in $(cat "$excludes_file"); do
-                if [[ "$file" =~ ^$filter ]]; then
-                    copy=$GD_FALSE
-                    break
-                fi
-            done
-        fi
-        
+        copy=filter_exclude "$file" "$excludes_file" $copy
+
         #start the process
         if [ $copy -eq $GD_TRUE ]; then
             # Handle modman file
