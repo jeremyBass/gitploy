@@ -100,11 +100,11 @@ usage() {
   -w   (Wall Broadcasting) Some times it's important that you
                             don't have others doing anything 
                             while you upgrade which wall will let
-                            them know you doing something
+                            them know you doing something, the flag stop that
        EX:
        \$ ${__ScriptName} $(tput bold)-w$(tput sgr0) <module> <repository>
-                => will add a new repository and let 
-                    everyone that is logged in know about it               
+                => will add a new repository and prevent 
+                    everyone that is logged in knowing about it               
                 
 END
 }
@@ -128,7 +128,7 @@ GD_DIR="$GD_ROOT/$GD_FOLDER"
 GD_UNATTENDED=GD_FALSE
 GD_RECURSIVE=GD_FALSE
 GD_QUIET=GD_FALSE
-
+GD_WALL=GD_TRUE
 
 DRY_RUN=GD_FALSE
 ACTION=""
@@ -168,6 +168,7 @@ _PROXYING=GD_FALSE
 #===============================================================================
 echostd() {
     [ $GD_QUIET = $GD_TRUE ] && printf "%s\n" "$@";
+    [ $GD_WALL = $GD_TRUE ] && wall -n "$@"
 }
 
 #===  FUNCTION  ================================================================
@@ -185,6 +186,7 @@ echoerr() {
 #===============================================================================
 echoinfo() {
     [ $GD_QUIET = $GD_TRUE ] && printf "INFO: %s\n" "$@";
+    [ $GD_WALL = $GD_TRUE ] && wall -n "$@"
 }
 
 #===  FUNCTION  ================================================================
@@ -204,6 +206,9 @@ echodebug() {
         printf "DEBUG: %s\n" "$@";
     fi
 }
+
+
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  merge_include
@@ -405,7 +410,7 @@ fi
 
 
 # Handle options
-while getopts "hvdur:i:e:o:b:t:" opt; do
+while getopts "hvdurqw:i:e:o:b:t:" opt; do
   case $opt in
   
     #flag----------------------
@@ -433,6 +438,12 @@ while getopts "hvdur:i:e:o:b:t:" opt; do
       GD_QUIET=$GD_TRUE
       shift $((OPTIND-1)); OPTIND=1
       ;;
+    w)
+      GD_WALL=$GD_FALSE
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
+      
+      
       
     #data----------------------
     i)
@@ -464,6 +475,10 @@ while getopts "hvdur:i:e:o:b:t:" opt; do
   esac
 done
 
+
+
+
+
 #-----------------------------------------------------------------------
 # Start the real process
 #-----------------------------------------------------------------------
@@ -475,6 +490,15 @@ if [ "$1" = "init" ]; then
     echoinfo "Initialized $SCRIPT at $(pwd)/.gitploy/"
     exit 0
 fi
+
+
+
+#-----------------------------------------------------------------------
+# Alert everyone there is going to be some action done
+#-----------------------------------------------------------------------
+[ $GD_WALL = $GD_TRUE ] && wall -n "$(tput bold)PLEASE NOTE:$(tput sgr0) action ${ACTION} is being run from ${USER}, \n and you should pause what you are doing.  If you believe you need some time run command \n \$ wall \"STOP ACTION\" with in the next 10 secs" && sleep 10
+
+
 
 
 #-----------------------------------------------------------------------
