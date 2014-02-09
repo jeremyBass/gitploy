@@ -125,6 +125,8 @@ GD_FOLDER=".gitploy"
 GD_ROOT=$(pwd -P)
 GD_DIR="$GD_ROOT/$GD_FOLDER"
 
+GD_UNATTENDED=GD_FALSE
+
 
 DRY_RUN=GD_FALSE
 ACTION=""
@@ -146,6 +148,9 @@ composer\.json"
 _OWNER="washingtonstateuniversity"
 _BRANCH="master"
 _TAG=""
+
+
+
 
 cur_file=""
 _PROXYING=GD_FALSE
@@ -329,7 +334,7 @@ fi
 
 
 # Handle options
-while getopts "hvd:i:e:o:b:t:" opt; do
+while getopts "hvdu:i:e:o:b:t:" opt; do
   case $opt in
   
     #flag----------------------
@@ -343,6 +348,10 @@ while getopts "hvd:i:e:o:b:t:" opt; do
       ;;
     d)
       DRY_RUN=1
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
+    u)
+      GD_UNATTENDED=1
       shift $((OPTIND-1)); OPTIND=1
       ;;
 
@@ -396,6 +405,16 @@ if [ $DRY_RUN -eq $GD_TRUE ]; then
   echoinfo "DRY RUN MODE ON"
   sleep 1
 fi
+
+
+#-----------------------------------------------------------------------
+# Initializes Dry run
+#-----------------------------------------------------------------------
+if [ $GD_UNATTENDED -eq $GD_TRUE ]; then
+  echoinfo "UNATTENDED MODE ON"
+  sleep 1
+fi
+
 
 
 
@@ -460,13 +479,13 @@ rm_mod_files() {
 #   DESCRIPTION:  Removes specified module
 #===============================================================================
 rm_mod() {
-  local module="$1"
-  local module_dir="$GD_DIR/$module"
+    local module="$1"
+    local module_dir="$GD_DIR/$module"
+    
+    require_mod_dir "$module"
 
-  require_mod_dir "$module"
-
-
-  return $?
+    
+    return $?
 }
 
 
