@@ -709,6 +709,18 @@ update_mod() {
     local module="$1"
     local module_dir="$GD_DIR/$module"
     local source_dir="$module_dir/source"
+    
+    require_mod_dir "$module"
+    
+    echoinfo "Updating '$module' module..."
+    sleep 1
+
+    cd "$source_dir"
+    > "$module_dir/diff.gitploy"
+    local old_commit=$(git rev-parse HEAD)
+
+
+
 
 
 
