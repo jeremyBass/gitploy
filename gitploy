@@ -789,10 +789,13 @@ update_mod() {
         fi
     done
 
-
-
-
-
+    # update the deployed.gitploy file
+    if build_deploy_file "$module";
+    then
+        return 0
+    else
+        return 1
+    fi
 
 }
 
