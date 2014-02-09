@@ -750,7 +750,7 @@ update_mod() {
     [ "$count" = "" ] && echostd "No changes found" && return 0
 
 
-    if [ $DRY_RUN -eq $GD_TRUE  ]; then
+    if [ $DRY_RUN -eq $GD_TRUE ]; then
         echoinfo "Would modify:"
         git --no-pager diff --name-only "$old_commit" "$new_commit"
         echostd "$count file(s) changed"
@@ -767,6 +767,16 @@ update_mod() {
         fi
     done
 
+    # update update.gitploy files
+    for line in $(cat "$module_dir/update.gitploy" 2>/dev/null); do
+        if ! [ -z "$line" ]; then
+            # copy the file 
+            if [ $DRY_RUN -eq $GD_TRUE ]; then
+            mkdir -p $(dirname "$ROOT/$line") && cp "$line" "$ROOT/$line"
+            echo "Updating: $line"
+        fi
+    fi
+    done
 
 
 
