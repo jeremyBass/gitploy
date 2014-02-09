@@ -478,7 +478,10 @@ while getopts "hvdurqw:i:e:o:b:t:" opt; do
 done
 
 
-
+#-----------------------------------------------------------------------
+# Alert everyone there is going to be some action done
+#-----------------------------------------------------------------------
+[ $GD_WALL -eq $GD_TRUE ] && wall -n "$(tput bold)PLEASE NOTE:$(tput sgr0) action ${ACTION} is being run from ${USER}, \n and you should pause what you are doing.  If you believe you need some time run command \n \$ wall \"STOP ACTION\" with in the next 10 secs" && sleep 10
 
 
 #-----------------------------------------------------------------------
@@ -492,15 +495,6 @@ if [ "$1" = "init" ]; then
     echoinfo "Initialized $SCRIPT at $(pwd)/.gitploy/"
     exit 0
 fi
-
-
-
-#-----------------------------------------------------------------------
-# Alert everyone there is going to be some action done
-#-----------------------------------------------------------------------
-[ $GD_WALL -eq $GD_TRUE ] && wall -n "$(tput bold)PLEASE NOTE:$(tput sgr0) action ${ACTION} is being run from ${USER}, \n and you should pause what you are doing.  If you believe you need some time run command \n \$ wall \"STOP ACTION\" with in the next 10 secs" && sleep 10
-
-
 
 
 #-----------------------------------------------------------------------
