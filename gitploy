@@ -391,13 +391,16 @@ require_mods() {
 #  If not installed, do so
 #-----------------------------------------------------------------------
 if [ "$1" = "install" ]; then
-    if [ -f /src/deployment/gitploy && $(which gitploy 2>&1 | grep -qi "/usr/sbin/gitploy") ];then
-        #this is what everything works around
-        [ $(which git 2>&1 | grep -qi "no git") ] || $PKG_MANAGER install -y git
-        __install_gitploy && echostd "gitploy was installed" && exit 0
-        echoerr "gitploy failed install"
-    else
+    [ $(which git 2>&1 | grep -qi "no git") ] || $PKG_MANAGER install -y git
+    if [ $(gitploy -v 2>&1 | grep -qi "Version") ];then
         echoerr "gitploy seems to be already installed"
+    else
+        if [ -f /src/deployment/gitploy ]; then
+            __install_gitploy && echostd "gitploy was installed" && exit 0
+            echoerr "gitploy failed install"
+        else
+            echoerr "gitploy file was missing failed install"
+        fi
     fi
 fi
 
