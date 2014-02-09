@@ -651,8 +651,16 @@ build_deploy_file() {
 
     for file in $(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///'); do
         # Copy file by default
-        copy=1
+        copy=$GD_TRUE
         target="$file"
+
+        # Include filter
+        filter_include "$file" "$includes_file" $copy    
+        copy=${_TMP_INC_FLT["copy"]}
+        target=${_TMP_INC_FLT["target"]}
+    
+        # Exclude filter
+        copy=$(filter_exclude "$file" "$excludes_file" $copy)
         
     done
     
