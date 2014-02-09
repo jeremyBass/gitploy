@@ -535,7 +535,7 @@ mv_files() {
         copy=$GD_TRUE
         target="$file"
 
-        # Include filters
+        # Include filter
         if [ -s "$includes_file" ]; then
             copy=$GD_FALSE
             for filter in $(cat "$includes_file"); do
@@ -560,6 +560,17 @@ mv_files() {
                 fi
             done
         fi
+
+        # Exclude filter
+        if [ -s "$excludes_file" ] && [ $copy -eq $GD_TRUE ]; then
+            for filter in $(cat "$excludes_file"); do
+                if [[ "$file" =~ ^$filter ]]; then
+                    copy=$GD_FALSE
+                    break
+                fi
+            done
+        fi
+
 
     done
     return 0
