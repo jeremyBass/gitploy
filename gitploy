@@ -391,7 +391,12 @@ require_mods() {
 #  If not installed, do so
 #-----------------------------------------------------------------------
 if [ "$1" = "install" ]; then
-    [ $(which gitploy 2>&1 | grep -qi "/usr/sbin/gitploy") ] || __install_gitploy
+    if [ $(which gitploy 2>&1 | grep -qi "/usr/sbin/gitploy") ];then
+    __install_gitploy && echostd "gitploy was installed" && exit 0
+    echoerr "gitploy seems to be already installed"
+    else
+        echoerr "gitploy seems to be already installed"
+    fi
 fi
 
 #-----------------------------------------------------------------------
