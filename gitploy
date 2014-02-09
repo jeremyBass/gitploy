@@ -757,6 +757,16 @@ update_mod() {
         return 0
     fi
 
+    > "$module_dir/update.gitploy"
+    > "$module_dir/delete.gitploy"
+
+
+
+
+
+
+
+
 }
 
 
