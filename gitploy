@@ -410,6 +410,13 @@ if [ "$1" = "install" ]; then
 fi
 
 
+#-----------------------------------------------------------------------
+#  Accept action as first argument or as add | note: add is default
+#-----------------------------------------------------------------------
+REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy)"
+if [[ "$1" =~ $REGEX_ACTION ]]; then
+    ACTION="$1"; shift
+fi
 
 #-----------------------------------------------------------------------
 #  Handle command line arguments
@@ -483,13 +490,7 @@ while getopts "hvdurqw:i:e:o:b:t:" opt; do
 done
 
 
-#-----------------------------------------------------------------------
-#  Accept action as first argument or as add | note: add is default
-#-----------------------------------------------------------------------
-REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy)"
-if [[ "$1" =~ $REGEX_ACTION ]]; then
-    ACTION="$1"; shift
-fi
+
 
 
 
