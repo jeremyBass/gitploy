@@ -163,17 +163,7 @@ _TAG=""
 cur_file=""
 _PROXYING=GD_FALSE
 
-#-----------------------------------------------------------------------
-#  Show help there is nothing but the command or action is "help"
-#-----------------------------------------------------------------------
-if [[ $# -eq 0 ]];then
-    usage
-    echoerr "You need to call more then gitploy.  Try added some options"
-fi
-if [[ "$1" = "help" ]];then
-    usage
-    exit 0
-fi
+
 
 
 
@@ -221,7 +211,17 @@ echodebug() {
 }
 
 
-
+#-----------------------------------------------------------------------
+#  Show help there is nothing but the command or action is "help"
+#-----------------------------------------------------------------------
+if [[ $# -eq 0 ]];then
+    usage
+    echoerr "You need to call more then gitploy.  Try added some options"
+fi
+if [[ "$1" = "help" ]];then
+    usage
+    exit 0
+fi
 
 #===  FUNCTION  ================================================================
 #          NAME:  merge_include
