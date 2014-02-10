@@ -662,7 +662,7 @@ mv_files() {
         # Copy file by default
         copy=$GD_TRUE
         target="$file"
-
+        echostd "> looking at: $file -for- $target"
         # Include filter
         filter_include "$file" "$includes_file" $copy    
         copy=${_TMP_INC_FLT["copy"]}
