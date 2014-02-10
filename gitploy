@@ -348,6 +348,7 @@ __proxy_init(){
     else
         if [ -f /src/deployment/gitploy ]; then
             echostd "it was there keep moving"
+            [ ${PWD} ] && [ -f "${PWD}/–i" ] && rm -f "${PWD}/–i" && echostd "cleared tee tmp"
         else
             if [ ${PWD} ]; then
                 cur_file= "${PWD}/gitploy"
@@ -364,7 +365,9 @@ __proxy_init(){
                 __symlink_exc
             fi
             echostd "removing current"
+            [ -f "${PWD}/–i" ] && rm -f "${PWD}/–i"
             rm -f $cur_file && exit 0 || echoerr "Failed to clean up"
+            
         fi
         [ -f /usr/sbin/gitploy ] || echoerr "failed to proxy the init, try to run in /src/deployment"
     fi
