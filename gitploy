@@ -163,6 +163,18 @@ _TAG=""
 cur_file=""
 _PROXYING=GD_FALSE
 
+#-----------------------------------------------------------------------
+#  Show help there is nothing but the command
+#-----------------------------------------------------------------------
+if [[ $# -eq 0 || "$1" = "help" ]];then
+    usage
+    if [[ $# -eq 0]];then
+        echoerr "You need to call more then gitploy.  Try added some options"
+    fi
+    exit 0
+fi
+
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  echostd
@@ -394,14 +406,6 @@ if [ "$1" = "install" ]; then
             echoerr "gitploy file was missing failed install"
         fi
     fi
-fi
-
-#-----------------------------------------------------------------------
-#  Show help if asked or if no argument specified
-#-----------------------------------------------------------------------
-if [ "$1" = "help" ]; then
-    usage
-    exit 0
 fi
 
 #-----------------------------------------------------------------------
