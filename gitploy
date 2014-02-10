@@ -630,13 +630,11 @@ rm_mod() {
 #   DESCRIPTION:  Copies specified file to root directory
 #===============================================================================
 deploy_file() {
-  local root_tmp="${ROOT//\//\\/}\\/"
+  local root_tmp="${GD_ROOT//\//\\/}\\/"
   echostd $(echo "$2" | sed "s/^$root_tmp//g")
 
   if [ $DRY_RUN -eq $GD_FALSE ]; then
-    filedir=$(dirname $2)
-    echostd "> creating: $filedir"
-    mkdir -p "$filedir" && cp "$1" "$2"
+    mkdir -p $(dirname $2) && cp "$1" "$2"
   fi
 }
 
