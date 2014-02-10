@@ -634,7 +634,9 @@ deploy_file() {
   echostd $(echo "$2" | sed "s/^$root_tmp//g")
 
   if [ $DRY_RUN -eq $GD_FALSE ]; then
-    mkdir -p $(dirname $2) && cp "$1" "$2"
+    filedir=$(dirname $2)
+    echostd "> creating: $filedir"
+    mkdir -p "$filedir" && cp "$1" "$2"
   fi
 }
 
@@ -693,6 +695,7 @@ mv_files() {
                     fi
                 done
             else
+                echostd "> deploying: $file  @  $GD_ROOT/$target"
                 deploy_file "$file" "$GD_ROOT/$target"
             fi
         fi
