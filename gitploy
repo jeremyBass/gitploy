@@ -577,16 +577,16 @@ rm_mod_files() {
     
     [ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
     for line in $(cat "$deployed_file" 2>/dev/null); do
-    if ! [ -z "$line" ] && [ -f "$ROOT/$line" ]; then
+    if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
         echostd $line
         # Remove deployed file and empty dirs
         if [ $DRY_RUN -eq $GD_FALSE ]; then
-            rm "$ROOT/$line" 2>/dev/null
+            rm "$GD_ROOT/$line" 2>/dev/null
             prev_dir=""
             dir=$(dirname $line)
             while [ "$dir" != "$prev_dir" ]; do
                 prev_dir=$dir
-                test_dir="$ROOT/$dir"
+                test_dir="$GD_ROOT/$dir"
                 if ! [ "$(ls -A $test_dir)" ]; then
                     rmdir $test_dir
                 fi
@@ -688,12 +688,12 @@ mv_files() {
                         src="${src//\//\\/}"
                         dest="${dest//\//\\/}"
                         target=$(echo $file | sed "s/$src/$dest/g")
-                        deploy_file "$file" "$ROOT/$target"
+                        deploy_file "$file" "$GD_ROOT/$target"
                         echo "$target" >> "$deployed_file"
                     fi
                 done
             else
-                deploy_file "$file" "$ROOT/$target"
+                deploy_file "$file" "$GD_ROOT/$target"
             fi
         fi
 
@@ -829,7 +829,7 @@ update_mod() {
         if ! [ -z "$line" ]; then
             # copy the file 
             if [ $DRY_RUN -eq $GD_TRUE ]; then
-                mkdir -p $(dirname "$ROOT/$line") && cp "$line" "$ROOT/$line"
+                mkdir -p $(dirname "$GD_ROOT/$line") && cp "$line" "$GD_ROOT/$line"
                 echostd "Updating: $line"
             fi
         fi
@@ -837,10 +837,10 @@ update_mod() {
 
     # delete delete.gitploy files
     for line in $(cat "$module_dir/delete.gitploy" 2>/dev/null); do
-        if ! [ -z "$line" ] && [ -f "$ROOT/$line" ]; then
+        if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
             # delete the file 
             if [ $DRY_RUN -eq $GD_TRUE ]; then
-                rm "$ROOT/$line" 2>/dev/null
+                rm "$GD_ROOT/$line" 2>/dev/null
                 echostd "Deleting: $line"
             fi
         fi
