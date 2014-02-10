@@ -659,7 +659,7 @@ mv_files() {
     cd "$source_dir" || return 1
     allfiles=$(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///')
     echostd "> all files: $allfiles"
-    IFS=$'\n'; set -f; files=($(<allfiles))
+    IFS=$'\n'; set -f; files=($(<$allfiles))
     for file in "${files[@]}"; do
         # Copy file by default
         copy=$GD_TRUE
