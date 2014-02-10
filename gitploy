@@ -989,6 +989,7 @@ case "$ACTION" in
       mod_info_inline "$module"
     done
     echostd "$count module(s) found"
+    exit 0
     ;;
 
   clone|add) 
@@ -1018,6 +1019,7 @@ case "$ACTION" in
         require_mod_dir "$module"
         echoerr "Error cloning '$module', operation cancelled"
     fi
+    exit 0
     ;;
     
   update|up)
@@ -1043,6 +1045,7 @@ case "$ACTION" in
             echoerr "Error updating '$module', operation cancelled"
         fi
     fi
+    exit 0
     ;;
 
   remove|rm)
@@ -1068,7 +1071,8 @@ case "$ACTION" in
         if ! require_mod_dir "$module" || ! rm_mod "$module"; then
           echoinfo "Error removing '$module', operation cancelled"
         fi
-    fi    
+    fi
+    exit 0
     ;;
 
   
