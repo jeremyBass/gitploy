@@ -86,10 +86,10 @@ usage() {
                    $(tput bold)NOTE::$(tput sgr0) all repo removals will be meet with a prompt
        
   -u   (Unattended) This flag will accept all promots.  Use wisely as 
-                    unattended in this form, `\$ rm -r -u`, would be wiping
+                    unattended in this form, `\$ rm -ru`, would be wiping
                     all logged repos
        EX:
-       \$ ${__ScriptName} $(tput bold)-u$(tput sgr0) rm <module>
+       \$ ${__ScriptName} rm $(tput bold)-u$(tput sgr0) <module>
                 => will remove named repository $(tput bold) 
                    WITHOUT a prompt$(tput sgr0)
        
