@@ -1082,7 +1082,7 @@ case "$ACTION" in
   
   files)
     # List deployed files of specified module
-    [ $# -gt 0 ] || && echoerr "No module specified"
+    [ $# -gt 0 ] || echoerr "No module specified"
     module="$1"; shift
     [ -z "$module" ] && echoerr "No module specified"
 
