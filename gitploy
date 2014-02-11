@@ -197,7 +197,7 @@ echoinfo() {
 #   DESCRIPTION:  Echo warning informations to stdout.
 #===============================================================================
 echowarn() {
-    [ $GD_QUIET -eq $GD_FALSE ] && printf "WARN$: %s\n" "$@";
+    [ $GD_QUIET -eq $GD_FALSE ] && printf "WARN: %s\n" "$@";
 }
 
 #===  FUNCTION  ================================================================
@@ -210,6 +210,13 @@ echodebug() {
     fi
 }
 
+#===  FUNCTION  ================================================================
+#          NAME:  echofin
+#   DESCRIPTION:  Echo a final massage unless it's both -u and -q.
+#===============================================================================
+echofin() {
+    [ $GD_QUIET -nq $GD_TRUE && $GD_UNATTENDED -nq $GD_TRUE ] && printf "Finished: %s\n" "$@";
+}
 
 #-----------------------------------------------------------------------
 #  Show help there is nothing but the command or action is "help"
@@ -958,9 +965,9 @@ create_module() {
         echoerr "An error occurred while fetching branch $_BRANCH"
     fi
 
-    echo "$_BRANCH" > "$module_dir/branch.gitploy"
+    echostd "$_BRANCH" > "$module_dir/branch.gitploy"
 
-    echo "Fetching submodules..."
+    echostd "Fetching submodules..."
         if ! git submodule --quiet update --init --recursive; then
         rm_mod_dir "$module"
         echoerr "An error occurred while cloning submodules of $repo"
