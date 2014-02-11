@@ -945,16 +945,16 @@ create_module() {
 
     if [ -n "$_TAG" ]; then
         if [ -z $(git tag -l "$_TAG") ]; then
-            remove_module_dir "$module"
+            rm_mod_dir "$module"
             echoerr "Tag '$_TAG' does not exist"
         fi
         if ! git checkout --quiet "$_TAG"; then
-            remove_module_dir "$module"
+            rm_mod_dir "$module"
             echoerr "An error occurred while fetching tag $_TAG"
         fi
         echo "$_TAG" > "$module_dir/tag.gitploy"
     elif ! git checkout --quiet "$_BRANCH"; then
-        remove_module_dir "$module"
+        rm_mod_dir "$module"
         echoerr "An error occurred while fetching branch $_BRANCH"
     fi
 
@@ -962,7 +962,7 @@ create_module() {
 
     echo "Fetching submodules..."
         if ! git submodule --quiet update --init --recursive; then
-        remove_module_dir "$module"
+        rm_mod_dir "$module"
         echoerr "An error occurred while cloning submodules of $repo"
     fi
     
@@ -1013,7 +1013,7 @@ case "$ACTION" in
         if require_mod_dir "$module" &&
             mv_files "$module";
             then
-            [ $DRY_RUN -eq $GD_FALSE ] && echostd "Installation complete" || remove_module_dir "$module"
+            [ $DRY_RUN -eq $GD_FALSE ] && echostd "Installation complete" || rm_mod_dir "$module"
         fi
     else
         require_mod_dir "$module"
