@@ -1005,7 +1005,7 @@ case "$ACTION" in
         if require_mod_dir "$module" &&
             mv_files "$module";
             then
-            [ $DRY_RUN -eq $GD_FALSE ] && echostd "Installation complete" || rm_mod_dir "$module"
+            [ $DRY_RUN -eq $GD_FALSE ] && echofin "Installation complete" || rm_mod_dir "$module"
         fi
     else
         require_mod_dir "$module"
