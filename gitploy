@@ -215,7 +215,7 @@ echodebug() {
 #   DESCRIPTION:  Echo a final massage unless it's both -u and -q.
 #===============================================================================
 echofin() {
-    [ $GD_QUIET -nq $GD_TRUE && $GD_UNATTENDED -nq $GD_TRUE ] && printf "Finished: %s\n" "$@";
+    [ $GD_QUIET -ne $GD_TRUE && $GD_UNATTENDED -ne $GD_TRUE ] && printf "Finished: %s\n" "$@";
 }
 
 #-----------------------------------------------------------------------
