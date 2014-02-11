@@ -1052,6 +1052,7 @@ case "$ACTION" in
             echoerr "Error updating '$module', operation cancelled"
         fi
     fi
+    echofin "Updated tracked repositories"
     exit 0
     ;;
 
@@ -1078,7 +1079,9 @@ case "$ACTION" in
         if ! require_mod_dir "$module" || ! rm_mod "$module"; then
           echoinfo "Error removing '$module', operation cancelled"
         fi
+        
     fi
+    echofin "Completed removal of tracked repositories"
     exit 0
     ;;
 
