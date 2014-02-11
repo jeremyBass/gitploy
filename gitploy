@@ -446,26 +446,11 @@ while getopts "hvdurqw:i:e:o:b:t:" opt; do
       echostd "$0 -- Version $__ScriptVersion";
       exit 0
       ;;
-    d)
-      DRY_RUN=1
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-    u)
-      GD_UNATTENDED=$GD_TRUE
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-    r)
-      GD_RECURSIVE=$GD_TRUE
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-    q)
-      GD_QUIET=$GD_TRUE
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-    w)
-      GD_WALL=$GD_FALSE
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
+    d) DRY_RUN=$GD_TRUE                  ;;
+    u) GD_UNATTENDED=$GD_TRUE            ;;
+    r) GD_RECURSIVE=$GD_TRUE             ;;
+    q) GD_QUIET=$GD_TRUE                 ;;
+    w) GD_WALL=$GD_FALSE                 ;;
       
       
       
@@ -498,7 +483,7 @@ while getopts "hvdurqw:i:e:o:b:t:" opt; do
          ;;
   esac
 done
-
+shift $(($OPTIND-1))
 
 
 
