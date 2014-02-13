@@ -68,7 +68,7 @@ PLACE HOLDER EXAMPLE VALUES:
        \$ ${__ScriptName} $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) <module> <repository>
                 => will deploy only lib/ (to lib/) and foo/ (to bar/)
                 
-  -a   (Action) Point to an action file with in the repo.  If none set, default is ` installer `
+  -c   (Callback) Point to an action file with in the repo.  If none set, default is ` installer `
        EX:
        \$ ${__ScriptName} $(tput bold)-a$(tput sgr0) <module> <repository>
                 => will add the repo, then look for the installer file and run it
@@ -146,7 +146,7 @@ DRY_RUN=$GD_FALSE
 ACTION=""
 
 declare -A _TMP_INC_FLT=()
-declare -A _ACTIONS=()
+declare -A _CALLBACKS=()
 
 INCLUDES=""
 EXCLUDES=""
@@ -327,19 +327,19 @@ filter_exclude() {
 }
 
 #===  FUNCTION  ================================================================
-#          NAME:  run_action
-#   DESCRIPTION:  run an action now that its at the end.
+#          NAME:  run_callback
+#   DESCRIPTION:  run a callback action now that its at the end.
 #===============================================================================
-run_action() {
+run_callback() {
 
 }
 
 #===  FUNCTION  ================================================================
-#          NAME:  queue_action
-#   DESCRIPTION:  we are going to run an action at the end.
+#          NAME:  queue_callback
+#   DESCRIPTION:  we are going to run a callback action at the end.
 #===============================================================================
-queue_action() {
-    _ACTIONS["file"]="path/to/file"
+queue_callback() {
+    _CALLBACKS["file"]="path/to/file"
 }
 
 
@@ -466,7 +466,7 @@ fi
 #fill out
 
 # Handle options
-while getopts "hvdurqw:a:i:e:o:b:t:" opt; do
+while getopts "hvdurqw:c:i:e:o:b:t:" opt; do
   case $opt in
   
     #flag----------------------
@@ -486,8 +486,8 @@ while getopts "hvdurqw:a:i:e:o:b:t:" opt; do
       
       
     #data----------------------
-    a)
-      queue_action "$OPTARG"
+    c)
+      queue_callback "$OPTARG"
       shift $((OPTIND-1)); OPTIND=1
       ;;
     #data----------------------
