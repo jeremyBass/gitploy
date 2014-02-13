@@ -331,7 +331,7 @@ filter_exclude() {
 #   DESCRIPTION:  run a callback action now that its at the end.
 #===============================================================================
 run_callback() {
-
+    exit 0
 }
 
 #===  FUNCTION  ================================================================
