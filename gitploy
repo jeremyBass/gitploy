@@ -53,8 +53,8 @@ usage() {
                 
 PLACE HOLDER EXAMPLE VALUES:
 <repository>  ==> https://github.com/account/repository.git
-<module>  ==> repository_name
-
+<module>      ==> repository_name
+<git_args>    ==> reset --hard upstream/master
 
   Options:
   -v   Show gitploy version
@@ -65,7 +65,7 @@ PLACE HOLDER EXAMPLE VALUES:
   
   -i   (Include) Only deploys items that match the filters
        EX:
-       \$ ${__ScriptName} $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) my_module https://github.com/account/repository.git
+       \$ ${__ScriptName} $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) <module> <repository>
                 => will deploy only lib/ (to lib/) and foo/ (to bar/)
                 
   -a   (Action) Point to an action file with in the repo.  If none set, default is ` installer `
@@ -75,18 +75,18 @@ PLACE HOLDER EXAMPLE VALUES:
                                 
   -e   (Exclude) Filters out listed items.  May use regex syntax
        EX:
-       \$ ${__ScriptName} $(tput bold)-e lib/tests/ -e *.txt$(tput sgr0) my_module https://github.com/account/repository.git
+       \$ ${__ScriptName} $(tput bold)-e lib/tests/ -e *.txt$(tput sgr0) <module> <repository>
                 => will exclude both directory lib/tests/ and file lib/README.txt
                 
   -b   (Branch) Specify a repository branch (only for add command)
        EX:
-       \$ ${__ScriptName} $(tput bold)-b 1.0-stable$(tput sgr0) my_module https://github.com/account/repository.git
+       \$ ${__ScriptName} $(tput bold)-b 1.0-stable$(tput sgr0) <module> <repository>
                 => will checkout 1.0-stable branch of 
                     specified repository
                 
   -t   (Tag) Specify a repository tag (only for add and update command also $(tput bold)overpowers -b$(tput sgr0) ) 
        EX:
-       \$ ${__ScriptName} $(tput bold)-t 1.2.0$(tput sgr0) my_module https://github.com/account/repository.git
+       \$ ${__ScriptName} $(tput bold)-t 1.2.0$(tput sgr0) <module> <repository>
                 => will checkout 1.2.0 tag of specified repository
                 
   -r   (Reqursive) Move through the modules tracked reqursively
