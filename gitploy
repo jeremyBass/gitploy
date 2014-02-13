@@ -146,7 +146,7 @@ DRY_RUN=$GD_FALSE
 ACTION=""
 
 declare -A _TMP_INC_FLT=()
-
+declare -A _ACTIONS=()
 
 INCLUDES=""
 EXCLUDES=""
@@ -325,6 +325,23 @@ filter_exclude() {
     fi
     echo $copy
 }
+
+#===  FUNCTION  ================================================================
+#          NAME:  run_action
+#   DESCRIPTION:  run an action now that its at the end.
+#===============================================================================
+run_action() {
+
+}
+
+#===  FUNCTION  ================================================================
+#          NAME:  queue_action
+#   DESCRIPTION:  we are going to run an action at the end.
+#===============================================================================
+queue_action() {
+    _ACTIONS["file"]="path/to/file"
+}
+
 
 #===  FUNCTION  ================================================================
 #         NAME:  __build_dirs
