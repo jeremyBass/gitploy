@@ -50,7 +50,8 @@ usage() {
                 => Run git command into specified module
     \$ ${__ScriptName} $(tput bold)install$(tput sgr0)
                 => Install gitploy
-                
+
+
   Options:
   -v   Show gitploy version
   
@@ -63,6 +64,11 @@ usage() {
        \$ ${__ScriptName} $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) my_module https://github.com/account/repository.git
                 => will deploy only lib/ (to lib/) and foo/ (to bar/)
                 
+  -a   (Action) Point to an action file with in the repo.  If none set, default is ` installer `
+       EX:
+       \$ ${__ScriptName} $(tput bold)-a$(tput sgr0) <module> <repository>
+                => will add the repo, then look for the installer file and run it
+                                
   -e   (Exclude) Filters out listed items.  May use regex syntax
        EX:
        \$ ${__ScriptName} $(tput bold)-e lib/tests/ -e *.txt$(tput sgr0) my_module https://github.com/account/repository.git
@@ -443,11 +449,11 @@ while getopts "hvdurqw:i:e:o:b:t:" opt; do
   case $opt in
   
     #flag----------------------
-    h )  
+    h)  
       usage;
       exit 0
       ;;
-    v )
+    v)
       echostd "$0 -- Version $__ScriptVersion";
       exit 0
       ;;
@@ -458,7 +464,11 @@ while getopts "hvdurqw:i:e:o:b:t:" opt; do
     w) GD_WALL=$GD_FALSE                 ;;
       
       
-      
+    #data----------------------
+    a)
+      queue_action "$OPTARG"
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
     #data----------------------
     i)
       merge_include "$OPTARG"
