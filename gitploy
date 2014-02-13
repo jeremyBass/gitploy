@@ -449,7 +449,7 @@ fi
 #fill out
 
 # Handle options
-while getopts "hvdurqw:i:e:o:b:t:" opt; do
+while getopts "hvdurqw:a:i:e:o:b:t:" opt; do
   case $opt in
   
     #flag----------------------
