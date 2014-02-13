@@ -50,6 +50,10 @@ usage() {
                 => Run git command into specified module
     \$ ${__ScriptName} $(tput bold)install$(tput sgr0)
                 => Install gitploy
+                
+PLACE HOLDER EXAMPLE VALUES:
+<repository>  ==> https://github.com/account/repository.git
+<module>  ==> repository_name
 
 
   Options:
