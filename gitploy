@@ -129,25 +129,30 @@ END
 # Case-insensitive for regex matching
 shopt -s nocasematch
 
-# Some truth values
+#- Some truth values
 GD_TRUE=1
 GD_FALSE=0
 
+#- run constants
 GD_FOLDER=".gitploy"
 GD_ROOT=$(pwd -P)
 GD_DIR="$GD_ROOT/$GD_FOLDER"
 
+#- run defaults
 GD_UNATTENDED=$GD_FALSE
 GD_RECURSIVE=$GD_FALSE
 GD_QUIET=$GD_FALSE
 GD_WALL=$GD_TRUE
 
+#- running as defaults
 DRY_RUN=$GD_FALSE
 ACTION=""
 
+#- data holders
 declare -A _TMP_INC_FLT=()
 declare -A _CALLBACKS=()
 
+#- options defaults
 INCLUDES=""
 EXCLUDES=""
 GITEXCLUDES="\
@@ -163,11 +168,11 @@ faq.*
 modman
 composer\.json"
 
+#- repo settings
 _OWNER="washingtonstateuniversity"
 _BRANCH="master"
 _TAG=""
-
-
+_ROOTFLODER=""
 
 
 cur_file=""
