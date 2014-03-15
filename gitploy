@@ -89,6 +89,11 @@ PLACE HOLDER EXAMPLE VALUES:
        \$ ${__ScriptName} $(tput bold)-t 1.2.0$(tput sgr0) <module> <repository>
                 => will checkout 1.2.0 tag of specified repository
                 
+  -f   (Folder root) Set the folder in the repo to root the tracking from. 
+       EX:
+       \$ ${__ScriptName} $(tput bold)-f foo/Folder$(tput sgr0) <module> <repository>
+                => will checkout specified repository but only starting at that folder in the repo
+
   -r   (Reqursive) Move through the modules tracked reqursively
        EX:
        \$ ${__ScriptName} rm $(tput bold)-r$(tput sgr0)
@@ -471,7 +476,7 @@ fi
 #fill out
 
 # Handle options
-while getopts "hvdurqw:c:i:e:o:b:t:" opt; do
+while getopts "hvdurqw:c:i:e:o:b:t:f:" opt; do
   case $opt in
   
     #flag----------------------
@@ -491,21 +496,18 @@ while getopts "hvdurqw:c:i:e:o:b:t:" opt; do
       
       
     #callback------------------
-    c)
-      queue_callback "$OPTARG"
+    c) queue_callback "$OPTARG"
       shift $((OPTIND-1)); OPTIND=1
       ;;
       
     #data----------------------
-    i)
-      merge_include "$OPTARG"
+    i) merge_include "$OPTARG"
       shift $((OPTIND-1)); OPTIND=1
       ;;
-    e)
-      merge_exclude "$OPTARG"
+    e) merge_exclude "$OPTARG"
       shift $((OPTIND-1)); OPTIND=1
       ;;
-
+	  
     #git options---------------
     o ) _OWNER=$OPTARG
       shift $((OPTIND-1)); OPTIND=1
@@ -516,7 +518,9 @@ while getopts "hvdurqw:c:i:e:o:b:t:" opt; do
     t ) _TAG=$OPTARG
       shift $((OPTIND-1)); OPTIND=1
       ;;
-
+    f) _ROOTFLODER=$OPTARG
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
 
     \?)  echo
          echoerr "Option does not exist : $OPTARG"
