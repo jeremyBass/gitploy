@@ -111,6 +111,13 @@ https://github.com/composer/composer
 
 There are ideas that echo from all points, but the goal is that one can simply managed repos that lay over each other.  As long as you will not want to make a pull request on the files, you can think of this as a sudo git.  You get dry runs, compare, and even a git proxy.  Some of the reference projects are geared to Magento, but this is not so restrictive.  The aim is to be able to handle any form of deployment strategy
 
+##Future Features
+
+1. To be able to accept a git push deployment 
+2. be able to have hooks and events to monitor for changes (still spec'in the out)
+
+Please request any features and feel free to send a pull request
+
 
 
 
