@@ -85,6 +85,7 @@ PLACE HOLDER EXAMPLE VALUES:
                     specified repository
                 
   -t   (Tag) Specify a repository tag (only for add and update command also $(tput bold)overpowers -b$(tput sgr0) ) 
+       Note: a value of `$(tput bold)latest$(tput sgr0)` will use the latest tag released
        EX:
        \$ ${__ScriptName} $(tput bold)-t 1.2.0$(tput sgr0) <module> <repository>
                 => will checkout 1.2.0 tag of specified repository
@@ -982,6 +983,11 @@ create_module() {
     git config core.filemode false
 
     if [ -n "$_TAG" ]; then
+        if [ "$_TAG" == "latest" ]; then
+            git fetch --tags
+            latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+            $_TAG=latestTag
+        fi
         if [ -z $(git tag -l "$_TAG") ]; then
             rm_mod_dir "$module"
             echoerr "Tag '$_TAG' does not exist"
