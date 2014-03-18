@@ -57,7 +57,8 @@ PLACE HOLDER EXAMPLE VALUES:
                 => will checkout 1.0-stable branch of 
                     specified repository
                 
-  -t   (Tag) Specify a repository tag (only for add and update command also <b>overpowers -b</b> ) 
+  -t   (Tag) Specify a repository tag (only for add and update command also <b>overpowers -b</b> )
+        Note: a value of `<b>latest</b>` will use the latest tag released
        EX:
        $>_ gitploy <b>-t 1.2.0</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
                 => will checkout 1.2.0 tag of specified repository
