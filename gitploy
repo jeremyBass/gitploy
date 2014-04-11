@@ -146,8 +146,8 @@ GD_DIR="$GD_ROOT/$GD_FOLDER"
 
 #- Set private repo vars
 GD_ORG=""
-GD_USER=""
-GD_PASS=""
+GD_USR=""
+GD_PWD=""
 
 #- git repo api settings
 GD_API_URL="https://api.github.com"
@@ -485,7 +485,7 @@ fi
 #fill out
 
 # Handle options
-while getopts "hvdurqw:c:i:e:o:b:t:f:" opt; do
+while getopts "hvdurqw:c:i:e:o:b:t:f:pwd:usr:org" opt; do
   case $opt in
   
     #flag----------------------
@@ -516,7 +516,7 @@ while getopts "hvdurqw:c:i:e:o:b:t:f:" opt; do
     e) merge_exclude "$OPTARG"
       shift $((OPTIND-1)); OPTIND=1
       ;;
-	  
+  
     #git options---------------
     o ) _OWNER=$OPTARG
       shift $((OPTIND-1)); OPTIND=1
@@ -530,6 +530,16 @@ while getopts "hvdurqw:c:i:e:o:b:t:f:" opt; do
     f) _ROOTFLODER=$OPTARG
       shift $((OPTIND-1)); OPTIND=1
       ;;
+    pwd) GD_PWD=$OPTARG
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
+    usr) GD_USR=$OPTARG
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
+    org) GD_ORG=$OPTARG
+      shift $((OPTIND-1)); OPTIND=1
+      ;; 
+
 
     \?)  echo
          echoerr "Option does not exist : $OPTARG"
