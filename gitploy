@@ -144,7 +144,7 @@ GD_FOLDER=".gitploy"
 GD_ROOT=$(pwd -P)
 GD_DIR="$GD_ROOT/$GD_FOLDER"
 
-#- Set privite repo vars
+#- Set private repo vars
 GD_ORG=""
 GD_USER=""
 GD_PASS=""
