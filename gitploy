@@ -149,6 +149,8 @@ GD_ORG=""
 GD_USER=""
 GD_PASS=""
 
+#- git repo api settings
+GD_API_URL="https://api.github.com"
 
 #- run defaults
 GD_UNATTENDED=$GD_FALSE
