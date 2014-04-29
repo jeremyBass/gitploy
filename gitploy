@@ -171,6 +171,7 @@ INCLUDES=""
 EXCLUDES=""
 GITEXCLUDES="\
 readme.*
+README.*
 about.*
 license.*
 copyright.*
