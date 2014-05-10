@@ -835,6 +835,7 @@ update_mod() {
     sleep 1
 
     cd "$source_dir"
+    local tagcheck=$(git fetch --tags)
     > "$module_dir/diff.gitploy"
     local old_commit=$(git rev-parse HEAD)
 
