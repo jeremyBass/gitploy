@@ -819,6 +819,8 @@ build_deploy_file() {
             else
                 echo "$target" >> "$deployed_file"
             fi
+        else
+            echo "skiping >> $target"
         fi
     done
     return 0
