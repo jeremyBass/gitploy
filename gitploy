@@ -886,6 +886,8 @@ update_mod() {
     if [ $DRY_RUN -eq $GD_TRUE ]; then
         echoinfo "Would modify:"
         git --no-pager diff --name-only "$old_commit" "$new_commit"
+        echoinfo "Would delete:"
+        git --no-pager diff --name-only "$old_commit" "$new_commit"
         echostd "$count file(s) changed"
         return 0
     fi
