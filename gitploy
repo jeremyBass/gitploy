@@ -785,16 +785,17 @@ build_deploy_file() {
         # Copy file by default
         copy=$GD_TRUE
         target="$file"
-        echostd "$target <<pre"
+
         # Include filter
         filter_include "$file" "$includes_file" $copy    
         copy=${_TMP_INC_FLT["copy"]}
         target=${_TMP_INC_FLT["target"]}
-        echostd "$target <<new"
+        
         # Exclude filter
         copy=$(filter_exclude "$file" "$excludes_file" $copy)
 
         if [ $copy -eq $GD_TRUE ]; then
+            echostd "$target <<using"
             # Handle modman file
             if [ -s "$modman_file" ]; then
                 IFS=$'\n'
