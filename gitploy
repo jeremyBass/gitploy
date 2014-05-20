@@ -1092,6 +1092,7 @@ case "$ACTION" in
   update|up)
     echostd "Starting repo update"
     if [ $GD_RECURSIVE = $GD_TRUE ]; then
+        IFS=$'\n'
         # Update all installed modules
         #[ -n "$2" ] && echoerr "Too many arguments for '$ACTION' command"
         require_mods
@@ -1119,6 +1120,7 @@ case "$ACTION" in
   remove|rm)
     echostd "Starting repo removal"
     if [ $GD_RECURSIVE = $GD_TRUE ]; then
+        IFS=$'\n'
         # Remove all installed modules
         #[ -n "$1" ] && echoerr "Too many arguments for '$ACTION' command"
         require_mods
