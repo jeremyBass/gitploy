@@ -1000,7 +1000,7 @@ create_module() {
         echoerr "An error occurred while cloning repository"
     fi
     
-    echostd "$repo" > "$module_dir/repository.gitploy"
+    echo "$repo" > "$module_dir/repository.gitploy"
 
     cd "$source_dir"
 
@@ -1027,7 +1027,7 @@ create_module() {
         echoerr "An error occurred while fetching branch $_BRANCH"
     fi
 
-    echostd "$_BRANCH" > "$module_dir/branch.gitploy"
+    echo "$_BRANCH" > "$module_dir/branch.gitploy"
 
     echostd "Fetching submodules..."
         if ! git submodule --quiet update --init --recursive; then
