@@ -1050,6 +1050,7 @@ case "$ACTION" in
   list|ls)
     # List all installed modules
     count=$(ls -A "$GD_DIR" | wc -l | sed 's/ //g')
+    IFS=$'\n'
     for module in $(ls -1 "$GD_DIR"); do
       [ -d "$GD_DIR/$module" ] || continue;
       mod_info_inline "$module"
