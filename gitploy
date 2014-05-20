@@ -864,7 +864,8 @@ update_mod() {
         local old_tag=$(cat "$module_dir/tag.gitploy")
         echostd "Switching from tag $old_tag to $_TAG"
         [ $DRY_RUN -eq $GD_FALSE ] && echo "$_TAG" > "$module_dir/tag.gitploy"
-        git diff --stat --name-only "$old_tag" "$_TAG"@{1} > "$module_dir/diff.gitploy" 2> /dev/null
+        git diff --stat --name-only "$old_tag" "$_TAG" --diff-filter=D > "$module_dir/delete.gitploy" 2> /dev/null
+        git diff --stat --name-only "$old_tag" "$_TAG" --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
     else
         # Ignoring -b option (switching branch) because not yet supported
         [ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
