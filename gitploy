@@ -769,6 +769,7 @@ mv_files() {
 #   DESCRIPTION:  sets up the file for deployment
 #===============================================================================
 build_deploy_file() {
+    IFS=$'\n'
     local module="$1"
     local module_dir="$GD_DIR/$module"
     local source_dir="$module_dir/source"
