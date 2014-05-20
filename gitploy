@@ -846,6 +846,9 @@ update_mod() {
     > "$module_dir/diff.gitploy"
     local old_commit=$(git rev-parse HEAD)
 
+    > "$module_dir/update.gitploy"
+    > "$module_dir/delete.gitploy"
+
     # If module was fetched with a specific tag
     if [ -s "$module_dir/tag.gitploy" ]; then
         if [ -z "$_TAG" ]; then
@@ -885,16 +888,6 @@ update_mod() {
         echostd "$count file(s) changed"
         return 0
     fi
-
-    > "$module_dir/update.gitploy"
-    > "$module_dir/delete.gitploy"
-    for line in $(cat "$module_dir/diff.gitploy" 2>/dev/null); do
-        if ! [ -z "$line" ] && [ -f "$line" ]; then
-            echostd "$line" >> "$module_dir/update.gitploy"
-        elif ! [ -z "$line" ]; then
-            echostd "$line" >> "$module_dir/delete.gitploy" 
-        fi
-    done
 
     # update update.gitploy files
     for line in $(cat "$module_dir/update.gitploy" 2>/dev/null); do
