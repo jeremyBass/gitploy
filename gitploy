@@ -795,7 +795,6 @@ build_deploy_file() {
         copy=$(filter_exclude "$file" "$excludes_file" $copy)
 
         if [ $copy -eq $GD_TRUE ]; then
-            echostd "$target <<using"
             # Handle modman file
             if [ -s "$modman_file" ]; then
                 IFS=$'\n'
@@ -819,8 +818,6 @@ build_deploy_file() {
             else
                 echo "$target" >> "$deployed_file"
             fi
-        else
-            echo "skiping >> $target"
         fi
     done
     return 0
@@ -901,7 +898,7 @@ update_mod() {
     for line in $(cat "$module_dir/update.gitploy" 2>/dev/null); do
         if ! [ -z "$line" ]; then
             # copy the file 
-            if [ $DRY_RUN -eq $GD_TRUE ]; then
+            if [ $DRY_RUN -eq $GD_FALSE ]; then
                 mkdir -p $(dirname "$GD_ROOT/$line") && cp "$line" "$GD_ROOT/$line"
                 echostd "Updating: $line"
             fi
@@ -912,7 +909,7 @@ update_mod() {
     for line in $(cat "$module_dir/delete.gitploy" 2>/dev/null); do
         if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
             # delete the file 
-            if [ $DRY_RUN -eq $GD_TRUE ]; then
+            if [ $DRY_RUN -eq $GD_FALSE ]; then
                 rm "$GD_ROOT/$line" 2>/dev/null
                 echostd "Deleting: $line"
             fi
