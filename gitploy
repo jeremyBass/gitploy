@@ -1018,6 +1018,8 @@ create_module() {
     local module="$2"
     local module_dir="$GD_DIR/$module"; shift 2
     local source_dir="$module_dir/source"
+    local exclude_cache="$module_dir/excludes.gitploy"
+    local include_cache="$module_dir/includes.gitploy"
     
     cd "$GD_DIR"
     echoinfo "Cloning $repo..."
@@ -1062,10 +1064,10 @@ create_module() {
     fi
     
     # Save includes filter if not empty
-    [ -z "$INCLUDES" ] || echo -e "$INCLUDES" > "$module_dir/includes.gitploy"
+    [ -z "$INCLUDES" ] || echo -e "$INCLUDES" > "$include_cache"
 
     # Save excludes filter if not empty
-    [ -z "$EXCLUDES" ] || echo -e "$EXCLUDES" > "$module_dir/excludes.gitploy"
+    [ -z "$EXCLUDES" ] || echo -e "$EXCLUDES" > "$exclude_cache"
 
     return 0
 }
