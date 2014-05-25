@@ -838,8 +838,12 @@ update_mod() {
     local source_dir="$module_dir/source"
     
     require_mod_dir "$module"
-    
-    echoinfo "Updating '$module' module..."
+
+    if [ $GD_REFRESH = $GD_TRUE ]; then
+        echoinfo "Refreshing '$module' module..."
+    else
+        echoinfo "Updating '$module' module..."
+    fi
     sleep 1
 
     cd "$source_dir"
