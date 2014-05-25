@@ -42,6 +42,8 @@ usage() {
                 => Remove specified module
     \$ ${__ScriptName} $(tput bold)up$(tput sgr0) <module>
                 => Update specified module
+    \$ ${__ScriptName} $(tput bold)re$(tput sgr0) <module>
+                => Refresh files of specified module
     \$ ${__ScriptName} $(tput bold)info$(tput sgr0) <module>
                 => Show information about a specific module
     \$ ${__ScriptName} $(tput bold)files$(tput sgr0) <module>
