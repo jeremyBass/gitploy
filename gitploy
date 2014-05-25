@@ -847,6 +847,8 @@ update_mod() {
 			[ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
 		fi
 		
+		build_deploy_file "$module"
+		
 		# update update.gitploy files
 		for line in $(cat "$module_dir/deployed.gitploy" 2>/dev/null); do
 			if ! [ -z "$line" ]; then
@@ -914,42 +916,42 @@ update_mod() {
 			echostd "$count file(s) changed"
 			return 0
 		fi
-		
+		# update update.gitploy files
+		for line in $(cat "$module_dir/update.gitploy" 2>/dev/null); do
+			if ! [ -z "$line" ]; then
+				# copy the file 
+				if [ $DRY_RUN -eq $GD_FALSE ]; then
+					mkdir -p $(dirname "$GD_ROOT/$line") && cp "$line" "$GD_ROOT/$line"
+					echostd "Updating: $line"
+				fi
+			fi
+		done
+	
+		# delete delete.gitploy files
+		for line in $(cat "$module_dir/delete.gitploy" 2>/dev/null); do
+			if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
+				# delete the file 
+				if [ $DRY_RUN -eq $GD_FALSE ]; then
+					rm "$GD_ROOT/$line" 2>/dev/null
+					echostd "Deleting: $line"
+				fi
+			fi
+		done
+	
+		# update the deployed.gitploy file
+		if build_deploy_file "$module";
+		then
+			return 0
+		else
+			return 1
+		fi
 		
     fi
     sleep 1
 
 
 
-    # update update.gitploy files
-    for line in $(cat "$module_dir/update.gitploy" 2>/dev/null); do
-        if ! [ -z "$line" ]; then
-            # copy the file 
-            if [ $DRY_RUN -eq $GD_FALSE ]; then
-                mkdir -p $(dirname "$GD_ROOT/$line") && cp "$line" "$GD_ROOT/$line"
-                echostd "Updating: $line"
-            fi
-        fi
-    done
 
-    # delete delete.gitploy files
-    for line in $(cat "$module_dir/delete.gitploy" 2>/dev/null); do
-        if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
-            # delete the file 
-            if [ $DRY_RUN -eq $GD_FALSE ]; then
-                rm "$GD_ROOT/$line" 2>/dev/null
-                echostd "Deleting: $line"
-            fi
-        fi
-    done
-
-    # update the deployed.gitploy file
-    if build_deploy_file "$module";
-    then
-        return 0
-    else
-        return 1
-    fi
 
 }
 
