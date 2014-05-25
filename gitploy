@@ -854,24 +854,23 @@ update_mod() {
 			if ! [ -z "$line" ]; then
 				# copy the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
-					echo "making dir $(dirname "$GD_ROOT/$line") then coping $line"
-					echo ""
 					mkdir -p $(dirname "$GD_ROOT/$line") && cp "$line" "$GD_ROOT/$line"
 					echostd "Updating: $line"
 				fi
 			fi
 		done
-		
+		return 0
     else
 		echoinfo "Updating '$module' module..."
 		> "$module_dir/update.gitploy"
 		> "$module_dir/delete.gitploy"
+		> "$module_dir/deployed.gitploy"
+		> "$module_dir/diff.gitploy"
 		
 		cd "$source_dir"
 		local tagcheck=$(git fetch --tags)
 		local tagupdate=$(git fetch)
-	
-		> "$module_dir/diff.gitploy"
+
 		local old_commit=$(git rev-parse HEAD)
 	
 	
@@ -949,12 +948,6 @@ update_mod() {
 		fi
 		
     fi
-    sleep 1
-
-
-
-
-
 }
 
 #===  FUNCTION  ================================================================
