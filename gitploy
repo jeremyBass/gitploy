@@ -782,7 +782,7 @@ build_deploy_file() {
     local deployed_file="$module_dir/deployed.gitploy"
 
     echoinfo "Building '$module' deployment"
-
+	cd "$source_dir"
 
     for file in $(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///'); do
         # Copy file by default
