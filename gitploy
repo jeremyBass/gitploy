@@ -841,7 +841,6 @@ update_mod() {
 
     if [ $GD_REFRESH = $GD_TRUE ]; then
         echoinfo "Refreshing '$module' module..."
-		exit
 		if [ -s "$module_dir/tag.gitploy" ]; then
 			local old_tag=$(cat "$module_dir/tag.gitploy")
 		else
@@ -861,7 +860,6 @@ update_mod() {
 		
     else
 		echoinfo "Updating '$module' module..."
-		exit
 		> "$module_dir/update.gitploy"
 		> "$module_dir/delete.gitploy"
 		
