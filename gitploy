@@ -841,6 +841,11 @@ update_mod() {
 
     if [ $GD_REFRESH = $GD_TRUE ]; then
         echoinfo "Refreshing '$module' module..."
+		if [ -s "$module_dir/tag.gitploy" ]; then
+			local old_tag=$(cat "$module_dir/tag.gitploy")
+		else
+			[ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
+		fi
     else
         echoinfo "Updating '$module' module..."
     fi
