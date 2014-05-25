@@ -846,7 +846,7 @@ update_mod() {
 		else
 			[ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
 		fi
-		
+		> "$module_dir/deployed.gitploy"
 		build_deploy_file "$module"
 		
 		# update update.gitploy files
@@ -854,6 +854,8 @@ update_mod() {
 			if ! [ -z "$line" ]; then
 				# copy the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
+					echo "making dir $(dirname "$GD_ROOT/$line") then coping $line"
+					echo ""
 					mkdir -p $(dirname "$GD_ROOT/$line") && cp "$line" "$GD_ROOT/$line"
 					echostd "Updating: $line"
 				fi
