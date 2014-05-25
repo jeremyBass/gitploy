@@ -841,6 +841,7 @@ update_mod() {
 
     if [ $GD_REFRESH = $GD_TRUE ]; then
         echoinfo "Refreshing '$module' module..."
+		exit
 		if [ -s "$module_dir/tag.gitploy" ]; then
 			local old_tag=$(cat "$module_dir/tag.gitploy")
 		else
@@ -860,6 +861,7 @@ update_mod() {
 		
     else
 		echoinfo "Updating '$module' module..."
+		exit
 		> "$module_dir/update.gitploy"
 		> "$module_dir/delete.gitploy"
 		
@@ -1125,10 +1127,7 @@ case "$ACTION" in
     echostd "Starting repo update"
     GD_REFRESH=$GD_TRUE
 	
-	 if [ $GD_REFRESH = $GD_TRUE ]; then
-	 	echo "REFRESHING THE MODULES"
-	 fi
-	exit
+
 	
     if [ $GD_RECURSIVE = $GD_TRUE ]; then
         IFS=$'\n'
