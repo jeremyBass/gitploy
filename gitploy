@@ -1097,6 +1097,7 @@ case "$ACTION" in
 
   refresh|re)
     echostd "Starting repo update"
+    GD_REFRESH= $GD_TRUE
     if [ $GD_RECURSIVE = $GD_TRUE ]; then
         IFS=$'\n'
         # Update all installed modules
