@@ -846,63 +846,80 @@ update_mod() {
 		else
 			[ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
 		fi
+		
+		# update update.gitploy files
+		for line in $(cat "$module_dir/deployed.gitploy" 2>/dev/null); do
+			if ! [ -z "$line" ]; then
+				# copy the file 
+				if [ $DRY_RUN -eq $GD_FALSE ]; then
+					mkdir -p $(dirname "$GD_ROOT/$line") && cp "$line" "$GD_ROOT/$line"
+					echostd "Updating: $line"
+				fi
+			fi
+		done
+		
     else
-        echoinfo "Updating '$module' module..."
+		echoinfo "Updating '$module' module..."
+		> "$module_dir/update.gitploy"
+		> "$module_dir/delete.gitploy"
+		
+		cd "$source_dir"
+		local tagcheck=$(git fetch --tags)
+		local tagupdate=$(git fetch)
+	
+		> "$module_dir/diff.gitploy"
+		local old_commit=$(git rev-parse HEAD)
+	
+	
+	
+		# If module was fetched with a specific tag
+		if [ -s "$module_dir/tag.gitploy" ]; then
+			if [ -z "$_TAG" ]; then
+			local repo_tag=$(cat "$module_dir/tag.gitploy")
+				echostd "'$module' module was fetched from tag '$repo_tag' and thus cannot be updated without -t option"
+				return 1
+			fi
+			if [ -z $(git tag -l "$_TAG") ]; then
+				echostd "Tag '$_TAG' does not exist"
+				return 1
+			fi
+			if ! git checkout --quiet "$_TAG"; then
+				echostd "An error occurred while fetching tag $_TAG"
+				return 1
+			fi
+			local old_tag=$(cat "$module_dir/tag.gitploy")
+			echostd "Switching from tag $old_tag to $_TAG"
+			[ $DRY_RUN -eq $GD_FALSE ] && echo "$_TAG" > "$module_dir/tag.gitploy"
+			git diff --stat --name-only "$old_tag" "$_TAG" --diff-filter=D > "$module_dir/delete.gitploy" 2> /dev/null
+			git diff --stat --name-only "$old_tag" "$_TAG" --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
+		else
+			# Ignoring -b option (switching branch) because not yet supported
+			[ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
+			git pull --quiet origin "$_BRANCH" && git submodule --quiet update --init --recursive || return 1
+			git diff --stat --name-only "$_BRANCH" "$_BRANCH" --diff-filter=D > "$module_dir/delete.gitploy" 2> /dev/null
+			git diff --stat --name-only "$_BRANCH" "$_BRANCH" --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
+		fi
+		
+		local new_commit=$(git rev-parse HEAD)
+		local count=$(git diff --shortstat "$old_commit" "$new_commit" | cut -d" " -f2)
+		[ $DRY_RUN -eq $GD_TRUE ] && git checkout --quiet "$old_commit"
+		[ "$count" = "" ] && echostd "No changes found" && return 0
+	
+	
+		if [ $DRY_RUN -eq $GD_TRUE ]; then
+			echoinfo "Would modify:"
+			git --no-pager diff --name-only "$old_commit" "$new_commit" --diff-filter=ACMR
+			echoinfo "Would delete:"
+			git --no-pager diff --name-only "$old_commit" "$new_commit" --diff-filter=D 
+			echostd "$count file(s) changed"
+			return 0
+		fi
+		
+		
     fi
     sleep 1
 
-    cd "$source_dir"
-    local tagcheck=$(git fetch --tags)
-    local tagupdate=$(git fetch)
 
-    > "$module_dir/diff.gitploy"
-    local old_commit=$(git rev-parse HEAD)
-
-    > "$module_dir/update.gitploy"
-    > "$module_dir/delete.gitploy"
-
-    # If module was fetched with a specific tag
-    if [ -s "$module_dir/tag.gitploy" ]; then
-        if [ -z "$_TAG" ]; then
-        local repo_tag=$(cat "$module_dir/tag.gitploy")
-            echostd "'$module' module was fetched from tag '$repo_tag' and thus cannot be updated without -t option"
-            return 1
-        fi
-        if [ -z $(git tag -l "$_TAG") ]; then
-            echostd "Tag '$_TAG' does not exist"
-            return 1
-        fi
-        if ! git checkout --quiet "$_TAG"; then
-            echostd "An error occurred while fetching tag $_TAG"
-            return 1
-        fi
-        local old_tag=$(cat "$module_dir/tag.gitploy")
-        echostd "Switching from tag $old_tag to $_TAG"
-        [ $DRY_RUN -eq $GD_FALSE ] && echo "$_TAG" > "$module_dir/tag.gitploy"
-        git diff --stat --name-only "$old_tag" "$_TAG" --diff-filter=D > "$module_dir/delete.gitploy" 2> /dev/null
-        git diff --stat --name-only "$old_tag" "$_TAG" --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
-    else
-        # Ignoring -b option (switching branch) because not yet supported
-        [ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
-        git pull --quiet origin "$_BRANCH" && git submodule --quiet update --init --recursive || return 1
-        git diff --stat --name-only "$_BRANCH" "$_BRANCH" --diff-filter=D > "$module_dir/delete.gitploy" 2> /dev/null
-        git diff --stat --name-only "$_BRANCH" "$_BRANCH" --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
-    fi
-    
-    local new_commit=$(git rev-parse HEAD)
-    local count=$(git diff --shortstat "$old_commit" "$new_commit" | cut -d" " -f2)
-    [ $DRY_RUN -eq $GD_TRUE ] && git checkout --quiet "$old_commit"
-    [ "$count" = "" ] && echostd "No changes found" && return 0
-
-
-    if [ $DRY_RUN -eq $GD_TRUE ]; then
-        echoinfo "Would modify:"
-        git --no-pager diff --name-only "$old_commit" "$new_commit" --diff-filter=ACMR
-        echoinfo "Would delete:"
-        git --no-pager diff --name-only "$old_commit" "$new_commit" --diff-filter=D 
-        echostd "$count file(s) changed"
-        return 0
-    fi
 
     # update update.gitploy files
     for line in $(cat "$module_dir/update.gitploy" 2>/dev/null); do
