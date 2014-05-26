@@ -15,6 +15,8 @@ gitploy
                 => Remove specified module
     $>_ gitploy <b>up</b> <b><i>&gt;module&lt;</i></b>
                 => Update specified module
+    $>_ gitploy <b>re</b> <b><i>&gt;module&lt;</i></b>
+                => Refresh files of specified module
     $>_ gitploy <b>info</b> <b><i>&gt;module&lt;</i></b>
                 => Show information about a specific module
     $>_ gitploy <b>files</b> <b><i>&gt;module&lt;</i></b>
