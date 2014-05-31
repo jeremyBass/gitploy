@@ -899,8 +899,8 @@ update_mod() {
 			# Ignoring -b option (switching branch) because not yet supported
 			[ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
 			git pull --quiet origin "$_BRANCH" && git submodule --quiet update --init --recursive || return 1
-			git diff --stat --name-only "$_BRANCH" "$_BRANCH" --diff-filter=D > "$module_dir/delete.gitploy" 2> /dev/null
-			git diff --stat --name-only "$_BRANCH" "$_BRANCH" --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
+			git diff --stat --name-only --diff-filter=D > "$module_dir/delete.gitploy" 2> /dev/null
+			git diff --stat --name-only --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
 		fi
 		
 		local new_commit=$(git rev-parse HEAD)
