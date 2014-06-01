@@ -1081,8 +1081,8 @@ create_module() {
 #pre actions that route to another action
 case "$ACTION" in
   refresh|re)
-    echostd "Starting repo update"
-    GD_REFRESH=$GD_TRUE
+	echostd "Refreshing the tracked repo"
+	GD_REFRESH=$GD_TRUE
 	ACTION=update
 	;;
 
