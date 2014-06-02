@@ -1038,7 +1038,19 @@ mod_info_inline(){
     return 0
 }
 
-
+#===  FUNCTION  ================================================================
+#          NAME:  mod_git_reset
+#   DESCRIPTION:  reset a repo to the head.  It may be a tag release but we will 
+#                 will now pull to branch (master or defined) and at head
+#===============================================================================
+mod_set_latest_tag(){
+	if [ "$_TAG" == "latest" ]; then
+		git fetch --tags
+		latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+		$_TAG=latestTag
+	fi
+	return 0
+}
 
 
 #===  FUNCTION  ================================================================
@@ -1069,11 +1081,7 @@ create_module() {
     git config core.filemode false
 
     if [ -n "$_TAG" ]; then
-        if [ "$_TAG" == "latest" ]; then
-            git fetch --tags
-            latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
-            $_TAG=latestTag
-        fi
+        mod_set_latest_tag()
         if [ -z $(git tag -l "$_TAG") ]; then
             rm_mod_dir "$module"
             echoerr "Tag '$_TAG' does not exist"
