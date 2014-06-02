@@ -1000,7 +1000,7 @@ mod_git_reset(){
     local module_dir="$GD_DIR/$module"
 	> "$module_dir/tag.gitploy"
 	git reset --hard
-	git clean
+	git clean --force
 	return 0
 }
 
