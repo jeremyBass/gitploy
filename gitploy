@@ -1000,9 +1000,11 @@ mod_git_reset(){
     local module="$1"
     local module_dir="$GD_DIR/$module"
 	if [ $DRY_RUN -eq $GD_TRUE ]; then
+		echostd "'$module' module would be cleaned and reset when not in dryrun"
 		git clean -n
 		return 0
 	fi
+	echostd "'$module' module is being cleaned and reset"
 	> "$module_dir/tag.gitploy"
 	git reset --hard
 	git clean --force
