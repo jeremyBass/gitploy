@@ -893,6 +893,7 @@ update_mod() {
 					return 0
 				fi
 			fi
+			mod_set_latest_tag()
 			if [ -z $(git tag -l "$_TAG") ]; then
 				echostd "Tag '$_TAG' does not exist"
 				return 1
