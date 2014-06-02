@@ -92,10 +92,9 @@ PLACE HOLDER EXAMPLE VALUES:
        \$ ${__ScriptName} $(tput bold)-t 1.2.0$(tput sgr0) <module> <repository>
                 => will checkout 1.2.0 tag of specified repository
                 
-  -R   (Reset) Reset a repo on operation.  Really only applies to updates.  You will move from tag to branch at head release 
-       Note: a value of `$(tput bold)latest$(tput sgr0)` will use the latest tag released
+  -reset  (Reset) Reset a repo on operation.  Really only applies to updates.  You will move from tag to branch at head release 
        EX:
-       \$ ${__ScriptName} up $(tput bold)-R$(tput sgr0) <module>
+       \$ ${__ScriptName} up $(tput bold)-reset$(tput sgr0) <module>
                 => will move to head cleaning the specified repository of tags and commits
 
   -f   (Folder root) Set the folder in the repo to root the tracking from. 
@@ -496,7 +495,7 @@ fi
 #fill out
 
 # Handle options
-while getopts "hvdurqwR:c:i:e:o:b:t:f:pwd:usr:org" opt; do
+while getopts "hvdurqw:reset:c:i:e:o:b:t:f:pwd:usr:org" opt; do
   case $opt in
   
     #flag----------------------
@@ -513,7 +512,7 @@ while getopts "hvdurqwR:c:i:e:o:b:t:f:pwd:usr:org" opt; do
     r) GD_RECURSIVE=$GD_TRUE             ;;
     q) GD_QUIET=$GD_TRUE                 ;;
     w) GD_WALL=$GD_FALSE                 ;;
-    R) GD_RESET=$GD_TRUE                 ;;
+    reset) GD_RESET=$GD_TRUE             ;;
       
       
     #callback------------------
@@ -890,7 +889,7 @@ update_mod() {
 					return 1
 				else
 					mod_git_reset "$module"
-					update_mod() "$module"
+					update_mod "$module"
 					return 0
 				fi
 			fi
