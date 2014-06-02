@@ -997,6 +997,9 @@ mod_info() {
 #                 will now pull to branch (master or defined) and at head
 #===============================================================================
 mod_git_reset(){
+    local module="$1"
+    local module_dir="$GD_DIR/$module"
+	> "$module_dir/tag.gitploy"
 	git reset --hard
 	git clean
 	return 0
