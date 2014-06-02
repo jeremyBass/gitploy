@@ -889,8 +889,8 @@ update_mod() {
 					echostd "'$module' module was fetched from tag '$repo_tag' and thus cannot be updated without -t option"
 					return 1
 				else
-					mod_git_reset()
-					update_mod()
+					mod_git_reset "$module"
+					update_mod() "$module"
 					return 0
 				fi
 			fi
