@@ -879,7 +879,7 @@ update_mod() {
 		# If module was fetched with a specific tag
 		if [ -s "$module_dir/tag.gitploy" ]; then
 			if [ -z "$_TAG" ]; then
-			local repo_tag=$(cat "$module_dir/tag.gitploy")
+				local repo_tag=$(cat "$module_dir/tag.gitploy")
 				echostd "'$module' module was fetched from tag '$repo_tag' and thus cannot be updated without -t option"
 				return 1
 			fi
@@ -978,6 +978,23 @@ mod_info() {
     fi
     return 0
 }
+
+
+#===  FUNCTION  ================================================================
+#          NAME:  mod_git_reset
+#   DESCRIPTION:  reset a repo to the head.  It may be a tag release but we will 
+#                 will now pull to branch (master or defined) and at head
+#===============================================================================
+mod_git_reset(){
+
+    git fetch upstream
+    git checkout master
+    git reset --hard upstream/master  
+    git push origin master --force 
+
+}
+
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  mod_info_inline
