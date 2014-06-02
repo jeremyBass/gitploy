@@ -611,6 +611,40 @@ if [ $GD_RECURSIVE -eq $GD_TRUE ]; then
   sleep 1
 fi
 
+#===  FUNCTION  ================================================================
+#          NAME:  mod_git_reset
+#   DESCRIPTION:  reset a repo to the head.  It may be a tag release but we will 
+#                 will now pull to branch (master or defined) and at head
+#===============================================================================
+mod_git_reset(){
+    local module="$1"
+    local module_dir="$GD_DIR/$module"
+	if [ $DRY_RUN -eq $GD_TRUE ]; then
+		echostd "'$module' module would be cleaned and reset when not in dryrun"
+		git clean -n
+		return 0
+	fi
+	echostd "'$module' module is being cleaned and reset"
+	> "$module_dir/tag.gitploy"
+	git reset --hard
+	git clean --force
+	return 0
+}
+
+#===  FUNCTION  ================================================================
+#          NAME:  mod_git_reset
+#   DESCRIPTION:  reset a repo to the head.  It may be a tag release but we will 
+#                 will now pull to branch (master or defined) and at head
+#===============================================================================
+mod_set_latest_tag(){
+	if [ "$_TAG" == "latest" ]; then
+		git fetch --tags
+		latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+		echostd "found the latest tag of '$latestTag'"
+		_TAG=$latestTag
+	fi
+	return 0
+}
 
 
 #===  FUNCTION  ================================================================
@@ -995,25 +1029,6 @@ mod_info() {
 }
 
 
-#===  FUNCTION  ================================================================
-#          NAME:  mod_git_reset
-#   DESCRIPTION:  reset a repo to the head.  It may be a tag release but we will 
-#                 will now pull to branch (master or defined) and at head
-#===============================================================================
-mod_git_reset(){
-    local module="$1"
-    local module_dir="$GD_DIR/$module"
-	if [ $DRY_RUN -eq $GD_TRUE ]; then
-		echostd "'$module' module would be cleaned and reset when not in dryrun"
-		git clean -n
-		return 0
-	fi
-	echostd "'$module' module is being cleaned and reset"
-	> "$module_dir/tag.gitploy"
-	git reset --hard
-	git clean --force
-	return 0
-}
 
 
 
@@ -1045,20 +1060,6 @@ mod_info_inline(){
     return 0
 }
 
-#===  FUNCTION  ================================================================
-#          NAME:  mod_git_reset
-#   DESCRIPTION:  reset a repo to the head.  It may be a tag release but we will 
-#                 will now pull to branch (master or defined) and at head
-#===============================================================================
-mod_set_latest_tag(){
-	if [ "$_TAG" == "latest" ]; then
-		git fetch --tags
-		latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
-		echostd "found the latest tag of '$latestTag'"
-		_TAG=$latestTag
-	fi
-	return 0
-}
 
 
 #===  FUNCTION  ================================================================
