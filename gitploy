@@ -1054,6 +1054,7 @@ mod_set_latest_tag(){
 	if [ "$_TAG" == "latest" ]; then
 		git fetch --tags
 		latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+		echostd "found the latest tag of '$latestTag'"
 		_TAG=$latestTag
 	fi
 	return 0
