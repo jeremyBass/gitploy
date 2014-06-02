@@ -92,9 +92,9 @@ PLACE HOLDER EXAMPLE VALUES:
        \$ ${__ScriptName} $(tput bold)-t 1.2.0$(tput sgr0) <module> <repository>
                 => will checkout 1.2.0 tag of specified repository
                 
-  -reset  (Reset) Reset a repo on operation.  Really only applies to updates.  You will move from tag to branch at head release 
+  -z  (Reset) Reset a repo on operation.  Really only applies to updates.  You will move from tag to branch at head release 
        EX:
-       \$ ${__ScriptName} up $(tput bold)-reset$(tput sgr0) <module>
+       \$ ${__ScriptName} up $(tput bold)-z$(tput sgr0) <module>
                 => will move to head cleaning the specified repository of tags and commits
 
   -f   (Folder root) Set the folder in the repo to root the tracking from. 
@@ -495,7 +495,7 @@ fi
 #fill out
 
 # Handle options
-while getopts "reset:hvdurqw:c:i:e:o:b:t:f:pwd:usr:org" opt; do
+while getopts "zhvdurqw:c:i:e:o:b:t:f:p:a:g" opt; do
   case $opt in
   
     #flag----------------------
@@ -512,9 +512,7 @@ while getopts "reset:hvdurqw:c:i:e:o:b:t:f:pwd:usr:org" opt; do
     r) GD_RECURSIVE=$GD_TRUE             ;;
     q) GD_QUIET=$GD_TRUE                 ;;
     w) GD_WALL=$GD_FALSE                 ;;
-    reset) GD_RESET=$GD_TRUE
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
+    z) GD_RESET=$GD_TRUE             ;;
       
       
     #callback------------------
@@ -543,13 +541,13 @@ while getopts "reset:hvdurqw:c:i:e:o:b:t:f:pwd:usr:org" opt; do
     f) _ROOTFLODER=$OPTARG
       shift $((OPTIND-1)); OPTIND=1
       ;;
-    pwd) GD_PWD=$OPTARG
+    p) GD_PWD=$OPTARG
       shift $((OPTIND-1)); OPTIND=1
       ;;
-    usr) GD_USR=$OPTARG
+    a) GD_USR=$OPTARG
       shift $((OPTIND-1)); OPTIND=1
       ;;
-    org) GD_ORG=$OPTARG
+    g) GD_ORG=$OPTARG
       shift $((OPTIND-1)); OPTIND=1
       ;; 
 
