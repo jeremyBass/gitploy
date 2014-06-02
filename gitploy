@@ -927,13 +927,15 @@ update_mod() {
 					return 0
 				fi
 			fi
-			mod_set_latest_tag()
+			
+			mod_set_latest_tag
+			
 			if [ -z $(git tag -l "$_TAG") ]; then
 				echostd "Tag '$_TAG' does not exist"
 				return 1
 			fi
 			if ! git checkout --quiet "$_TAG"; then
-				echostd "An error occurred while fetching tag $_TAG"
+				echostd "An error occurred while fetching tag '$_TAG'"
 				return 1
 			fi
 			local new_commit=$(git rev-parse HEAD)
