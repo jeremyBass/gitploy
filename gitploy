@@ -905,16 +905,20 @@ update_mod() {
 			local new_commit=$(git rev-parse HEAD)
 			local old_tag=$(cat "$module_dir/tag.gitploy")
 			echostd "Switching from tag $old_tag to $_TAG"
-			[ $DRY_RUN -eq $GD_FALSE ] && echo "$_TAG" > "$module_dir/tag.gitploy"
-			git diff --stat --name-only "$old_tag" "$_TAG" --diff-filter=D > "$module_dir/delete.gitploy" 2> /dev/null
-			git diff --stat --name-only "$old_tag" "$_TAG" --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
+			if [ $DRY_RUN -eq $GD_FALSE ]; then
+				echo "$_TAG" > "$module_dir/tag.gitploy"
+				git diff --stat --name-only "$old_tag" "$_TAG" --diff-filter=D > "$module_dir/delete.gitploy" 2> /dev/null
+				git diff --stat --name-only "$old_tag" "$_TAG" --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
+			fi
 		else
 			# Ignoring -b option (switching branch) because not yet supported
 			[ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
 			git pull --quiet origin "$_BRANCH" && git submodule --quiet update --init --recursive || return 1
 			local new_commit=$(git rev-parse HEAD)
-			git diff --stat --name-only "$old_commit" "$new_commit" --diff-filter=D > "$module_dir/delete.gitploy" 2> /dev/null
-			git diff --stat --name-only "$old_commit" "$new_commit" --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
+			if [ $DRY_RUN -eq $GD_FALSE ]; then
+				git diff --stat --name-only "$old_commit" "$new_commit" --diff-filter=D > "$module_dir/delete.gitploy" 2> /dev/null
+				git diff --stat --name-only "$old_commit" "$new_commit" --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
+			fi
 		fi
 		
 		local count=$(git diff --shortstat "$old_commit" "$new_commit" | cut -d" " -f2)
