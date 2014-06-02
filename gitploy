@@ -998,6 +998,10 @@ mod_info() {
 mod_git_reset(){
     local module="$1"
     local module_dir="$GD_DIR/$module"
+	if [ $DRY_RUN -eq $GD_TRUE ]; then
+		git clean -n
+		return 0
+	fi
 	> "$module_dir/tag.gitploy"
 	git reset --hard
 	git clean --force
