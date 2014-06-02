@@ -495,7 +495,7 @@ fi
 #fill out
 
 # Handle options
-while getopts "hvdurqw:reset:c:i:e:o:b:t:f:pwd:usr:org" opt; do
+while getopts "reset:hvdurqw:c:i:e:o:b:t:f:pwd:usr:org" opt; do
   case $opt in
   
     #flag----------------------
@@ -512,7 +512,9 @@ while getopts "hvdurqw:reset:c:i:e:o:b:t:f:pwd:usr:org" opt; do
     r) GD_RECURSIVE=$GD_TRUE             ;;
     q) GD_QUIET=$GD_TRUE                 ;;
     w) GD_WALL=$GD_FALSE                 ;;
-    reset) GD_RESET=$GD_TRUE             ;;
+    reset) GD_RESET=$GD_TRUE
+      shift $((OPTIND-1)); OPTIND=1
+      ;;
       
       
     #callback------------------
