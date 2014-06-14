@@ -949,7 +949,12 @@ update_mod() {
 			fi
 		else
 			# Ignoring -b option (switching branch) because not yet supported
-			[ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
+			
+			if [ -z "$_BRANCH"  ] || [ "$_BRANCH" == "master"]; then
+				[ -s "$module_dir/branch.gitploy" ] && _FOE_BRANCH=$(cat "$module_dir/branch.gitploy")
+				[ "$_FOE_BRANCH" != "master"] && _BRANCH=$_FOE_BRANCH
+			fi
+			
 			echostd "Update to branch '$_BRANCH'"
 			git pull --quiet origin "$_BRANCH" && git submodule --quiet update --init --recursive || return 1
 			local new_commit=$(git rev-parse HEAD)
