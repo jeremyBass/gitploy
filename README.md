@@ -5,10 +5,15 @@ gitploy
   Usage :  gitploy [<b><i>&gt;git_args&lt;</i></b>] [options]
 
   Command Examples:
-    $>_ gitploy <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
-                => Install a module by cloning specified git repository
+
+    $>_ gitploy <b>install</b>
+                => Install gitploy itself
     $>_ gitploy <b>init</b>
                 => Initialize .gitploy/ folder
+    $>_ gitploy <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
+                => Install a module by cloning specified git repository
+    $>_ gitploy <b>clone</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
+                => Install gitploy itself
     $>_ gitploy <b>ls</b>
                 => List installed modules
     $>_ gitploy <b>rm</b> <b><i>&gt;module&lt;</i></b>
@@ -23,8 +28,7 @@ gitploy
                 => List deployed files of specified module
     $>_ gitploy <b>proxy</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;git_args&lt;</i></b>
                 => Run git command into specified module
-    $>_ gitploy <b>install</b>
-                => Install gitploy
+
                 
 PLACE HOLDER EXAMPLE VALUES:
 <b><i>&gt;repository&lt;</i></b>  ==> https://github.com/account/repository.git
@@ -113,6 +117,35 @@ https://github.com/jreinke/modgit
 https://github.com/composer/composer
 
 There are ideas that echo from all points, but the goal is that one can simply managed repos that lay over each other.  As long as you will not want to make a pull request on the files, you can think of this as a sudo git.  You get dry runs, compare, and even a git proxy.  Some of the reference projects are geared to Magento, but this is not so restrictive.  The aim is to be able to handle any form of deployment strategy
+
+##using ssh for private repos
+
+1. Start by making sure your server is set up to make a ssh connectiong over your user.  look to https://help.github.com/articles/generating-ssh-keys
+2. follow the directions here https://developer.github.com/guides/managing-deploy-keys/#deploy-keys
+
+After these first step then you are ready to star managing your private repos.  To get your repo in run something like 
+
+```shell
+$>_ gitploy repoName "git@github.com:username/repo.git"
+```
+
+***NOTE***
+If it is the first time you have made the connection (which if you just got done with the first two step it will be), you must run the first repo addition like this
+
+```shell
+$>_ gitploy clone repoName "git@github.com:username/repo.git"
+```
+
+Why you must run the fist one with the explict `clone` action is that you will be asked to finalize the connection.  This will look something like
+
+```shell 
+RSA key fingerprint is 16:27:23:43:d4:eb:27:23:43:d4:eb:xx:xx:xx:df:a6:48.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'github.com,192.255.255.255' (RSA) to the list of known hosts.
+Enter passphrase for key '/root/.ssh/id_rsa':
+
+```
+
 
 ##Future Features
 
