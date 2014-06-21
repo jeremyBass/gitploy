@@ -144,10 +144,8 @@ PLACE HOLDER EXAMPLE VALUES:
 	With the `/root/.ssh/id_rsa` make sure it's under the user you are user ie: if it was `foo.bob` user it would be `/home/foo.bob/.ssh/id_ras`.  If that doesn't exist then you'll need to create that.  To do so try this:
 	
 	```shell
-	
 	touch /home/foo.bob/.ssh/id_ras
 	chmod 600 /home/foo.bob/.ssh/id_ras
-	
 	```
 
 
