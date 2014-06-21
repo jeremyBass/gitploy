@@ -137,10 +137,20 @@ PLACE HOLDER EXAMPLE VALUES:
 4. add the user so the passphase is only needed to be entered once
 
 	```shell
-	ssh-agent bash
 	ssh-add 
 	Enter passphrase for /root/.ssh/id_rsa:
 	```
+	
+	With the `/root/.ssh/id_rsa` make sure it's under the user you are user ie: if it was `foo.bob` user it would be `/home/foo.bob/.ssh/id_ras`.  If that doesn't exist then you'll need to create that.  To do so try this:
+	
+	```shell
+	
+	touch /home/foo.bob/.ssh/id_ras
+	chmod 600 /home/foo.bob/.ssh/id_ras
+	
+	```
+
+
 
 ##Moving from tag to branch
 This is no issue as you just need to run an update with the `-b` option.  For example
