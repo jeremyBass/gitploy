@@ -106,17 +106,7 @@ PLACE HOLDER EXAMPLE VALUES:
 </pre>
 
 
-Inspiration for this script was derivate from
 
-https://github.com/saltstack/salt-bootstrap
-
-https://github.com/colinmollenhour/modman
-
-https://github.com/jreinke/modgit
-
-https://github.com/composer/composer
-
-There are ideas that echo from all points, but the goal is that one can simply managed repos that lay over each other.  As long as you will not want to make a pull request on the files, you can think of this as a sudo git.  You get dry runs, compare, and even a git proxy.  Some of the reference projects are geared to Magento, but this is not so restrictive.  The aim is to be able to handle any form of deployment strategy
 
 ##using ssh for private repos
 
@@ -147,6 +137,9 @@ Enter passphrase for key '/root/.ssh/id_rsa':
 ```
 
 
+
+
+
 ##Future Features
 
 1. To be able to accept a git push deployment 
@@ -157,3 +150,14 @@ Please request any features and feel free to send a pull request
 
 
 
+Inspiration for this script was derivate from
+
+https://github.com/saltstack/salt-bootstrap
+
+https://github.com/colinmollenhour/modman
+
+https://github.com/jreinke/modgit
+
+https://github.com/composer/composer
+
+There are ideas that echo from all points, but the goal is that one can simply managed repos that lay over each other.  As long as you will not want to make a pull request on the files, you can think of this as a sudo git.  You get dry runs, compare, and even a git proxy.  Some of the reference projects are geared to Magento, but this is not so restrictive.  The aim is to be able to handle any form of deployment strategy
