@@ -116,14 +116,14 @@ PLACE HOLDER EXAMPLE VALUES:
 After these first step then you are ready to star managing your private repos.  To get your repo in run something like 
 
 ```shell
-$>_ gitploy repoName "git@github.com:username/repo.git"
+gitploy repoName "git@github.com:username/repo.git"
 ```
 
 ***NOTE***
 If it is the first time you have made the connection (which if you just got done with the first two step it will be), you must run the first repo addition like this
 
 ```shell
-$>_ gitploy clone repoName "git@github.com:username/repo.git"
+gitploy clone repoName "git@github.com:username/repo.git"
 ```
 
 Why you must run the fist one with the explict `clone` action is that you will be asked to finalize the connection.  This will look something like
@@ -136,8 +136,14 @@ Enter passphrase for key '/root/.ssh/id_rsa':
 
 ```
 
+##Moving from tag to branch
+This is no issue as you just need to run an update with the `-b` option.  For example
 
+```shell
+gitploy up -b master repoName
+```
 
+If you were on a tag then you would have been moved off this tag and to the head of the repo under the branch of `master` (in this example)
 
 
 ##Future Features
