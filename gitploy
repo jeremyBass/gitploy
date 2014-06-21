@@ -1293,7 +1293,7 @@ case "$ACTION" in
 
   
   *)
-    show_help
+    usage
     echoerr "Invalid action: $ACTION"
 
 esac
