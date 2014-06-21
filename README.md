@@ -147,7 +147,7 @@ PLACE HOLDER EXAMPLE VALUES:
 	touch /home/foo.bob/.ssh/id_ras
 	chmod 600 /home/foo.bob/.ssh/id_ras
 	```
-
+	Another tip if you are still are having to enter your passphrase each time is to set the passphase to blank.  This may seem like your breaking the security, but if yout system is secure it is argued that you have alread athentacated twice at the very least before you would have used the passphase.  Do this only if you are sure you know what you are doing.  Lots of chat on google about this, but do what you feel is best.
 
 
 ##Moving from tag to branch
