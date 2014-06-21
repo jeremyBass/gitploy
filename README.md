@@ -110,8 +110,8 @@ PLACE HOLDER EXAMPLE VALUES:
 
 ##using ssh for private repos
 
-1. Start by making sure your server is set up to make a ssh connectiong over your user.  look to https://help.github.com/articles/generating-ssh-keys
-2. follow the directions here https://developer.github.com/guides/managing-deploy-keys/#deploy-keys
+1. Start by making sure your server is set up to make a ssh connection from your user.  Look to https://help.github.com/articles/generating-ssh-keys for more information
+2. Follow the directions here https://developer.github.com/guides/managing-deploy-keys/#deploy-keys
 3. After these first step then you are ready to star managing your private repos.  To get your repo in run something like 
 	
 	```shell
@@ -125,7 +125,7 @@ PLACE HOLDER EXAMPLE VALUES:
 	gitploy clone repoName "git@github.com:username/repo.git"
 	```
 	
-	Why you must run the fist one with the explict `clone` action is that you will be asked to finalize the connection.  This will look something like
+	Why you must run the first one with the explicit `clone` action is that you will be asked to finalize the connection.  This will look something like
 	
 	```shell 
 	RSA key fingerprint is 16:27:23:43:d4:eb:27:23:43:d4:eb:xx:xx:xx:df:a6:48.
@@ -134,7 +134,7 @@ PLACE HOLDER EXAMPLE VALUES:
 	Enter passphrase for key '/root/.ssh/id_rsa':
 	
 	```
-4. add the user so the passphase is only needed to be entered once
+4. Add the user so the passphase is only needed to be entered once
 
 	```shell
 	ssh-add 
@@ -147,7 +147,7 @@ PLACE HOLDER EXAMPLE VALUES:
 	touch /home/foo.bob/.ssh/id_ras
 	chmod 600 /home/foo.bob/.ssh/id_ras
 	```
-	Another tip if you are still are having to enter your passphrase each time is to set the passphase to blank.  This may seem like your breaking the security, but if yout system is secure it is argued that you have alread athentacated twice at the very least before you would have used the passphase.  Do this only if you are sure you know what you are doing.  Lots of chat on google about this, but do what you feel is best.
+	Another tip if you are still are having to enter your passphrase each time is to set the passphase to blank.  This may seem like your breaking the security, but if your system is secure it is argued that you have already authenticated twice at the very least before you would have used the passphase.  Do this only if you are sure you know what you are doing.  Lots of chat on google about this, but do what you feel is best.
 
 
 ##Moving from tag to branch
