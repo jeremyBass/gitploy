@@ -135,7 +135,8 @@ PLACE HOLDER EXAMPLE VALUES:
 	
 	```
 4. add the user so the passphase is only needed to be entered once
-	```
+
+	```shell
 	ssh-agent bash
 	ssh-add 
 	Enter passphrase for /root/.ssh/id_rsa:
