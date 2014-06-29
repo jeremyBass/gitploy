@@ -450,6 +450,8 @@ applyaliases() {
 
     git config --global alias.reset-master '!f() { git reset --hard && git clean -f -x -d && git fetch upstream && git checkout master && git reset --hard upstream/master && git push origin master --force; }; f'
     
+    git config --global alias.up-sub '!f() { cd $1 && git checkout master && git pull && git submodule update --init --recursive; }; f'
+    
     exit 1
 }
 
