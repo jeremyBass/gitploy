@@ -206,6 +206,7 @@ _PROXYING=GD_FALSE
 
 
 
+
 #===  FUNCTION  ================================================================
 #          NAME:  echostd
 #   DESCRIPTION:  Echo stdout.  Basicly a proxy is what is done
@@ -442,12 +443,23 @@ __proxy_init(){
 }
 
 #===  FUNCTION  ================================================================
+#          NAME:  applyaliases
+#   DESCRIPTION:  set up some git aliases to be convinent to user and gitploy
+#===============================================================================
+applyaliases() {
+    git config --global alias.reset-master '!f() { git reset --hard && git clean -f -x -d && git fetch upstream && git checkout master && git reset --hard upstream/master && git push origin master --force; }; f'
+    exit 1
+}
+
+
+#===  FUNCTION  ================================================================
 #          NAME:  __init_gitploy
 #   DESCRIPTION:  sets up gitploy as user and system executable.
 #===============================================================================
 __install_gitploy(){
     __proxy_init
     __symlink_exc
+    applyaliases
     return 0
 }
 
