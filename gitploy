@@ -447,7 +447,9 @@ __proxy_init(){
 #   DESCRIPTION:  set up some git aliases to be convinent to user and gitploy
 #===============================================================================
 applyaliases() {
+
     git config --global alias.reset-master '!f() { git reset --hard && git clean -f -x -d && git fetch upstream && git checkout master && git reset --hard upstream/master && git push origin master --force; }; f'
+    
     exit 1
 }
 
