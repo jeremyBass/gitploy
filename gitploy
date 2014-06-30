@@ -27,32 +27,32 @@ __ScriptName="gitploy"
 SCRIPT=${0##*/}
 IFS=$''
 usage() {
-    cat << END
-    
+	cat << END
+
   Usage :  ${__ScriptName} [<command>] [options]
 
   Command Examples:
-    \$ ${__ScriptName} $(tput bold)$(tput sgr0)<module> <repository>
-                => Install a module by cloning specified git repository
-    \$ ${__ScriptName} $(tput bold)init$(tput sgr0)
-                => Initialize .gitploy/ folder
-    \$ ${__ScriptName} $(tput bold)ls$(tput sgr0)
-                => List installed modules
-    \$ ${__ScriptName} $(tput bold)rm$(tput sgr0) <module>
-                => Remove specified module
-    \$ ${__ScriptName} $(tput bold)up$(tput sgr0) <module>
-                => Update specified module
-    \$ ${__ScriptName} $(tput bold)re$(tput sgr0) <module>
-                => Refresh files of specified module
-    \$ ${__ScriptName} $(tput bold)info$(tput sgr0) <module>
-                => Show information about a specific module
-    \$ ${__ScriptName} $(tput bold)files$(tput sgr0) <module>
-                => List deployed files of specified module
-    \$ ${__ScriptName} $(tput bold)proxy$(tput sgr0) <module> <git_args>
-                => Run git command into specified module
-    \$ ${__ScriptName} $(tput bold)install$(tput sgr0)
-                => Install gitploy
-                
+	\$ ${__ScriptName} $(tput bold)$(tput sgr0)<module> <repository>
+				=> Install a module by cloning specified git repository
+	\$ ${__ScriptName} $(tput bold)init$(tput sgr0)
+				=> Initialize .gitploy/ folder
+	\$ ${__ScriptName} $(tput bold)ls$(tput sgr0)
+				=> List installed modules
+	\$ ${__ScriptName} $(tput bold)rm$(tput sgr0) <module>
+				=> Remove specified module
+	\$ ${__ScriptName} $(tput bold)up$(tput sgr0) <module>
+				=> Update specified module
+	\$ ${__ScriptName} $(tput bold)re$(tput sgr0) <module>
+				=> Refresh files of specified module
+	\$ ${__ScriptName} $(tput bold)info$(tput sgr0) <module>
+				=> Show information about a specific module
+	\$ ${__ScriptName} $(tput bold)files$(tput sgr0) <module>
+				=> List deployed files of specified module
+	\$ ${__ScriptName} $(tput bold)proxy$(tput sgr0) <module> <git_args>
+				=> Run git command into specified module
+	\$ ${__ScriptName} $(tput bold)install$(tput sgr0)
+				=> Install gitploy
+
 PLACE HOLDER EXAMPLE VALUES:
 <repository>  ==> https://github.com/account/repository.git
 <module>      ==> repository_name
@@ -60,77 +60,77 @@ PLACE HOLDER EXAMPLE VALUES:
 
   Options:
   -v   Show gitploy version
-  
+
   -h   Show this help
-  
+
   -d   (Dry run) Dry run mode (show what would be done)
-  
+
   -i   (Include) Only deploys items that match the filters
-       EX:
-       \$ ${__ScriptName} $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) <module> <repository>
-                => will deploy only lib/ (to lib/) and foo/ (to bar/)
-                
+	   EX:
+	   \$ ${__ScriptName} $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) <module> <repository>
+				=> will deploy only lib/ (to lib/) and foo/ (to bar/)
+
   -c   (Callback) Point to an action file with in the repo.  If none set, default is ` installer `
-       EX:
-       \$ ${__ScriptName} $(tput bold)-a$(tput sgr0) <module> <repository>
-                => will add the repo, then look for the installer file and run it
-                                
+	   EX:
+	   \$ ${__ScriptName} $(tput bold)-a$(tput sgr0) <module> <repository>
+				=> will add the repo, then look for the installer file and run it
+
   -e   (Exclude) Filters out listed items.  May use regex syntax
-       EX:
-       \$ ${__ScriptName} $(tput bold)-e lib/tests/ -e *.txt$(tput sgr0) <module> <repository>
-                => will exclude both directory lib/tests/ and file lib/README.txt
-                
+	   EX:
+	   \$ ${__ScriptName} $(tput bold)-e lib/tests/ -e *.txt$(tput sgr0) <module> <repository>
+				=> will exclude both directory lib/tests/ and file lib/README.txt
+
   -b   (Branch) Specify a repository branch (only for add command)
-       EX:
-       \$ ${__ScriptName} $(tput bold)-b 1.0-stable$(tput sgr0) <module> <repository>
-                => will checkout 1.0-stable branch of 
-                    specified repository
-                
+	   EX:
+	   \$ ${__ScriptName} $(tput bold)-b 1.0-stable$(tput sgr0) <module> <repository>
+				=> will checkout 1.0-stable branch of 
+					specified repository
+
   -t   (Tag) Specify a repository tag (only for add and update command also $(tput bold)overpowers -b$(tput sgr0) ) 
-       Note: a value of `$(tput bold)latest$(tput sgr0)` will use the latest tag released
-       EX:
-       \$ ${__ScriptName} $(tput bold)-t 1.2.0$(tput sgr0) <module> <repository>
-                => will checkout 1.2.0 tag of specified repository
-                
+	   Note: a value of `$(tput bold)latest$(tput sgr0)` will use the latest tag released
+	   EX:
+	   \$ ${__ScriptName} $(tput bold)-t 1.2.0$(tput sgr0) <module> <repository>
+				=> will checkout 1.2.0 tag of specified repository
+
   -z  (Reset) Reset a repo on operation.  Really only applies to updates.  You will move from tag to branch at head release 
-       EX:
-       \$ ${__ScriptName} up $(tput bold)-z$(tput sgr0) <module>
-                => will move to head cleaning the specified repository of tags and commits
+	   EX:
+	   \$ ${__ScriptName} up $(tput bold)-z$(tput sgr0) <module>
+				=> will move to head cleaning the specified repository of tags and commits
 
   -f   (Folder root) Set the folder in the repo to root the tracking from. 
-       EX:
-       \$ ${__ScriptName} $(tput bold)-f foo/Folder$(tput sgr0) <module> <repository>
-                => will checkout specified repository but only starting at that folder in the repo
+	   EX:
+	   \$ ${__ScriptName} $(tput bold)-f foo/Folder$(tput sgr0) <module> <repository>
+				=> will checkout specified repository but only starting at that folder in the repo
 
   -r   (Reqursive) Move through the modules tracked reqursively
-       EX:
-       \$ ${__ScriptName} rm $(tput bold)-r$(tput sgr0)
-                => will remove all repositories logged
-                   $(tput bold)NOTE::$(tput sgr0) all repo removals will be meet with a prompt
-       
+	   EX:
+	   \$ ${__ScriptName} rm $(tput bold)-r$(tput sgr0)
+				=> will remove all repositories logged
+				   $(tput bold)NOTE::$(tput sgr0) all repo removals will be meet with a prompt
+
   -u   (Unattended) This flag will accept all promots.  Use wisely as 
-                    unattended in this form, `\$ rm -ru`, would be wiping
-                    all logged repos
-       EX:
-       \$ ${__ScriptName} rm $(tput bold)-u$(tput sgr0) <module>
-                => will remove named repository $(tput bold) 
-                   WITHOUT a prompt$(tput sgr0)
-       
+					unattended in this form, `\$ rm -ru`, would be wiping
+					all logged repos
+	   EX:
+	   \$ ${__ScriptName} rm $(tput bold)-u$(tput sgr0) <module>
+				=> will remove named repository $(tput bold) 
+				   WITHOUT a prompt$(tput sgr0)
+
   -q   (Quite) If you must hide the verbose output,
-                this flag will block all stdout
-       EX:
-       \$ ${__ScriptName} $(tput bold)-q$(tput sgr0) <module> <repository>
-                => will add a new repository with out any stdout messaging
-                
+				this flag will block all stdout
+	   EX:
+	   \$ ${__ScriptName} $(tput bold)-q$(tput sgr0) <module> <repository>
+				=> will add a new repository with out any stdout messaging
+
   -w   (Wall Broadcasting) Some times it's important that you
-                            don't have others doing anything 
-                            while you upgrade which wall will let
-                            them know you doing something, the flag stop that
-       EX:
-       \$ ${__ScriptName} $(tput bold)-w$(tput sgr0) <module> <repository>
-                => will add a new repository and prevent 
-                    everyone that is logged in knowing about it               
-                
+							don't have others doing anything 
+							while you upgrade which wall will let
+							them know you doing something, the flag stop that
+	   EX:
+	   \$ ${__ScriptName} $(tput bold)-w$(tput sgr0) <module> <repository>
+				=> will add a new repository and prevent 
+					everyone that is logged in knowing about it               
+
 END
 }
 # ----------  end of usage  ----------
@@ -212,7 +212,7 @@ _PROXYING=GD_FALSE
 #   DESCRIPTION:  Echo stdout.  Basicly a proxy is what is done
 #===============================================================================
 echostd() {
-    [ $GD_QUIET -eq $GD_FALSE ] && printf "%s\n" "$@";
+	[ $GD_QUIET -eq $GD_FALSE ] && printf "%s\n" "$@";
 }
 
 #===  FUNCTION  ================================================================
@@ -220,8 +220,8 @@ echostd() {
 #   DESCRIPTION:  Echo errors to stderr.
 #===============================================================================
 echoerr() {
-    printf "ERROR: $@\n" 1>&2;
-    exit 1
+	printf "ERROR: $@\n" 1>&2;
+	exit 1
 }
 
 #===  FUNCTION  ================================================================
@@ -229,7 +229,7 @@ echoerr() {
 #   DESCRIPTION:  Echo information to stdout.
 #===============================================================================
 echoinfo() {
-    [ $GD_QUIET -eq $GD_FALSE ] && printf "INFO: %s\n" "$@";
+	[ $GD_QUIET -eq $GD_FALSE ] && printf "INFO: %s\n" "$@";
 }
 
 #===  FUNCTION  ================================================================
@@ -237,7 +237,7 @@ echoinfo() {
 #   DESCRIPTION:  Echo warning informations to stdout.
 #===============================================================================
 echowarn() {
-    [ $GD_QUIET -eq $GD_FALSE ] && printf "WARN: %s\n" "$@";
+	[ $GD_QUIET -eq $GD_FALSE ] && printf "WARN: %s\n" "$@";
 }
 
 #===  FUNCTION  ================================================================
@@ -245,9 +245,9 @@ echowarn() {
 #   DESCRIPTION:  Echo debug information to stdout.
 #===============================================================================
 echodebug() {
-    if [ $GD_DEBUG -eq $GD_TRUE ]; then
-        printf "DEBUG: %s\n" "$@";
-    fi
+	if [ $GD_DEBUG -eq $GD_TRUE ]; then
+		printf "DEBUG: %s\n" "$@";
+	fi
 }
 
 #===  FUNCTION  ================================================================
@@ -255,24 +255,24 @@ echodebug() {
 #   DESCRIPTION:  Echo a final massage unless it's both -u and -q.
 #===============================================================================
 echofin() {
-    if [ $GD_UNATTENDED -ne $GD_TRUE ]; then
-        if [ $GD_QUIET -ne $GD_TRUE ]; then
-            printf "Finished: %s\n" "$@";
-            exit 0
-        fi
-    fi
+	if [ $GD_UNATTENDED -ne $GD_TRUE ]; then
+		if [ $GD_QUIET -ne $GD_TRUE ]; then
+			printf "Finished: %s\n" "$@";
+			exit 0
+		fi
+	fi
 }
 
 #-----------------------------------------------------------------------
 #  Show help there is nothing but the command or action is "help"
 #-----------------------------------------------------------------------
 if [[ $# -eq 0 ]];then
-    usage
-    echoerr "You need to call more then gitploy.  Try added some options"
+	usage
+	echoerr "You need to call more then gitploy.  Try added some options"
 fi
 if [[ "$1" = "help" ]];then
-    usage
-    exit 0
+	usage
+	exit 0
 fi
 
 #===  FUNCTION  ================================================================
@@ -280,11 +280,11 @@ fi
 #   DESCRIPTION:  Merge the INCLUDES with agrs for stuff not needed.
 #===============================================================================
 merge_include() {
-    if [ -z "$INCLUDES" ]; then
-        INCLUDES="$1"
-    else
-        INCLUDES="$INCLUDES\n$1"
-    fi
+	if [ -z "$INCLUDES" ]; then
+		INCLUDES="$1"
+	else
+		INCLUDES="$INCLUDES\n$1"
+	fi
 }
 
 #===  FUNCTION  ================================================================
@@ -292,36 +292,36 @@ merge_include() {
 #   DESCRIPTION:  checks if the items should be included.
 #===============================================================================
 filter_include() {
-    file="$1"
-    includes_file="$2"
-    copy=$3
-    if [ -s "$includes_file" ]; then
-        copy=$GD_FALSE
-        for filter in $(cat "$includes_file"); do
-            src=$(echo $filter | cut -d: -f1)
-            if [ -z "$src" ]; then
-                continue
-            fi
-            if [[ "$file" =~ ^$src ]]; then
-                copy=$GD_TRUE
-                # Handle optional different target
-                real=$(echo $filter | cut -d: -f2)
-                if [ "$src" != "$real" ]; then
-                    tmp_src=$(echo $src | sed 's/^[\/]*//;s/[\/]*$//')
-                    tmp_src="$tmp_src/"
-                    tmp_src="${tmp_src//\//\\/}"
-                    tmp_real=$(echo $real | sed 's/^[\/]*//;s/[\/]*$//')
-                    tmp_real="$tmp_real/"
-                    tmp_real="${tmp_real//\//\\/}"
-                    target=$(echo $file | sed "s/$tmp_src/$tmp_real/g")
-                fi
-                break
-            fi
-        done
-    fi
-    _TMP_INC_FLT["copy"]=$copy
-    _TMP_INC_FLT["target"]=$target
-    return 0
+	file="$1"
+	includes_file="$2"
+	copy=$3
+	if [ -s "$includes_file" ]; then
+		copy=$GD_FALSE
+		for filter in $(cat "$includes_file"); do
+			src=$(echo $filter | cut -d: -f1)
+			if [ -z "$src" ]; then
+				continue
+			fi
+			if [[ "$file" =~ ^$src ]]; then
+				copy=$GD_TRUE
+				# Handle optional different target
+				real=$(echo $filter | cut -d: -f2)
+				if [ "$src" != "$real" ]; then
+					tmp_src=$(echo $src | sed 's/^[\/]*//;s/[\/]*$//')
+					tmp_src="$tmp_src/"
+					tmp_src="${tmp_src//\//\\/}"
+					tmp_real=$(echo $real | sed 's/^[\/]*//;s/[\/]*$//')
+					tmp_real="$tmp_real/"
+					tmp_real="${tmp_real//\//\\/}"
+					target=$(echo $file | sed "s/$tmp_src/$tmp_real/g")
+				fi
+				break
+			fi
+		done
+	fi
+	_TMP_INC_FLT["copy"]=$copy
+	_TMP_INC_FLT["target"]=$target
+	return 0
 }
 
 
@@ -330,11 +330,11 @@ filter_include() {
 #   DESCRIPTION:  Merge the GITEXCLUDES with agrs for github stuff not needed.
 #===============================================================================
 merge_exclude() {
-    if [ -z "$GITEXCLUDES" ]; then
-        EXCLUDES="$1"
-    else
-        EXCLUDES="$GITEXCLUDES\n$1"
-    fi
+	if [ -z "$GITEXCLUDES" ]; then
+		EXCLUDES="$1"
+	else
+		EXCLUDES="$GITEXCLUDES\n$1"
+	fi
 }
 
 #===  FUNCTION  ================================================================
@@ -342,18 +342,18 @@ merge_exclude() {
 #   DESCRIPTION:  checks if the items should be filtered out.
 #===============================================================================
 filter_exclude() {
-    file="$1"
-    excludes_file="$2"
-    copy=$3
-    if [ -s "$excludes_file" ] && [ $copy -eq $GD_TRUE ]; then
-      for filter in $(cat "$excludes_file"); do
-        if [[ "$file" =~ ^$filter ]]; then
-          copy=$GD_FALSE
-          break
-        fi
-      done
-    fi
-    echo $copy
+	file="$1"
+	excludes_file="$2"
+	copy=$3
+	if [ -s "$excludes_file" ] && [ $copy -eq $GD_TRUE ]; then
+	  for filter in $(cat "$excludes_file"); do
+		if [[ "$file" =~ ^$filter ]]; then
+		  copy=$GD_FALSE
+		  break
+		fi
+	  done
+	fi
+	echo $copy
 }
 
 #===  FUNCTION  ================================================================
@@ -361,7 +361,7 @@ filter_exclude() {
 #   DESCRIPTION:  run a callback action now that its at the end.
 #===============================================================================
 run_callback() {
-    exit 0
+	exit 0
 }
 
 #===  FUNCTION  ================================================================
@@ -369,7 +369,7 @@ run_callback() {
 #   DESCRIPTION:  we are going to run a callback action at the end.
 #===============================================================================
 queue_callback() {
-    _CALLBACKS["file"]="path/to/file"
+	_CALLBACKS["file"]="path/to/file"
 }
 
 
@@ -378,9 +378,9 @@ queue_callback() {
 #  DESCRIPTION:  Builds for default folders needed to operate correctly.
 #===============================================================================
 __build_dirs() {
-    [ -d $GD_DIR ] && echoerr "$SCRIPT is already initialized"
-    mkdir $GD_FOLDER || echoerr "Could not create .gitploy directory"
-  
+	[ -d $GD_DIR ] && echoerr "$SCRIPT is already initialized"
+	mkdir $GD_FOLDER || echoerr "Could not create .gitploy directory"
+
 }
 
 #===  FUNCTION  ================================================================
@@ -388,16 +388,16 @@ __build_dirs() {
 #  DESCRIPTION:  Builds for default folders needed to operate correctly.
 #===============================================================================
 __symlink_exc() {
-    if [ -f /src/deployment/gitploy ]; then
-        if [ -h /usr/sbin/gitploy ]; then
-            echostd "gitploy was already loaded"
-        else
-            [ -h /usr/local/bin/gitploy ]   || ln -s /src/deployment/gitploy /usr/local/bin/gitploy
-            [ -h /usr/sbin/gitploy ]        || ln -s /src/deployment/gitploy /usr/sbin/gitploy
-            [ -h /etc/init.d/gitploy ]      || ln -s /src/deployment/gitploy /etc/init.d/gitploy
-            chmod a=r+w+x /usr/local/bin/gitploy
-        fi
-    fi
+	if [ -f /src/deployment/gitploy ]; then
+		if [ -h /usr/sbin/gitploy ]; then
+			echostd "gitploy was already loaded"
+		else
+			[ -h /usr/local/bin/gitploy ]   || ln -s /src/deployment/gitploy /usr/local/bin/gitploy
+			[ -h /usr/sbin/gitploy ]        || ln -s /src/deployment/gitploy /usr/sbin/gitploy
+			[ -h /etc/init.d/gitploy ]      || ln -s /src/deployment/gitploy /etc/init.d/gitploy
+			chmod a=r+w+x /usr/local/bin/gitploy
+		fi
+	fi
 }
 
 
@@ -409,37 +409,37 @@ __symlink_exc() {
 #                 location. Copy, init with pwd args, remove old
 #===============================================================================
 __proxy_init(){
-    #ensure the deployment bed
-    [ -d /src/deployment ] || mkdir -p /src/deployment
-    if [[ $PWD = "/src/deployment/" && -f /src/deployment/gitploy ]]; then
-        #nothing to do
-        echostd "gitploy running from in the right place and exist"
-    else
-        if [ -f /src/deployment/gitploy ]; then
-            echostd "it was there keep moving"
-            [ ${PWD} ] && [ -f "${PWD}/–i" ] && rm -f "${PWD}/–i" && echostd "cleared tee tmp"
-        else
-            if [ ${PWD} ]; then
-                cur_file= "${PWD}/gitploy"
-                if [ ${cur_file} ]; then
-                    cp -fL $cur_file /src/deployment/gitploy
-                else
-                    _PROXYING=GD_TRUE
-                fi
-            else
-                #copy it over if not stream
-                _PROXYING=GD_TRUE
-            fi
-            if [ -f /src/deployment/gitploy ]; then
-                __symlink_exc
-            fi
-            echostd "removing current"
-            [ -f "${PWD}/–i" ] && rm -f "${PWD}/–i"
-            rm -f $cur_file && exit 0 || echoerr "Failed to clean up"
-            
-        fi
-        [ -f /usr/sbin/gitploy ] || echoerr "failed to proxy the init, try to run in /src/deployment"
-    fi
+	#ensure the deployment bed
+	[ -d /src/deployment ] || mkdir -p /src/deployment
+	if [[ $PWD = "/src/deployment/" && -f /src/deployment/gitploy ]]; then
+		#nothing to do
+		echostd "gitploy running from in the right place and exist"
+	else
+		if [ -f /src/deployment/gitploy ]; then
+			echostd "it was there keep moving"
+			[ ${PWD} ] && [ -f "${PWD}/–i" ] && rm -f "${PWD}/–i" && echostd "cleared tee tmp"
+		else
+			if [ ${PWD} ]; then
+				cur_file= "${PWD}/gitploy"
+				if [ ${cur_file} ]; then
+					cp -fL $cur_file /src/deployment/gitploy
+				else
+					_PROXYING=GD_TRUE
+				fi
+			else
+				#copy it over if not stream
+				_PROXYING=GD_TRUE
+			fi
+			if [ -f /src/deployment/gitploy ]; then
+				__symlink_exc
+			fi
+			echostd "removing current"
+			[ -f "${PWD}/–i" ] && rm -f "${PWD}/–i"
+			rm -f $cur_file && exit 0 || echoerr "Failed to clean up"
+
+		fi
+		[ -f /usr/sbin/gitploy ] || echoerr "failed to proxy the init, try to run in /src/deployment"
+	fi
 }
 
 #===  FUNCTION  ================================================================
@@ -448,11 +448,11 @@ __proxy_init(){
 #===============================================================================
 applyaliases() {
 
-    git config --global alias.reset-master '!f() { git reset --hard && git clean -f -x -d && git fetch upstream && git checkout master && git reset --hard upstream/master && git push origin master --force; }; f'
-    
-    git config --global alias.up-sub '!f() { cd $1 && git checkout master && git pull && git submodule update --init --recursive; }; f'
-    
-    exit 1
+	git config --global alias.reset-master '!f() { git reset --hard && git clean -f -x -d && git fetch upstream && git checkout master && git reset --hard upstream/master && git push origin master --force; }; f'
+
+	git config --global alias.up-sub '!f() { cd $1 && git checkout master && git pull && git submodule update --init --recursive; }; f'
+
+	exit 1
 }
 
 
@@ -461,10 +461,10 @@ applyaliases() {
 #   DESCRIPTION:  sets up gitploy as user and system executable.
 #===============================================================================
 __install_gitploy(){
-    __proxy_init
-    __symlink_exc
-    applyaliases
-    return 0
+	__proxy_init
+	__symlink_exc
+	applyaliases
+	return 0
 }
 
 
@@ -482,18 +482,18 @@ require_mods() {
 #  If not installed, do so
 #-----------------------------------------------------------------------
 if [ "$1" = "install" ]; then
-    PKG_MANAGER=$( command -v yum || command -v apt-get ) || echo "Neither yum nor apt-get found"
-    $(git -v 2>&1 | grep -qi "command not found") && $PKG_MANAGER install -y git
-    if [ $(gitploy -v 2>&1 | grep -qi "Version") ];then
-        echoerr "gitploy seems to be already installed"
-    else
-        if [ -f /src/deployment/gitploy ]; then
-            __install_gitploy && echostd "gitploy was installed" && exit 0
-            echoerr "gitploy failed install"
-        else
-            echoerr "gitploy file was missing failed install"
-        fi
-    fi
+	PKG_MANAGER=$( command -v yum || command -v apt-get ) || echo "Neither yum nor apt-get found"
+	$(git -v 2>&1 | grep -qi "command not found") && $PKG_MANAGER install -y git
+	if [ $(gitploy -v 2>&1 | grep -qi "Version") ];then
+		echoerr "gitploy seems to be already installed"
+	else
+		if [ -f /src/deployment/gitploy ]; then
+			__install_gitploy && echostd "gitploy was installed" && exit 0
+			echoerr "gitploy failed install"
+		else
+			echoerr "gitploy file was missing failed install"
+		fi
+	fi
 fi
 
 
@@ -502,7 +502,7 @@ fi
 #-----------------------------------------------------------------------
 REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
 if [[ "$1" =~ $REGEX_ACTION ]]; then
-    ACTION="$1"; shift
+	ACTION="$1"; shift
 fi
 
 #-----------------------------------------------------------------------
@@ -513,67 +513,67 @@ fi
 # Handle options
 while getopts "zhvdurqw:c:i:e:o:b:t:f:p:a:g" opt; do
   case $opt in
-  
-    #flag----------------------
-    h)  
-      usage;
-      exit 0
-      ;;
-    v)
-      echostd "$0 -- Version $__ScriptVersion";
-      exit 0
-      ;;
-    d) DRY_RUN=$GD_TRUE                  ;;
-    u) GD_UNATTENDED=$GD_TRUE            ;;
-    r) GD_RECURSIVE=$GD_TRUE             ;;
-    q) GD_QUIET=$GD_TRUE                 ;;
-    w) GD_WALL=$GD_FALSE                 ;;
-    z) GD_RESET=$GD_TRUE                 ;;
-      
-      
-    #callback------------------
-    c) queue_callback "$OPTARG"
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-      
-    #data----------------------
-    i) merge_include "$OPTARG"
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-    e) merge_exclude "$OPTARG"
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-  
-    #git options---------------
-    o ) _OWNER=$OPTARG
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-    b ) _BRANCH=$OPTARG
-      shift $((OPTIND-1)); OPTIND=1
+
+	#flag----------------------
+	h)  
+	  usage;
+	  exit 0
+	  ;;
+	v)
+	  echostd "$0 -- Version $__ScriptVersion";
+	  exit 0
+	  ;;
+	d) DRY_RUN=$GD_TRUE                  ;;
+	u) GD_UNATTENDED=$GD_TRUE            ;;
+	r) GD_RECURSIVE=$GD_TRUE             ;;
+	q) GD_QUIET=$GD_TRUE                 ;;
+	w) GD_WALL=$GD_FALSE                 ;;
+	z) GD_RESET=$GD_TRUE                 ;;
+
+
+	#callback------------------
+	c) queue_callback "$OPTARG"
+	  shift $((OPTIND-1)); OPTIND=1
+	  ;;
+
+	#data----------------------
+	i) merge_include "$OPTARG"
+	  shift $((OPTIND-1)); OPTIND=1
+	  ;;
+	e) merge_exclude "$OPTARG"
+	  shift $((OPTIND-1)); OPTIND=1
+	  ;;
+
+	#git options---------------
+	o ) _OWNER=$OPTARG
+	  shift $((OPTIND-1)); OPTIND=1
+	  ;;
+	b ) _BRANCH=$OPTARG
+	  shift $((OPTIND-1)); OPTIND=1
 	  echostd "set -b $_BRANCH"
-      ;;
-    t ) _TAG=$OPTARG
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-    f) _ROOTFLODER=$OPTARG
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-    p) GD_PWD=$OPTARG
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-    a) GD_USR=$OPTARG
-      shift $((OPTIND-1)); OPTIND=1
-      ;;
-    g) GD_ORG=$OPTARG
-      shift $((OPTIND-1)); OPTIND=1
-      ;; 
+	  ;;
+	t ) _TAG=$OPTARG
+	  shift $((OPTIND-1)); OPTIND=1
+	  ;;
+	f) _ROOTFLODER=$OPTARG
+	  shift $((OPTIND-1)); OPTIND=1
+	  ;;
+	p) GD_PWD=$OPTARG
+	  shift $((OPTIND-1)); OPTIND=1
+	  ;;
+	a) GD_USR=$OPTARG
+	  shift $((OPTIND-1)); OPTIND=1
+	  ;;
+	g) GD_ORG=$OPTARG
+	  shift $((OPTIND-1)); OPTIND=1
+	  ;; 
 
 
-    \?)  echo
-         echoerr "Option does not exist : $OPTARG"
-         usage
-         exit 1
-         ;;
+	\?)  echo
+		 echoerr "Option does not exist : $OPTARG"
+		 usage
+		 exit 1
+		 ;;
   esac
 done
 shift $(($OPTIND-1))
@@ -597,9 +597,9 @@ shift $(($OPTIND-1))
 # the add action.  We should be only left with that possiblity by now
 #-----------------------------------------------------------------------
 if [ -z $ACTION ];then
-    if [[ $# -gt 0 ]];then
-        ACTION="add"
-    fi
+	if [[ $# -gt 0 ]];then
+		ACTION="add"
+	fi
 fi
 
 
@@ -634,8 +634,8 @@ fi
 #                 will now pull to branch (master or defined) and at head
 #===============================================================================
 mod_git_reset(){
-    local module="$1"
-    local module_dir="$GD_DIR/$module"
+	local module="$1"
+	local module_dir="$GD_DIR/$module"
 	if [ $DRY_RUN -eq $GD_TRUE ]; then
 		echostd "'$module' module would be cleaned and reset when not in dryrun"
 		git clean -n
@@ -669,9 +669,8 @@ mod_set_latest_tag(){
 #   DESCRIPTION:  Checks if module dir exists or quit.
 #===============================================================================
 require_mod_dir() {
-  [ -d "$GD_DIR/$1" ] || echoerr "Module '$1' does not exist"
-
-  return 0
+	[ -d "$GD_DIR/$1" ] || echoerr "Module '$1' does not exist"
+	return 0
 }
 
 #===  FUNCTION  ================================================================
@@ -679,13 +678,13 @@ require_mod_dir() {
 #   DESCRIPTION:  Removes the module as needed safely.
 #===============================================================================
 rm_mod_dir() {
-  local module="$1"
-  local module_dir="$GD_DIR/$module"
-  if [ -n "$module" ] && [ -d "$module_dir" ]; then
-    rm -rf "$module_dir" 2>/dev/null
-  fi
+	local module="$1"
+	local module_dir="$GD_DIR/$module"
+	if [ -n "$module" ] && [ -d "$module_dir" ]; then
+		rm -rf "$module_dir" 2>/dev/null
+	fi
 
-  return 0
+	return 0
 }
 
 #===  FUNCTION  ================================================================
@@ -693,31 +692,31 @@ rm_mod_dir() {
 #   DESCRIPTION:  Deletes deployed files of specified module. Could be not safe
 #===============================================================================
 rm_mod_files() {
-    local module="$1"
-    local module_dir="$GD_DIR/$module"
-    local deployed_file="$module_dir/deployed.gitploy"
-    
-    [ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
-    for line in $(cat "$deployed_file" 2>/dev/null); do
-    if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
-        echostd $line
-        # Remove deployed file and empty dirs
-        if [ $DRY_RUN -eq $GD_FALSE ]; then
-            rm "$GD_ROOT/$line" 2>/dev/null
-            prev_dir=""
-            dir=$(dirname $line)
-            while [ "$dir" != "$prev_dir" ]; do
-                prev_dir=$dir
-                test_dir="$GD_ROOT/$dir"
-                if ! [ "$(ls -A $test_dir)" ]; then
-                    rmdir $test_dir
-                fi
-                dir=${dir%/*}
-            done
-        fi
-    fi    
-    done
-    return 0
+	local module="$1"
+	local module_dir="$GD_DIR/$module"
+	local deployed_file="$module_dir/deployed.gitploy"
+
+	[ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
+	for line in $(cat "$deployed_file" 2>/dev/null); do
+	if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
+		echostd $line
+		# Remove deployed file and empty dirs
+		if [ $DRY_RUN -eq $GD_FALSE ]; then
+			rm "$GD_ROOT/$line" 2>/dev/null
+			prev_dir=""
+			dir=$(dirname $line)
+			while [ "$dir" != "$prev_dir" ]; do
+				prev_dir=$dir
+				test_dir="$GD_ROOT/$dir"
+				if ! [ "$(ls -A $test_dir)" ]; then
+					rmdir $test_dir
+				fi
+				dir=${dir%/*}
+			done
+		fi
+	fi    
+	done
+	return 0
 }
 
 #===  FUNCTION  ================================================================
@@ -725,26 +724,26 @@ rm_mod_files() {
 #   DESCRIPTION:  Removes specified module
 #===============================================================================
 rm_mod() {
-    local module="$1"
-    local module_dir="$GD_DIR/$module"
-    
-    require_mod_dir "$module"
-    if [ $DRY_RUN -eq $GD_FALSE ]; then
-        if [ $GD_UNATTENDED -eq $GD_FALSE ]; then
-            read -p "Are you sure you want to remove '$module' module? (y/n): " confirm
-            [ "$confirm" != "y" ] && [ "$confirm" != "" ] && echo "Aborting..." && return 0
-        fi
-    fi
-    
-    echostd "Removing '$module' module..."
-    sleep 1  
+	local module="$1"
+	local module_dir="$GD_DIR/$module"
 
-    rm_mod_files "$module" || return 1
+	require_mod_dir "$module"
+	if [ $DRY_RUN -eq $GD_FALSE ]; then
+		if [ $GD_UNATTENDED -eq $GD_FALSE ]; then
+			read -p "Are you sure you want to remove '$module' module? (y/n): " confirm
+			[ "$confirm" != "y" ] && [ "$confirm" != "" ] && echo "Aborting..." && return 0
+		fi
+	fi
 
-    [ $DRY_RUN -eq $GD_TRUE ] && return 0
-    rm_mod_dir "$module"
+	echostd "Removing '$module' module..."
+	sleep 1  
 
-    return $?
+	rm_mod_files "$module" || return 1
+
+	[ $DRY_RUN -eq $GD_TRUE ] && return 0
+	rm_mod_dir "$module"
+
+	return $?
 }
 
 #===  FUNCTION  ================================================================
@@ -752,12 +751,12 @@ rm_mod() {
 #   DESCRIPTION:  Copies specified file to root directory
 #===============================================================================
 deploy_file() {
-  local root_tmp="${GD_ROOT//\//\\/}\\/"
-  echostd $(echo "$2" | sed "s/^$root_tmp//g")
+	local root_tmp="${GD_ROOT//\//\\/}\\/"
+	echostd $(echo "$2" | sed "s/^$root_tmp//g")
 
-  if [ $DRY_RUN -eq $GD_FALSE ]; then
-    mkdir -p $(dirname $2) && cp "$1" "$2"
-  fi
+	if [ $DRY_RUN -eq $GD_FALSE ]; then
+		mkdir -p $(dirname $2) && cp "$1" "$2"
+	fi
 }
 
 
@@ -767,61 +766,61 @@ deploy_file() {
 #                 deployed files for easy removal later
 #===============================================================================
 mv_files() {
-    local module="$1"
-    local module_dir="$GD_DIR/$module"
-    local source_dir="$module_dir/source"
-    local includes_file="$module_dir/includes.gitploy"
-    local excludes_file="$module_dir/excludes.gitploy"
-    local modman_file="$source_dir/modman"
-    local deployed_file="$module_dir/deployed.gitploy"
+	local module="$1"
+	local module_dir="$GD_DIR/$module"
+	local source_dir="$module_dir/source"
+	local includes_file="$module_dir/includes.gitploy"
+	local excludes_file="$module_dir/excludes.gitploy"
+	local modman_file="$source_dir/modman"
+	local deployed_file="$module_dir/deployed.gitploy"
 
-    > "$deployed_file" #creat empty file
-    cd "$source_dir" || return 1
+	> "$deployed_file" #creat empty file
+	cd "$source_dir" || return 1
 
-    IFS=$'\n'; set -f; files=($(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///'))
-    for file in "${files[@]}"; do
-        # Copy file by default
-        copy=$GD_TRUE
-        target="$file"
+	IFS=$'\n'; set -f; files=($(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///'))
+	for file in "${files[@]}"; do
+		# Copy file by default
+		copy=$GD_TRUE
+		target="$file"
 
-        # Include filter
-        filter_include "$file" "$includes_file" $copy    
-        copy=${_TMP_INC_FLT["copy"]}
-        target=${_TMP_INC_FLT["target"]}
-    
-        # Exclude filter
-        copy=$(filter_exclude "$file" "$excludes_file" $copy)
+		# Include filter
+		filter_include "$file" "$includes_file" $copy    
+		copy=${_TMP_INC_FLT["copy"]}
+		target=${_TMP_INC_FLT["target"]}
 
-        #start the process
-        if [ $copy -eq $GD_TRUE ]; then
-            # Handle modman file
-            if [ -s "$modman_file" ]; then
-                IFS=$'\n'
-                for line in $(cat "$modman_file"); do
-                    if [ -z "$line" ] || [[ $line =~ ^# ]] || [[ $line =~ ^@ ]]; then
-                        continue
-                    fi
-                    IFS=$' \t'
-                    line="${line/\*/}" # remove * char
-                    set -- $line       # set $1 and $2
-                    if [[ "$file" =~ ^$1 ]]; then
-                        # Remove trailing slashes and escape paths for sed
-                        src=$(echo $1 | sed 's/^[\/]*//;s/[\/]*$//')
-                        dest=$(echo $2 | sed 's/^[\/]*//;s/[\/]*$//')
-                        src="${src//\//\\/}"
-                        dest="${dest//\//\\/}"
-                        target=$(echo $file | sed "s/$src/$dest/g")
-                        deploy_file "$file" "$GD_ROOT/$target"
-                        echo "$target" >> "$deployed_file"
-                    fi
-                done
-            else
-                deploy_file "$file" "$GD_ROOT/$target"
-            fi
-        fi
+		# Exclude filter
+		copy=$(filter_exclude "$file" "$excludes_file" $copy)
 
-    done
-    return 0
+		#start the process
+		if [ $copy -eq $GD_TRUE ]; then
+			# Handle modman file
+			if [ -s "$modman_file" ]; then
+				IFS=$'\n'
+				for line in $(cat "$modman_file"); do
+					if [ -z "$line" ] || [[ $line =~ ^# ]] || [[ $line =~ ^@ ]]; then
+						continue
+					fi
+					IFS=$' \t'
+					line="${line/\*/}" # remove * char
+					set -- $line       # set $1 and $2
+					if [[ "$file" =~ ^$1 ]]; then
+						# Remove trailing slashes and escape paths for sed
+						src=$(echo $1 | sed 's/^[\/]*//;s/[\/]*$//')
+						dest=$(echo $2 | sed 's/^[\/]*//;s/[\/]*$//')
+						src="${src//\//\\/}"
+						dest="${dest//\//\\/}"
+						target=$(echo $file | sed "s/$src/$dest/g")
+						deploy_file "$file" "$GD_ROOT/$target"
+						echo "$target" >> "$deployed_file"
+					fi
+				done
+			else
+				deploy_file "$file" "$GD_ROOT/$target"
+			fi
+		fi
+
+	done
+	return 0
 }
 
 
@@ -830,58 +829,58 @@ mv_files() {
 #   DESCRIPTION:  sets up the file for deployment
 #===============================================================================
 build_deploy_file() {
-    IFS=$'\n'
-    local module="$1"
-    local module_dir="$GD_DIR/$module"
-    local source_dir="$module_dir/source"
-    local includes_file="$module_dir/includes.gitploy"
-    local excludes_file="$module_dir/excludes.gitploy"
-    local modman_file="$source_dir/modman"
-    local deployed_file="$module_dir/deployed.gitploy"
+	IFS=$'\n'
+	local module="$1"
+	local module_dir="$GD_DIR/$module"
+	local source_dir="$module_dir/source"
+	local includes_file="$module_dir/includes.gitploy"
+	local excludes_file="$module_dir/excludes.gitploy"
+	local modman_file="$source_dir/modman"
+	local deployed_file="$module_dir/deployed.gitploy"
 
-    echoinfo "Building '$module' deployment"
+	echoinfo "Building '$module' deployment"
 	cd "$source_dir"
 
-    for file in $(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///'); do
-        # Copy file by default
-        copy=$GD_TRUE
-        target="$file"
+	for file in $(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///'); do
+		# Copy file by default
+		copy=$GD_TRUE
+		target="$file"
 
-        # Include filter
-        filter_include "$file" "$includes_file" $copy    
-        copy=${_TMP_INC_FLT["copy"]}
-        target=${_TMP_INC_FLT["target"]}
-        
-        # Exclude filter
-        copy=$(filter_exclude "$file" "$excludes_file" $copy)
+		# Include filter
+		filter_include "$file" "$includes_file" $copy    
+		copy=${_TMP_INC_FLT["copy"]}
+		target=${_TMP_INC_FLT["target"]}
 
-        if [ $copy -eq $GD_TRUE ]; then
-            # Handle modman file
-            if [ -s "$modman_file" ]; then
-                IFS=$'\n'
-                for line in $(cat "$modman_file"); do
-                    if [ -z "$line" ] || [[ $line =~ ^# ]] || [[ $line =~ ^@ ]]; then
-                        continue
-                    fi
-                    IFS=$' \t'
-                    line="${line/\*/}" # remove * char
-                    set -- $line       # set $1 and $2
-                    if [[ "$file" =~ ^$1 ]]; then
-                        # Remove trailing slashes and escape paths for sed
-                        src=$(echo $1 | sed 's/^[\/]*//;s/[\/]*$//')
-                        dest=$(echo $2 | sed 's/^[\/]*//;s/[\/]*$//')
-                        src="${src//\//\\/}"
-                        dest="${dest//\//\\/}"
-                        target=$(echo $file | sed "s/$src/$dest/g")
-                        echo "$target" >> "$deployed_file"
-                    fi
-                done
-            else
-                echo "$target" >> "$deployed_file"
-            fi
-        fi
-    done
-    return 0
+		# Exclude filter
+		copy=$(filter_exclude "$file" "$excludes_file" $copy)
+
+		if [ $copy -eq $GD_TRUE ]; then
+			# Handle modman file
+			if [ -s "$modman_file" ]; then
+				IFS=$'\n'
+				for line in $(cat "$modman_file"); do
+					if [ -z "$line" ] || [[ $line =~ ^# ]] || [[ $line =~ ^@ ]]; then
+						continue
+					fi
+					IFS=$' \t'
+					line="${line/\*/}" # remove * char
+					set -- $line       # set $1 and $2
+					if [[ "$file" =~ ^$1 ]]; then
+						# Remove trailing slashes and escape paths for sed
+						src=$(echo $1 | sed 's/^[\/]*//;s/[\/]*$//')
+						dest=$(echo $2 | sed 's/^[\/]*//;s/[\/]*$//')
+						src="${src//\//\\/}"
+						dest="${dest//\//\\/}"
+						target=$(echo $file | sed "s/$src/$dest/g")
+						echo "$target" >> "$deployed_file"
+					fi
+				done
+			else
+				echo "$target" >> "$deployed_file"
+			fi
+		fi
+	done
+	return 0
 }
 
 
@@ -890,15 +889,15 @@ build_deploy_file() {
 #   DESCRIPTION:  Updates a module
 #===============================================================================
 update_mod() {
-    IFS=$'\n'
-    local module="$1"
-    local module_dir="$GD_DIR/$module"
-    local source_dir="$module_dir/source"
-    
-    require_mod_dir "$module"
+	IFS=$'\n'
+	local module="$1"
+	local module_dir="$GD_DIR/$module"
+	local source_dir="$module_dir/source"
 
-    if [ $GD_REFRESH = $GD_TRUE ]; then
-        echoinfo "Refreshing '$module' module..."
+	require_mod_dir "$module"
+
+	if [ $GD_REFRESH = $GD_TRUE ]; then
+		echoinfo "Refreshing '$module' module..."
 		if [ -s "$module_dir/tag.gitploy" ]; then
 			local old_tag=$(cat "$module_dir/tag.gitploy")
 		else
@@ -906,7 +905,7 @@ update_mod() {
 		fi
 		> "$module_dir/deployed.gitploy"
 		build_deploy_file "$module"
-		
+
 		# update update.gitploy files
 		for line in $(cat "$module_dir/deployed.gitploy" 2>/dev/null); do
 			if ! [ -z "$line" ]; then
@@ -918,13 +917,13 @@ update_mod() {
 			fi
 		done
 		return 0
-    else
+	else
 		echoinfo "Updating '$module' module..."
 		> "$module_dir/update.gitploy"
 		> "$module_dir/delete.gitploy"
 		> "$module_dir/deployed.gitploy"
 		> "$module_dir/diff.gitploy"
-		
+
 		cd "$source_dir"
 		local tagcheck=$(git fetch --tags)
 		local tagupdate=$(git fetch)
@@ -944,9 +943,9 @@ update_mod() {
 					return 0
 				fi
 			fi
-			
+
 			mod_set_latest_tag
-			
+
 			if [ -z $(git tag -l "$_TAG") ]; then
 				echostd "Tag '$_TAG' does not exist"
 				return 1
@@ -965,13 +964,13 @@ update_mod() {
 			fi
 		else
 			# Ignoring -b option (switching branch) because not yet supported
-			
+
 			if [ -z "$_BRANCH"  ] || [ "$_BRANCH" -eq "master"]; then
 				_FOE_BRANCH="master"
 				[ -s "$module_dir/branch.gitploy" ] && _FOE_BRANCH=$(cat "$module_dir/branch.gitploy")
 				[ "$_FOE_BRANCH" -ne "master"] && _BRANCH=$_FOE_BRANCH
 			fi
-			
+
 			echostd "Update to branch '$_BRANCH'"
 			git pull --quiet origin "$_BRANCH" && git submodule --quiet update --init --recursive || return 1
 			local new_commit=$(git rev-parse HEAD)
@@ -980,12 +979,12 @@ update_mod() {
 				git diff --stat --name-only "$old_commit" "$new_commit" --diff-filter=ACMR > "$module_dir/update.gitploy" 2> /dev/null
 			fi
 		fi
-		
+
 		local count=$(git diff --shortstat "$old_commit" "$new_commit" | cut -d" " -f2)
 		[ $DRY_RUN -eq $GD_TRUE ] && git checkout --quiet "$old_commit"
 		[ "$count" = "" ] && echostd "No changes found" && return 0
-	
-	
+
+
 		if [ $DRY_RUN -eq $GD_TRUE ]; then
 			echoinfo "Would modify:"
 			git --no-pager diff --name-only "$old_commit" "$new_commit" --diff-filter=ACMR
@@ -1004,7 +1003,7 @@ update_mod() {
 				fi
 			fi
 		done
-	
+
 		# delete delete.gitploy files
 		for line in $(cat "$module_dir/delete.gitploy" 2>/dev/null); do
 			if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
@@ -1015,7 +1014,7 @@ update_mod() {
 				fi
 			fi
 		done
-	
+
 		# update the deployed.gitploy file
 		if build_deploy_file "$module";
 		then
@@ -1023,8 +1022,8 @@ update_mod() {
 		else
 			return 1
 		fi
-		
-    fi
+
+	fi
 }
 
 #===  FUNCTION  ================================================================
@@ -1032,26 +1031,26 @@ update_mod() {
 #   DESCRIPTION:  echo out file info.
 #===============================================================================
 mod_info() {
-    local module="$1"
-    local module_dir="$GD_DIR/$module"
-    
-    require_mod_dir "$module"
-    
-    echostd "Information about '$module' module:"
-    if [ -s "$module_dir/repository.gitploy" ]; then
-        local repo=$(cat "$module_dir/repository.gitploy")
-        echostd "Repository: $repo"
-    fi
+	local module="$1"
+	local module_dir="$GD_DIR/$module"
 
-    if [ -s "$module_dir/tag.gitploy" ]; then
-        local current_tag=$(cat "$module_dir/tag.gitploy")
-        echostd "Tag: $current_tag"
-    else
-        local current_branch="master"
-        [ -s "$module_dir/branch.gitploy" ] && current_branch=$(cat "$module_dir/branch.gitploy")
-        echostd "Branch: $current_branch"
-    fi
-    return 0
+	require_mod_dir "$module"
+
+	echostd "Information about '$module' module:"
+	if [ -s "$module_dir/repository.gitploy" ]; then
+		local repo=$(cat "$module_dir/repository.gitploy")
+		echostd "Repository: $repo"
+	fi
+
+	if [ -s "$module_dir/tag.gitploy" ]; then
+		local current_tag=$(cat "$module_dir/tag.gitploy")
+		echostd "Tag: $current_tag"
+	else
+		local current_branch="master"
+		[ -s "$module_dir/branch.gitploy" ] && current_branch=$(cat "$module_dir/branch.gitploy")
+		echostd "Branch: $current_branch"
+	fi
+	return 0
 }
 
 
@@ -1063,27 +1062,27 @@ mod_info() {
 #   DESCRIPTION:  print out file info.
 #===============================================================================
 mod_info_inline(){
-    local module="$1"
-    local module_dir="$GD_DIR/$module"
-    local info=""
+	local module="$1"
+	local module_dir="$GD_DIR/$module"
+	local info=""
 
-    require_mod_dir "$module"
+	require_mod_dir "$module"
 
-    if [ -s "$module_dir/repository.gitploy" ]; then
-        local repo=$(cat "$module_dir/repository.gitploy")
-        info="$info $repo"
-    fi
+	if [ -s "$module_dir/repository.gitploy" ]; then
+		local repo=$(cat "$module_dir/repository.gitploy")
+		info="$info $repo"
+	fi
 
-    if [ -s "$module_dir/tag.gitploy" ]; then
-        local current_tag=$(cat "$module_dir/tag.gitploy")
-        info="$info (tag: $current_tag)"
-    else
-        local current_branch="master"
-        [ -s "$module_dir/branch.gitploy" ] && current_branch=$(cat "$module_dir/branch.gitploy")
-        info="$info (branch: $current_branch)"
-    fi
-    printf "$(tput bold)%-20s$(tput sgr0) $info\n" "$module"
-    return 0
+	if [ -s "$module_dir/tag.gitploy" ]; then
+		local current_tag=$(cat "$module_dir/tag.gitploy")
+		info="$info (tag: $current_tag)"
+	else
+		local current_branch="master"
+		[ -s "$module_dir/branch.gitploy" ] && current_branch=$(cat "$module_dir/branch.gitploy")
+		info="$info (branch: $current_branch)"
+	fi
+	printf "$(tput bold)%-20s$(tput sgr0) $info\n" "$module"
+	return 0
 }
 
 
@@ -1094,58 +1093,58 @@ mod_info_inline(){
 #                 include/exclude filters.
 #===============================================================================
 create_module() {
-    local repo="$1"
-    local module="$2"
-    local module_dir="$GD_DIR/$module"; shift 2
-    local source_dir="$module_dir/source"
-    local exclude_cache="$module_dir/excludes.gitploy"
-    local include_cache="$module_dir/includes.gitploy"
-    
-    cd "$GD_DIR"
-    echoinfo "Cloning $repo..."
-    if ! git clone --quiet -- $repo "$source_dir"; then
-        rm_mod_dir "$module"
-        echoerr "An error occurred while cloning repository"
-    fi
-    
-    echo "$repo" > "$module_dir/repository.gitploy"
+	local repo="$1"
+	local module="$2"
+	local module_dir="$GD_DIR/$module"; shift 2
+	local source_dir="$module_dir/source"
+	local exclude_cache="$module_dir/excludes.gitploy"
+	local include_cache="$module_dir/includes.gitploy"
 
-    cd "$source_dir"
+	cd "$GD_DIR"
+	echoinfo "Cloning $repo..."
+	if ! git clone --quiet -- $repo "$source_dir"; then
+		rm_mod_dir "$module"
+		echoerr "An error occurred while cloning repository"
+	fi
 
-    # Ignore chmod changes in future
-    git config core.filemode false
+	echo "$repo" > "$module_dir/repository.gitploy"
 
-    if [ -n "$_TAG" ]; then
-        mod_set_latest_tag()
-        if [ -z $(git tag -l "$_TAG") ]; then
-            rm_mod_dir "$module"
-            echoerr "Tag '$_TAG' does not exist"
-        fi
-        if ! git checkout --quiet "$_TAG"; then
-            rm_mod_dir "$module"
-            echoerr "An error occurred while fetching tag $_TAG"
-        fi
-        echo "$_TAG" > "$module_dir/tag.gitploy"
-    elif ! git checkout --quiet "$_BRANCH"; then
-        rm_mod_dir "$module"
-        echoerr "An error occurred while fetching branch $_BRANCH"
-    fi
+	cd "$source_dir"
 
-    echo "$_BRANCH" > "$module_dir/branch.gitploy"
+	# Ignore chmod changes in future
+	git config core.filemode false
 
-    echostd "Fetching submodules..."
-        if ! git submodule --quiet update --init --recursive; then
-        rm_mod_dir "$module"
-        echoerr "An error occurred while cloning submodules of $repo"
-    fi
-    
-    # Save includes filter if not empty
-    [ -z "$INCLUDES" ] || echo -e "$INCLUDES" > "$include_cache"
+	if [ -n "$_TAG" ]; then
+		mod_set_latest_tag()
+		if [ -z $(git tag -l "$_TAG") ]; then
+			rm_mod_dir "$module"
+			echoerr "Tag '$_TAG' does not exist"
+		fi
+		if ! git checkout --quiet "$_TAG"; then
+			rm_mod_dir "$module"
+			echoerr "An error occurred while fetching tag $_TAG"
+		fi
+		echo "$_TAG" > "$module_dir/tag.gitploy"
+	elif ! git checkout --quiet "$_BRANCH"; then
+		rm_mod_dir "$module"
+		echoerr "An error occurred while fetching branch $_BRANCH"
+	fi
 
-    # Save excludes filter if not empty
-    [ -z "$EXCLUDES" ] || echo -e "$EXCLUDES" > "$exclude_cache"
+	echo "$_BRANCH" > "$module_dir/branch.gitploy"
 
-    return 0
+	echostd "Fetching submodules..."
+		if ! git submodule --quiet update --init --recursive; then
+		rm_mod_dir "$module"
+		echoerr "An error occurred while cloning submodules of $repo"
+	fi
+
+	# Save includes filter if not empty
+	[ -z "$INCLUDES" ] || echo -e "$INCLUDES" > "$include_cache"
+
+	# Save excludes filter if not empty
+	[ -z "$EXCLUDES" ] || echo -e "$EXCLUDES" > "$exclude_cache"
+
+	return 0
 }
 
 
@@ -1165,152 +1164,152 @@ esac
 case "$ACTION" in
 
   list|ls)
-    # List all installed modules
-    count=$(ls -A "$GD_DIR" | wc -l | sed 's/ //g')
-    IFS=$'\n'
-    for module in $(ls -1 "$GD_DIR"); do
-      [ -d "$GD_DIR/$module" ] || continue;
-      mod_info_inline "$module"
-    done
-    echostd "$count module(s) found"
-    exit 0
-    ;;
+	# List all installed modules
+	count=$(ls -A "$GD_DIR" | wc -l | sed 's/ //g')
+	IFS=$'\n'
+	for module in $(ls -1 "$GD_DIR"); do
+		[ -d "$GD_DIR/$module" ] || continue;
+		mod_info_inline "$module"
+	done
+	echostd "$count module(s) found"
+	exit 0
+	;;
 
   clone|add) 
-    # Install new repo
-    echostd "Starting repo clone"
-    module="$1"; shift
-    [ -z "$module" ] && echoerr "No repo specified"
-    repo_dir="$GD_DIR/$module"
-    [[ "$module" =~ [^a-z0-9_-]+ ]] &&
-      echoerr "You cannot add a repo containingmore then [^a-zA-Z0-9_-]+ pattern\nModule specified: $module"
-      
-    [ -d "$repo_dir" ] && echoerr "A module with this name already exists"
-  
-    success=$GD_TRUE
-    repo="$1"; shift
-    create_module "$repo" "$module" || success=$GD_FALSE
-  
-    cd "$GD_DIR"
+	# Install new repo
+	echostd "Starting repo clone"
+	module="$1"; shift
+	[ -z "$module" ] && echoerr "No repo specified"
+	repo_dir="$GD_DIR/$module"
+	[[ "$module" =~ [^a-z0-9_-]+ ]] &&
+		echoerr "You cannot add a repo containingmore then [^a-zA-Z0-9_-]+ pattern\nModule specified: $module"
 
-    if [ $success -eq $GD_TRUE ]; then
-        if require_mod_dir "$module" &&
-            mv_files "$module";
-            then
-            [ $DRY_RUN -eq $GD_FALSE ] && echofin "Installation complete" || rm_mod_dir "$module"
-        fi
-    else
-        require_mod_dir "$module"
-        echoerr "Error cloning '$module', operation cancelled"
-    fi
-    exit 0
-    ;;
+	[ -d "$repo_dir" ] && echoerr "A module with this name already exists"
+
+	success=$GD_TRUE
+	repo="$1"; shift
+	create_module "$repo" "$module" || success=$GD_FALSE
+
+	cd "$GD_DIR"
+
+	if [ $success -eq $GD_TRUE ]; then
+		if require_mod_dir "$module" &&
+			mv_files "$module";
+			then
+			[ $DRY_RUN -eq $GD_FALSE ] && echofin "Installation complete" || rm_mod_dir "$module"
+		fi
+	else
+		require_mod_dir "$module"
+		echoerr "Error cloning '$module', operation cancelled"
+	fi
+	exit 0
+	;;
 
   update|up)
-    echostd "Starting repo update"
-    if [ $GD_RECURSIVE = $GD_TRUE ]; then
-        IFS=$'\n'
-        # Update all installed modules
-        #[ -n "$2" ] && echoerr "Too many arguments for '$ACTION' command"
-        require_mods
-        errors=0
-        for module in $(ls -1 "$GD_DIR"); do
-            [ -d "$GD_DIR/$module" ] || continue;
-            if ! update_mod "$module"; then
-                echoinfo "-e" "Error occurred while updating '$module'"
-                errors=$((errors+1))
-            fi
-        done
-        [ $DRY_RUN -eq $GD_FALSE ] && echoinfo "Updated all modules with $errors error(s)"
-    else
-        # Update specified module
-        module="$1"; shift
-        [ -z "$module" ] && echoerr "No module specified"
-        if ! update_mod "$module"; then
-            echoerr "Error updating '$module', operation cancelled"
-        fi
-    fi
-    echofin "Updated tracked repositories"
-    exit 0
-    ;;
+	echostd "Starting repo update"
+	if [ $GD_RECURSIVE = $GD_TRUE ]; then
+		IFS=$'\n'
+		# Update all installed modules
+		#[ -n "$2" ] && echoerr "Too many arguments for '$ACTION' command"
+		require_mods
+		errors=0
+		for module in $(ls -1 "$GD_DIR"); do
+			[ -d "$GD_DIR/$module" ] || continue;
+			if ! update_mod "$module"; then
+				echoinfo "-e" "Error occurred while updating '$module'"
+				errors=$((errors+1))
+			fi
+		done
+		[ $DRY_RUN -eq $GD_FALSE ] && echoinfo "Updated all modules with $errors error(s)"
+	else
+		# Update specified module
+		module="$1"; shift
+		[ -z "$module" ] && echoerr "No module specified"
+		if ! update_mod "$module"; then
+			echoerr "Error updating '$module', operation cancelled"
+		fi
+	fi
+	echofin "Updated tracked repositories"
+	exit 0
+	;;
 
   remove|rm)
-    echostd "Starting repo removal"
-    if [ $GD_RECURSIVE = $GD_TRUE ]; then
-        IFS=$'\n'
-        # Remove all installed modules
-        #[ -n "$1" ] && echoerr "Too many arguments for '$ACTION' command"
-        require_mods
-        errors=0
-        for module in $(ls -1 "$GD_DIR"); do
-          [ -d "$GD_DIR/$module" ] || continue
-          if ! rm_mod "$module"; then
-            echoinfo "Error occurred while removing '$module' module"
-            errors=$((errors+1))
-          fi
-        done
-        [ $DRY_RUN -eq $GD_FALSE ] && echoinfo "Removed desired modules with $errors error(s)"
-    else
-        # Remove specified module
-        module="$1"; shift
-        [ -z "$module" ] && echoerr "No module specified"
+	echostd "Starting repo removal"
+	if [ $GD_RECURSIVE = $GD_TRUE ]; then
+		IFS=$'\n'
+		# Remove all installed modules
+		#[ -n "$1" ] && echoerr "Too many arguments for '$ACTION' command"
+		require_mods
+		errors=0
+		for module in $(ls -1 "$GD_DIR"); do
+			[ -d "$GD_DIR/$module" ] || continue
+			if ! rm_mod "$module"; then
+				echoinfo "Error occurred while removing '$module' module"
+				errors=$((errors+1))
+			fi
+		done
+		[ $DRY_RUN -eq $GD_FALSE ] && echoinfo "Removed desired modules with $errors error(s)"
+	else
+		# Remove specified module
+		module="$1"; shift
+		[ -z "$module" ] && echoerr "No module specified"
 
-        if ! require_mod_dir "$module" || ! rm_mod "$module"; then
-          echoinfo "Error removing '$module', operation cancelled"
-        fi
-        
-    fi
-    echofin "Completed removal of tracked repositories"
-    exit 0
-    ;;
+		if ! require_mod_dir "$module" || ! rm_mod "$module"; then
+			echoinfo "Error removing '$module', operation cancelled"
+		fi
 
-  
+	fi
+	echofin "Completed removal of tracked repositories"
+	exit 0
+	;;
+
+
   info)
-    # Show information about specified module
-    module="$1"; shift
-    [ -z "$module" ] && echoerr "No module specified"
+	# Show information about specified module
+	module="$1"; shift
+	[ -z "$module" ] && echoerr "No module specified"
 
-    mod_info "$module"
-    ;;
-  
+	mod_info "$module"
+	;;
+
   files)
-    # List deployed files of specified module
-    [ $# -gt 0 ] || echoerr "No module specified"
-    module="$1"; shift
-    [ -z "$module" ] && echoerr "No module specified"
+	# List deployed files of specified module
+	[ $# -gt 0 ] || echoerr "No module specified"
+	module="$1"; shift
+	[ -z "$module" ] && echoerr "No module specified"
 
-    require_mod_dir "$module"
+	require_mod_dir "$module"
 
-    echoinfo "Deployed files of '$module' module:"
-    sleep 1
-    module_dir="$GD_DIR/$module"
-    cat "$module_dir/deployed.gitploy"
-    ;;
+	echoinfo "Deployed files of '$module' module:"
+	sleep 1
+	module_dir="$GD_DIR/$module"
+	cat "$module_dir/deployed.gitploy"
+	;;
 
-  
+
   proxy)
-    # Run git command into specified module
-    module="$1"; shift
-    [ -z "$module" ] && echoerr "No module specified"
+	# Run git command into specified module
+	module="$1"; shift
+	[ -z "$module" ] && echoerr "No module specified"
 
-    require_mod_dir "$module"
+	require_mod_dir "$module"
 
-    cd "$GD_DIR/$module/source"
+	cd "$GD_DIR/$module/source"
 
-    git "$@"
-    ;;
+	git "$@"
+	;;
 
-  
+
   init)
-    __build_dirs
-    echoinfo "Initialized $SCRIPT at $(pwd)/.gitploy/"
-    exit 0
-    ;;
+	__build_dirs
+	echoinfo "Initialized $SCRIPT at $(pwd)/.gitploy/"
+	exit 0
+	;;
 
-  
+
   *)
-    usage
-    echoerr "Invalid action: $ACTION"
+	usage
+	echoerr "Invalid action: $ACTION"
 
 esac
 
