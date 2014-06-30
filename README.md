@@ -163,7 +163,7 @@ If you were on a tag then you would have been moved off this tag and to the head
 ##Future Features
 
  - [ ] To be able to accept a git push deployment
- - [ ] Be able to have hooks and events to monitor for changes ***(still spec'in the out but the thought is the cron jobs run `rm` to ensure the code is always what it should be.  This would be done to lower malware infection scope of damage)***
+ - [ ] Be able to have hooks and events to monitor for changes ***(still spec'in the out but the thought is the cron jobs run `re` to ensure the code is always what it should be.  This would be done to lower malware infection scope of damage)***
  - [ ] To be able to accept a git push deployment
 
 Please request any features and feel free to send a pull request
