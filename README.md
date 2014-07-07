@@ -106,7 +106,14 @@ PLACE HOLDER EXAMPLE VALUES:
 </pre>
 
 
+##install
 
+
+	```shell
+	curl  https://raw.githubusercontent.com/jeremyBass/gitploy/master/gitploy | sudo sh -s -- install
+	```
+
+This will get you to an installed state.  It will pull it's self in , regardless of where you are runing the command, and set up gitploy to be used. `gitploy` can be used for many things, as long as it's repor based.  This is why `gitploy` is installed to the root directory.
 
 ##using ssh for private repos
 
