@@ -456,6 +456,18 @@ applyaliases() {
 }
 
 
+
+#===  FUNCTION  ================================================================
+#          NAME:  __update_gitploy
+#   DESCRIPTION:  update the gitploy script
+#===============================================================================
+__update_gitploy(){
+	curl  https://raw.githubusercontent.com/jeremyBass/gitploy/master/gitploy | sudo sh -s -- install
+	return 0
+}
+
+
+
 #===  FUNCTION  ================================================================
 #          NAME:  __init_gitploy
 #   DESCRIPTION:  sets up gitploy as user and system executable.
@@ -500,7 +512,7 @@ fi
 #-----------------------------------------------------------------------
 #  Accept action as first argument or as add | note: add is default
 #-----------------------------------------------------------------------
-REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
+REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh|update_gitploy)"
 if [[ "$1" =~ $REGEX_ACTION ]]; then
 	ACTION="$1"; shift
 fi
@@ -1086,7 +1098,6 @@ mod_info_inline(){
 }
 
 
-
 #===  FUNCTION  ================================================================
 #          NAME:  create_module
 #   DESCRIPTION:  Creates module dir, clones git repo and optionally stores 
@@ -1300,6 +1311,12 @@ case "$ACTION" in
 	;;
 
 
+  update_gitploy)
+	__update_gitploy
+	echoinfo "Updated gitploy"
+	exit 0
+	;;
+	
   init)
 	__build_dirs
 	echoinfo "Initialized $SCRIPT at $(pwd)/.gitploy/"
