@@ -161,7 +161,7 @@ It will pull it's self in , regardless of where you are runing the command, and 
 
 ###Option 1 - ssh agent forwarding
 
-There are two steps that need to be done:
+There is only one steps that need to be done:
 
 1. Add `ForwardAgent yes` to your `/.ssh/config` file.  When you coonect to your production server you will have access to your git repos.  
 
@@ -173,12 +173,26 @@ There are two steps that need to be done:
 	  IdentityFile ~/.ssh/github_rsa
 	```
 	
-1. (optional) You most likely are going to need to `sudo -s` to do anything with the server including using `gitploy`.  Inorder to still have the ssh agent forwarded an edit will need to be done.  With in `/etc/sudoers` you need to add:
+1. (optional if not working yet) You most likely are going to need to `sudo -s` to do anything with the server including using `gitploy`.  Inorder to still have the ssh agent forwarded an edit will need to be done.  With in `/etc/sudoers` you need to add:
 
 	```shell
 	Defaults    env_keep+=SSH_AUTH_SOCK
 	```
 	After this when the `foo.user` logs in and then `sudo -s` you can run `ssh-add -L`  and you should see that you are now getting you ssh key alther way from your local machine to your server user that is sudoed in.
+	
+1. (optional if still not working yet) it may be that you are getting a `ssh: connect to host github.com port 22: Connection refused` message, if so you just need to point your host to the ssl for github (443).  This can be done like this:
+
+	```shell
+	vi ~/.ssh/config
+	```
+	and add:
+	
+	```shell
+	Host github.com
+	  Hostname ssh.github.com
+	  Port 443
+	```
+	
 
 ##Moving from tag to branch
 This is no issue as you just need to run an update with the `-b` option.  For example
