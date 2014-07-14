@@ -31,105 +31,49 @@ usage() {
 
   Usage :  ${__ScriptName} [<command>] [options]
 
-  Command Examples:
-    \$ ${__ScriptName} $(tput bold)$(tput sgr0)<module> <repository>
-                => Install a module by cloning specified git repository
-    \$ ${__ScriptName} $(tput bold)init$(tput sgr0)
-                => Initialize .gitploy/ folder
-    \$ ${__ScriptName} $(tput bold)ls$(tput sgr0)
-                => List installed modules
-    \$ ${__ScriptName} $(tput bold)rm$(tput sgr0) <module>
-                => Remove specified module
-    \$ ${__ScriptName} $(tput bold)up$(tput sgr0) <module>
-                => Update specified module
-    \$ ${__ScriptName} $(tput bold)re$(tput sgr0) <module>
-                => Refresh files of specified module
-    \$ ${__ScriptName} $(tput bold)info$(tput sgr0) <module>
-                => Show information about a specific module
-    \$ ${__ScriptName} $(tput bold)files$(tput sgr0) <module>
-                => List deployed files of specified module
-    \$ ${__ScriptName} $(tput bold)proxy$(tput sgr0) <module> <git_args>
-                => Run git command into specified module
-    \$ ${__ScriptName} $(tput bold)install$(tput sgr0)
-                => Install gitploy
 
-PLACE HOLDER EXAMPLE VALUES:
-<repository>  ==> https://github.com/account/repository.git
-<module>      ==> repository_name
-<git_args>    ==> reset --hard upstream/master
+  Actions:
+    init           => Initialize .gitploy/ folder
+    ls/list        => List installed modules
+    rm/remove      => Remove specified module
+    up/update      => Update specified module
+    re/refresh     => Refresh files of specified module
+    info           => Show information about a specific module
+    files          => List deployed files of specified module
+    proxy          => Run git command into specified module
+    install        => Install gitploy
+    update_gitploy => This will update gitploy it's self
+
+
+  Command Examples:
+    ${__ScriptName} <module> <repository> //(note this installs the repo)
+    ${__ScriptName} init  
+    ${__ScriptName} ls
+    ${__ScriptName} rm <module>
+    ${__ScriptName} up <module>
+    ${__ScriptName} re <module>
+    ${__ScriptName} info <module>
+    ${__ScriptName} files <module>
+    ${__ScriptName} proxy <module> <git_args>
+    ${__ScriptName} install
+    ${__ScriptName} update_gitploy
 
   Options:
   -v   Show gitploy version
-
   -h   Show this help
-
   -d   (Dry run) Dry run mode (show what would be done)
-
   -i   (Include) Only deploys items that match the filters
-       EX:
-       \$ ${__ScriptName} $(tput bold)-i lib/ -i foo/:bar/$(tput sgr0) <module> <repository>
-                => will deploy only lib/ (to lib/) and foo/ (to bar/)
-
   -c   (Callback) Point to an action file with in the repo.  If none set, default is ` installer `
-       EX:
-       \$ ${__ScriptName} $(tput bold)-a$(tput sgr0) <module> <repository>
-                => will add the repo, then look for the installer file and run it
-
   -e   (Exclude) Filters out listed items.  May use regex syntax
-       EX:
-       \$ ${__ScriptName} $(tput bold)-e lib/tests/ -e *.txt$(tput sgr0) <module> <repository>
-                => will exclude both directory lib/tests/ and file lib/README.txt
-
   -b   (Branch) Specify a repository branch (only for add command)
-       EX:
-       \$ ${__ScriptName} $(tput bold)-b 1.0-stable$(tput sgr0) <module> <repository>
-                => will checkout 1.0-stable branch of 
-                    specified repository
-
   -t   (Tag) Specify a repository tag (only for add and update command also $(tput bold)overpowers -b$(tput sgr0) ) 
-       Note: a value of `$(tput bold)latest$(tput sgr0)` will use the latest tag released
-       EX:
-       \$ ${__ScriptName} $(tput bold)-t 1.2.0$(tput sgr0) <module> <repository>
-                => will checkout 1.2.0 tag of specified repository
-
   -z  (Reset) Reset a repo on operation.  Really only applies to updates.  You will move from tag to branch at head release 
-       EX:
-       \$ ${__ScriptName} up $(tput bold)-z$(tput sgr0) <module>
-                => will move to head cleaning the specified repository of tags and commits
-
   -f   (Folder root) Set the folder in the repo to root the tracking from. 
-       EX:
-       \$ ${__ScriptName} $(tput bold)-f foo/Folder$(tput sgr0) <module> <repository>
-                => will checkout specified repository but only starting at that folder in the repo
-
   -r   (Reqursive) Move through the modules tracked reqursively
-       EX:
-       \$ ${__ScriptName} rm $(tput bold)-r$(tput sgr0)
-                => will remove all repositories logged
-                   $(tput bold)NOTE::$(tput sgr0) all repo removals will be meet with a prompt
-
-  -u   (Unattended) This flag will accept all promots.  Use wisely as 
-                    unattended in this form, `\$ rm -ru`, would be wiping
-                    all logged repos
-       EX:
-       \$ ${__ScriptName} rm $(tput bold)-u$(tput sgr0) <module>
-                => will remove named repository $(tput bold) 
-                   WITHOUT a prompt$(tput sgr0)
-
-  -q   (Quite) If you must hide the verbose output,
-                this flag will block all stdout
-       EX:
-       \$ ${__ScriptName} $(tput bold)-q$(tput sgr0) <module> <repository>
-                => will add a new repository with out any stdout messaging
-
-  -w   (Wall Broadcasting) Some times it's important that you
-                            don't have others doing anything 
-                            while you upgrade which wall will let
-                            them know you doing something, the flag stop that
-       EX:
-       \$ ${__ScriptName} $(tput bold)-w$(tput sgr0) <module> <repository>
-                => will add a new repository and prevent 
-                    everyone that is logged in knowing about it               
+  -u   (Unattended) This flag will accept all promots.
+  -q   (Quite) If you must hide the verbose output, this flag will block all stdout
+  -w   (Wall Broadcasting) telll anyone on the server you are about to run an action
+         
 
 END
 }
