@@ -67,7 +67,7 @@ usage() {
   -e   (Exclude) Filters out listed items.  May use regex syntax
   -b   (Branch) Specify a repository branch (only for add command)
   -t   (Tag) Specify a repository tag (only for add and update command also $(tput bold)overpowers -b$(tput sgr0) ) 
-  -z  (Reset) Reset a repo on operation.  Really only applies to updates.  You will move from tag to branch at head release 
+  -z   (Reset) Reset a repo on operation.  Really only applies to updates.  You will move from tag to branch at head release 
   -f   (Folder root) Set the folder in the repo to root the tracking from. 
   -r   (Reqursive) Move through the modules tracked reqursively
   -u   (Unattended) This flag will accept all promots.
