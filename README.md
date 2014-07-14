@@ -173,7 +173,7 @@ There are two steps that need to be done:
 	  IdentityFile ~/.ssh/github_rsa
 	```
 	
-1. (optional) You mostly are going to need to `sudo -s` to do anything with the server including using `gitploy`.  Inorder to still have the ssh agent forwarded an edit will need to be done.
+1. (optional) You most likely are going to need to `sudo -s` to do anything with the server including using `gitploy`.  Inorder to still have the ssh agent forwarded an edit will need to be done.  With in `/etc/sudoers` you need to add:
 
 	```shell
 	Defaults    env_keep+=SSH_AUTH_SOCK
