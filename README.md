@@ -118,6 +118,8 @@ It will pull it's self in , regardless of where you are runing the command, and 
 
 ##using ssh for private repos
 
+###Option 1 - deployment keys
+
 1. Start by making sure your server is set up to make a ssh connection from your user.  Look to https://help.github.com/articles/generating-ssh-keys for more information
 2. Follow the directions here https://developer.github.com/guides/managing-deploy-keys/#deploy-keys
 3. After these first step then you are ready to star managing your private repos.  To get your repo in run something like 
@@ -157,6 +159,26 @@ It will pull it's self in , regardless of where you are runing the command, and 
 	```
 	Another tip if you are still are having to enter your passphrase each time is to set the passphase to blank.  This may seem like your breaking the security, but if your system is secure it is argued that you have already authenticated twice at the very least before you would have used the passphase.  Do this only if you are sure you know what you are doing.  Lots of chat on google about this, but do what you feel is best.
 
+###Option 1 - ssh agent forwarding
+
+There are two steps that need to be done:
+
+1. Add `ForwardAgent yes` to your `/.ssh/config` file.  When you coonect to your production server you will have access to your git repos.  
+
+	```shell
+	Host foo.com
+	  ForwardAgent yes
+	  User foo.user
+	  Hostname 111.111.111.111
+	  IdentityFile ~/.ssh/github_rsa
+	```
+	
+1. (optional) You mostly are going to need to `sudo -s` to do anything with the server including using `gitploy`.  Inorder to still have the ssh agent forwarded an edit will need to be done.
+
+	```shell
+	Defaults    env_keep+=SSH_AUTH_SOCK
+	```
+	After this when the `foo.user` logs in and then `sudo -s` you can run `ssh-add -L`  and you should see that you are now getting you ssh key alther way from your local machine to your server user that is sudoed in.
 
 ##Moving from tag to branch
 This is no issue as you just need to run an update with the `-b` option.  For example
