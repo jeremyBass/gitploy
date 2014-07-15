@@ -610,12 +610,28 @@ mod_git_reset(){
 sparse_checkout(){
 	git config core.sparsecheckout true
 	
-	echo $_ROOTFLODER >> .git/info/sparse-checkout
-	echo another/sub/tree >> .git/info/sparse-checkout
+	IFS=',' read -a folders <<< "$_ROOTFLODER"
+	for folder in "${folders[@]}"
+	do
+		echo $folder >> .git/info/sparse-checkout
+	done
 	
 	
+	#if the above don't work then
+	#if [[ $string == *,* ]]
+	#then
+	#	IFS=',' read -a folders <<< "$_ROOTFLODER"
+	#	for folder in "${folders[@]}"
+	#	do
+	#		echo $folder >> .git/info/sparse-checkout
+	#	done
+	#else
+	#	echo $_ROOTFLODER >> .git/info/sparse-checkout
+	#fi
+	echostd "'$module' is rooted at $_ROOTFLODER"
 	return 0
 }
+
 #===  FUNCTION  ================================================================
 #          NAME:  sparse_to_full
 #   DESCRIPTION:  remove a sub-tree of a repo and track everything again
