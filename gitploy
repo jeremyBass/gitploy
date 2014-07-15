@@ -1124,7 +1124,7 @@ create_module() {
 
 	cd "$GD_DIR"
 	[ -z "$_ROOTFOLDER" ] || sparse_checkout "$module"
-	[ "$_ROOTFOLDER" -eq "false" ] && sparse_to_full "$module"
+	[ "x$_ROOTFOLDER" == "xfalse" ] && sparse_to_full "$module"
 
 	echoinfo "Cloning $repo..."
 	if ! git clone --quiet -- $repo "$source_dir"; then
