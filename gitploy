@@ -618,18 +618,18 @@ sparse_checkout(){
 
 	local module="$1"
 	local module_dir="$GD_DIR/$module"
-	local source_dir="$module_dir/source"
-	local sparse_file="$source_dir/.git/info/sparse-checkout"
+	local source_sparse_dir="$module_dir/source/.git/info"
+	local sparse_file="$source_sparse_dir/sparse-checkout"
 
 	git config core.sparsecheckout true
-	[ -d "$source_dir" ] || mkdir -p $source_dir
+	[ -d "$source_sparse_dir" ] || mkdir -p $source_sparse_dir
 	[ -f "$sparse_file" ] || touch "$sparse_file"
 	> "$sparse_file"
 	
 	IFS=',' read -a folders <<< "$_ROOTFOLDER"
 	for folder in "${folders[@]}"
 	do
-		echo $folder >> "$source_dir/.git/info/sparse-checkout"
+		echo $folder >> "$source_sparse_dir/sparse-checkout"
 		echostd "a subtree using folder '$folder'"
 	done
 	
