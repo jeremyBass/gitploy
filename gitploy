@@ -1016,6 +1016,17 @@ update_mod() {
 		[ $DRY_RUN -eq $GD_TRUE ] && git checkout --quiet "$old_commit"
 		[ "$count" = "" ] && echostd "No changes found" && return 0
 
+		#we are going to controll the root folder the file is comeing from
+		#we have a sparse tree at this point, but it may be in parent folders, so 
+		#what will happen is we need to iteratate over the list and remove the parent folder paths
+		#	IFS=',' read -a folders <<< "$_ROOTFOLDER"
+		#	for folder in "${folders[@]}"
+		#	do
+		#		echo $folder >> "$source_sparse_dir/sparse-checkout"
+		#		echostd "a subtree using folder '$folder'"
+		#	done
+
+
 
 		if [ $DRY_RUN -eq $GD_TRUE ]; then
 			echoinfo "Would modify:"
