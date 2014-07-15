@@ -663,7 +663,7 @@ sparse_to_full(){
 
 	if [ -z "$_drity" ]; then
 		git config core.sparsecheckout false
-		> "$module_dir/.git/info/sparse-checkout"
+		echo "*" > "$module_dir/.git/info/sparse-checkout"
 		mod_git_reset
 	fi
 
@@ -1128,8 +1128,6 @@ create_module() {
 	local include_cache="$module_dir/includes.gitploy"
 
 	cd "$GD_DIR"
-	
-	
 
 	echoinfo "Cloning $repo..."
 	if ! git clone --quiet -- $repo "$source_dir"; then
