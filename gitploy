@@ -637,7 +637,7 @@ sparse_checkout(){
 #   DESCRIPTION:  remove a sub-tree of a repo and track everything again
 #===============================================================================
 sparse_to_full(){
-	git config core.sparsecheckout fallse
+	git config core.sparsecheckout false
 	> .git/info/sparse-checkout
 	mod_git_reset();
 	return 0
