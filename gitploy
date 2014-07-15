@@ -146,7 +146,7 @@ composer\.json"
 _OWNER="washingtonstateuniversity"
 _BRANCH="master"
 _TAG=""
-_ROOTFLODER=""
+_ROOTFOLDER=""
 
 
 cur_file=""
@@ -517,7 +517,7 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:a:g" opt; do
 	t ) _TAG=$OPTARG
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
-	f) _ROOTFLODER=$OPTARG
+	f) _ROOTFOLDER=$OPTARG
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 	p) GD_PWD=$OPTARG
@@ -623,27 +623,27 @@ sparse_checkout(){
 	git config core.sparsecheckout true
 	> "$source_dir/.git/info/sparse-checkout"
 	
-	IFS=',' read -a folders <<< "$_ROOTFLODER"
+	IFS=',' read -a folders <<< "$_ROOTFOLDER"
 	for folder in "${folders[@]}"
 	do
 		echo $folder >> "$source_dir/.git/info/sparse-checkout"
 		echostd "a subtree using folder '$folder'"
 	done
 	
-	echostd "'$module' is using a subtree starting at '$_ROOTFLODER'"
+	echostd "'$module' is using a subtree starting at '$_ROOTFOLDER'"
 	
 	#if the above don't work then
 	#if [[ $string == *,* ]]
 	#then
-	#	IFS=',' read -a folders <<< "$_ROOTFLODER"
+	#	IFS=',' read -a folders <<< "$_ROOTFOLDER"
 	#	for folder in "${folders[@]}"
 	#	do
 	#		echo $folder >> .git/info/sparse-checkout
 	#	done
 	#else
-	#	echo $_ROOTFLODER >> .git/info/sparse-checkout
+	#	echo $_ROOTFOLDER >> .git/info/sparse-checkout
 	#fi
-	echostd "'$module' is rooted at $_ROOTFLODER"
+	echostd "'$module' is rooted at $_ROOTFOLDER"
 	return 0
 }
 
@@ -1117,16 +1117,14 @@ mod_info_inline(){
 create_module() {
 	local repo="$1"
 	local module="$2"
-	local module_dir="$GD_DIR/$module"; shift 2
+	local module_dir="$GD_DIR/$module"; #shift 2
 	local source_dir="$module_dir/source"
 	local exclude_cache="$module_dir/excludes.gitploy"
 	local include_cache="$module_dir/includes.gitploy"
 
 	cd "$GD_DIR"
-
-	[ -z "$_ROOTFLODER" ] || sparse_checkout $module
-
-	[ "$_ROOTFLODER" -eq "false" ] && sparse_to_full $module
+	[ -z "$_ROOTFOLDER" ] || sparse_checkout "$module"
+	[ "$_ROOTFOLDER" -eq "false" ] && sparse_to_full "$module"
 
 	echoinfo "Cloning $repo..."
 	if ! git clone --quiet -- $repo "$source_dir"; then
