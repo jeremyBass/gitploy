@@ -622,8 +622,7 @@ sparse_checkout(){
 	local sparse_file="$source_sparse_dir/sparse-checkout"
 
 	git config core.sparsecheckout true
-	[ -d "$source_sparse_dir" ] || mkdir -p $source_sparse_dir
-	[ -f "$sparse_file" ] || touch "$sparse_file"
+
 	> "$sparse_file"
 	
 	IFS=',' read -a folders <<< "$_ROOTFOLDER"
@@ -632,7 +631,7 @@ sparse_checkout(){
 		echo $folder >> "$source_sparse_dir/sparse-checkout"
 		echostd "a subtree using folder '$folder'"
 	done
-	
+	git read-tree -mu HEAD
 	echostd "'$module' is using a subtree starting at '$_ROOTFOLDER'"
 	
 	#if the above don't work then
@@ -956,6 +955,9 @@ update_mod() {
 
 		local old_commit=$(git rev-parse HEAD)
 
+		[ "x$_ROOTFOLDER" == "xfalse" ] && sparse_to_full "$module"
+
+
 		# If module was fetched with a specific tag
 		if [ -s "$module_dir/tag.gitploy" ]; then
 			if [ -z "$_TAG" ]; then
@@ -1126,8 +1128,8 @@ create_module() {
 	local include_cache="$module_dir/includes.gitploy"
 
 	cd "$GD_DIR"
-	[ -z "$_ROOTFOLDER" ] || sparse_checkout "$module"
-	[ "x$_ROOTFOLDER" == "xfalse" ] && sparse_to_full "$module"
+	
+	
 
 	echoinfo "Cloning $repo..."
 	if ! git clone --quiet -- $repo "$source_dir"; then
@@ -1159,6 +1161,8 @@ create_module() {
 	fi
 
 	echo "$_BRANCH" > "$module_dir/branch.gitploy"
+
+	[ -z "$_ROOTFOLDER" ] || sparse_checkout "$module"
 
 	echostd "Fetching submodules..."
 		if ! git submodule --quiet update --init --recursive; then
