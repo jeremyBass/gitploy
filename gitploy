@@ -1125,7 +1125,7 @@ create_module() {
 
 	[ -z "$_ROOTFLODER" ] || sparse_checkout $module
 
-	[ $_ROOTFLODER -eq "false" ] && sparse_to_full $module
+	[ "$_ROOTFLODER" -eq "false" ] && sparse_to_full $module
 
 	echoinfo "Cloning $repo..."
 	if ! git clone --quiet -- $repo "$source_dir"; then
