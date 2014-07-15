@@ -626,8 +626,10 @@ sparse_checkout(){
 	for folder in "${folders[@]}"
 	do
 		echo $folder >> "$source_dir/.git/info/sparse-checkout"
+		echostd "a subtree using folder '$folder'"
 	done
 	
+	echostd "'$module' is using a subtree starting at '$_ROOTFLODER'"
 	
 	#if the above don't work then
 	#if [[ $string == *,* ]]
