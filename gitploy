@@ -71,7 +71,7 @@ usage() {
   -z   (Reset) Reset a repo on operation.  Really only applies to updates.
                You will move from tag to branch at head release 
   -f   (Folder root) Set the folder in the repo to root the tracking from. 
-           (** NOTE:: setting to 0 will clear the root used adn return the
+           (** NOTE:: setting to false will clear the root used adn return the
                       repo back to a normal checkout ** )
   -r   (Reqursive) Move through the modules tracked reqursively
   -u   (Unattended) This flag will accept all promots.
@@ -1123,7 +1123,7 @@ create_module() {
 
 	[ -z "$_ROOTFLODER" ] || sparse_checkout $module
 
-	[ "$_ROOTFLODER" -eq "$GD_FALSE" ] && sparse_to_full $module
+	[ $_ROOTFLODER -eq "false" ] && sparse_to_full $module
 
 	echoinfo "Cloning $repo..."
 	if ! git clone --quiet -- $repo "$source_dir"; then
