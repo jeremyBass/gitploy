@@ -62,10 +62,10 @@ usage() {
   -h   Show this help
   -d   (Dry run) Dry run mode (show what would be done)
   -i   (Include) Only deploys items that match the filters
-  -c   (Callback) Point to an action file with in the repo.  If none set, default is ` installer `
+  -c   (Callback) Point to an action file with in the repo.  If none set, default is installer
   -e   (Exclude) Filters out listed items.  May use regex syntax
   -b   (Branch) Specify a repository branch (only for add command)
-  -t   (Tag) Specify a repository tag (only for add and update command also $(tput bold)overpowers -b$(tput sgr0) ) 
+  -t   (Tag) Specify a repository tag (only for add and update command also overpowers -b ) 
   -z   (Reset) Reset a repo on operation.  Really only applies to updates.  You will move from tag to branch at head release 
   -f   (Folder root) Set the folder in the repo to root the tracking from. 
   -r   (Reqursive) Move through the modules tracked reqursively
@@ -602,6 +602,26 @@ mod_git_reset(){
 	git clean --force
 	return 0
 }
+
+#===  FUNCTION  ================================================================
+#          NAME:  sparse_checkout
+#   DESCRIPTION:  get a sub-tree of a repo and track that only
+#===============================================================================
+sparse_checkout(){
+
+
+	#_ROOTFLODER
+	git config core.sparsecheckout true
+	
+	echo some/dir/ >> .git/info/sparse-checkout
+	echo another/sub/tree >> .git/info/sparse-checkout
+	
+	
+	return 0
+}
+
+
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  mod_set_latest_tag
