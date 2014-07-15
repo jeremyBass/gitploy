@@ -615,12 +615,17 @@ mod_git_reset(){
 #   DESCRIPTION:  get a sub-tree of a repo and track that only
 #===============================================================================
 sparse_checkout(){
+
+	local module="$1"
+	local module_dir="$GD_DIR/$module"
+	local source_dir="$module_dir/source"
+
 	git config core.sparsecheckout true
 	
 	IFS=',' read -a folders <<< "$_ROOTFLODER"
 	for folder in "${folders[@]}"
 	do
-		echo $folder >> .git/info/sparse-checkout
+		echo $folder >> "$source_dir/.git/info/sparse-checkout"
 	done
 	
 	
@@ -644,10 +649,18 @@ sparse_checkout(){
 #   DESCRIPTION:  remove a sub-tree of a repo and track everything again
 #===============================================================================
 sparse_to_full(){
-	git config core.sparsecheckout false
-	> .git/info/sparse-checkout
+
+	local module="$1"
+	local module_dir="$GD_DIR/$module"
+	local source_dir="$module_dir/source"
+	_dirty=""
+	[ -s "$source_dir/.git/info/sparse-checkout" ] && _drity=$(cat "$source_dir/.git/info/sparse-checkout")
 	
-	mod_git_reset
+	if [ -z "$_drity" ]; then
+		git config core.sparsecheckout false
+		> "$module_dir/.git/info/sparse-checkout"
+		mod_git_reset
+	fi
 	
 	return 0
 }
@@ -1108,8 +1121,8 @@ create_module() {
 
 	cd "$GD_DIR"
 
-	[ -z "$_ROOTFLODER" ] || sparse_checkout
-	[ $_ROOTFLODER -eq $GD_FALSE ] && sparse_to_full
+	[ -z "$_ROOTFLODER" ] || sparse_checkout $module
+	[ $_ROOTFLODER -eq $GD_FALSE ] && sparse_to_full $module
 
 
 	echoinfo "Cloning $repo..."
