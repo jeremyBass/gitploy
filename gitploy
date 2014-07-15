@@ -622,6 +622,7 @@ sparse_checkout(){
 	local sparse_file="$source_dir/.git/info/sparse-checkout"
 
 	git config core.sparsecheckout true
+	[ -d "$source_dir" ] || mkdir -p $source_dir
 	[ -f "$sparse_file" ] || touch "$sparse_file"
 	> "$sparse_file"
 	
