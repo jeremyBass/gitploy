@@ -616,6 +616,16 @@ sparse_checkout(){
 	
 	return 0
 }
+#===  FUNCTION  ================================================================
+#          NAME:  sparse_to_full
+#   DESCRIPTION:  remove a sub-tree of a repo and track everything again
+#===============================================================================
+sparse_to_full(){
+	git config core.sparsecheckout fallse
+	> .git/info/sparse-checkout
+	mod_git_reset();
+	return 0
+}
 
 
 
