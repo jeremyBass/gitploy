@@ -557,7 +557,6 @@ if [ -z $ACTION ];then
 	fi
 fi
 
-
 #-----------------------------------------------------------------------
 # Initializes Dry run
 #-----------------------------------------------------------------------
@@ -582,6 +581,7 @@ if [ $GD_RECURSIVE -eq $GD_TRUE ]; then
   echoinfo "RECURSIVE MODE ON"
   sleep 1
 fi
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  mod_git_reset
@@ -608,12 +608,9 @@ mod_git_reset(){
 #   DESCRIPTION:  get a sub-tree of a repo and track that only
 #===============================================================================
 sparse_checkout(){
-
-
-	#_ROOTFLODER
 	git config core.sparsecheckout true
 	
-	echo some/dir/ >> .git/info/sparse-checkout
+	echo $_ROOTFLODER >> .git/info/sparse-checkout
 	echo another/sub/tree >> .git/info/sparse-checkout
 	
 	
