@@ -28,7 +28,7 @@ SCRIPT=${0##*/}
 IFS=$''
 usage() {
     cat << END
-
+  version : ${__ScriptVersion}
   Usage :  ${__ScriptName} [<command>] [options]
 
   Actions:
