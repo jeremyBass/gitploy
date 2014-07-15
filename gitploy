@@ -1325,8 +1325,9 @@ case "$ACTION" in
 
 
   *)
-	usage
 	echoerr "Invalid action: $ACTION"
+	[ $GD_QUIET -eq $GD_FALSE ] &&  usage
+	
 
 esac
 
