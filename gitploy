@@ -31,7 +31,6 @@ usage() {
 
   Usage :  ${__ScriptName} [<command>] [options]
 
-
   Actions:
     init           => Initialize .gitploy/ folder
     ls/list        => List installed modules
@@ -605,9 +604,9 @@ mod_git_reset(){
 }
 
 #===  FUNCTION  ================================================================
-#          NAME:  mod_git_reset
-#   DESCRIPTION:  reset a repo to the head.  It may be a tag release but we will 
-#                 will now pull to branch (master or defined) and at head
+#          NAME:  mod_set_latest_tag
+#   DESCRIPTION:  Find out what the last tagged release is for the repo and  
+#                 reassgin it to the global var $_TAG
 #===============================================================================
 mod_set_latest_tag(){
 	if [ "$_TAG" == "latest" ]; then
