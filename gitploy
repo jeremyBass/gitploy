@@ -639,7 +639,7 @@ sparse_checkout(){
 sparse_to_full(){
 	git config core.sparsecheckout false
 	> .git/info/sparse-checkout
-	mod_git_reset();
+	mod_git_reset()
 	return 0
 }
 
