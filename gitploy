@@ -621,6 +621,7 @@ sparse_checkout(){
 	local source_dir="$module_dir/source"
 
 	git config core.sparsecheckout true
+	> "$source_dir/.git/info/sparse-checkout"
 	
 	IFS=',' read -a folders <<< "$_ROOTFLODER"
 	for folder in "${folders[@]}"
