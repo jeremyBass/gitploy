@@ -62,17 +62,23 @@ usage() {
   -h   Show this help
   -d   (Dry run) Dry run mode (show what would be done)
   -i   (Include) Only deploys items that match the filters
-  -c   (Callback) Point to an action file with in the repo.  If none set, default is installer
+  -c   (Callback) Point to an action file with in the repo.  If none set,
+                  default is installer
   -e   (Exclude) Filters out listed items.  May use regex syntax
   -b   (Branch) Specify a repository branch (only for add command)
-  -t   (Tag) Specify a repository tag (only for add and update command also overpowers -b ) 
-  -z   (Reset) Reset a repo on operation.  Really only applies to updates.  You will move from tag to branch at head release 
+  -t   (Tag) Specify a repository tag (only for add and update command
+             also overpowers -b ) 
+  -z   (Reset) Reset a repo on operation.  Really only applies to updates.
+               You will move from tag to branch at head release 
   -f   (Folder root) Set the folder in the repo to root the tracking from. 
-           (** NOTE:: setting to 0 will clear the root used adn return the repo back to a normal checkout ** )
+           (** NOTE:: setting to 0 will clear the root used adn return the
+                      repo back to a normal checkout ** )
   -r   (Reqursive) Move through the modules tracked reqursively
   -u   (Unattended) This flag will accept all promots.
-  -q   (Quite) If you must hide the verbose output, this flag will block all stdout
-  -w   (Wall Broadcasting) telll anyone on the server you are about to run an action
+  -q   (Quite) If you must hide the verbose output, this flag will 
+               block all stdout
+  -w   (Wall Broadcasting) tell anyone on the server you are about to
+                           run an action
          
 
 END
