@@ -1100,6 +1100,9 @@ create_module() {
 	local include_cache="$module_dir/includes.gitploy"
 
 	cd "$GD_DIR"
+
+	[ -z "$_ROOTFLODER" ] || sparse_checkout
+
 	echoinfo "Cloning $repo..."
 	if ! git clone --quiet -- $repo "$source_dir"; then
 		rm_mod_dir "$module"
