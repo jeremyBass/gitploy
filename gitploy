@@ -662,10 +662,13 @@ sparse_to_full(){
 	[ -s "$source_dir/.git/info/sparse-checkout" ] && _drity=$(cat "$source_dir/.git/info/sparse-checkout")
 
 	if [ -z "$_drity" ]; then
-		git config core.sparsecheckout false
+		
 		echo "*" > "$module_dir/.git/info/sparse-checkout"
 		git read-tree -mu HEAD
 		mod_git_reset
+		
+		git config core.sparsecheckout false
+		
 	fi
 
 	return 0
