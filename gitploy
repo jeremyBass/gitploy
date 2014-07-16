@@ -1159,7 +1159,7 @@ mod_info_inline(){
 		url="$repo"
 	fi
 
-	printf "$(tput bold)$module$(tput sgr0) ( $info )  >> $url\n" "$module"
+	printf "$(tput bold)$module$(tput sgr0) ( $info )\n->> $url\n" "$module"
 	return 0
 }
 
