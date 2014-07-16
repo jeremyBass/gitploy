@@ -100,6 +100,7 @@ GD_FALSE=0
 GD_FOLDER=".gitploy"
 GD_ROOT=$(pwd -P)
 GD_DIR="$GD_ROOT/$GD_FOLDER"
+GD_REPO=""
 
 #- Set private repo vars
 GD_ORG=""
@@ -1249,7 +1250,8 @@ case "$ACTION" in
   clone|add) 
 	# Install new repo
 	echostd "Starting repo clone"
-	module="$1"; shift
+	GD_REPO="$1"; shift
+	module=$GD_REPO
 	[ -z "$module" ] && echoerr "No repo specified"
 	repo_dir="$GD_DIR/$module"
 	[[ "$module" =~ [^a-z0-9_-]+ ]] &&
@@ -1294,7 +1296,8 @@ case "$ACTION" in
 		[ $DRY_RUN -eq $GD_FALSE ] && echoinfo "Updated all modules with $errors error(s)"
 	else
 		# Update specified module
-		module="$1"; shift
+		GD_REPO="$1"; shift
+		module=$GD_REPO
 		[ -z "$module" ] && echoerr "No module specified"
 		if ! update_mod "$module"; then
 			echoerr "Error updating '$module', operation cancelled"
@@ -1322,7 +1325,8 @@ case "$ACTION" in
 		[ $DRY_RUN -eq $GD_FALSE ] && echoinfo "Removed desired modules with $errors error(s)"
 	else
 		# Remove specified module
-		module="$1"; shift
+		GD_REPO="$1"; shift
+		module=$GD_REPO
 		[ -z "$module" ] && echoerr "No module specified"
 
 		if ! require_mod_dir "$module" || ! rm_mod "$module"; then
@@ -1337,7 +1341,8 @@ case "$ACTION" in
 
   info)
 	# Show information about specified module
-	module="$1"; shift
+	GD_REPO="$1"; shift
+	module=$GD_REPO
 	[ -z "$module" ] && echoerr "No module specified"
 
 	mod_info "$module"
@@ -1346,7 +1351,8 @@ case "$ACTION" in
   files)
 	# List deployed files of specified module
 	[ $# -gt 0 ] || echoerr "No module specified"
-	module="$1"; shift
+	GD_REPO="$1"; shift
+	module=$GD_REPO
 	[ -z "$module" ] && echoerr "No module specified"
 
 	require_mod_dir "$module"
@@ -1360,7 +1366,8 @@ case "$ACTION" in
 
   proxy)
 	# Run git command into specified module
-	module="$1"; shift
+	GD_REPO="$1"; shift
+	module=$GD_REPO
 	[ -z "$module" ] && echoerr "No module specified"
 
 	require_mod_dir "$module"
