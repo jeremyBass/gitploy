@@ -719,15 +719,16 @@ rm_mod_dir() {
 rm_mod_files() {
 	local module_dir="$GD_DIR/$GD_REPO"
 	local deployed_file="$module_dir/deployed.gitploy"
-
+	local _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
+	
 	[ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
 	for line in $(cat "$deployed_file" 2>/dev/null); do
 	
-		local _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
+		
 		IFS=',' read -a folders <<< "$_ROOTFOLDER"
 		for folder in "${folders[@]}"
 		do
-			line=$(echo "$line" | sed 's@($folder)@@g')
+			line=${line#$folder}
 		done
 
 		if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
