@@ -738,7 +738,7 @@ rm_mod_files() {
 			tar_file=${tar_file#$folder}
 		done
 		echostd "looking for $tar_file"
-		if ! [ -z "$tar_file" ] && [ -f "$GD_ROOT/$tar_file" ]; then
+		if ! [ -z "$tar_file" ] && [ -f "$GD_ROOT/$tar_file" ] && [ "x$GD_ROOT/$tar_file" != "x$GD_ROOT/" ]; then
 
 			# Remove deployed file and empty dirs
 			if [ $DRY_RUN -eq $GD_FALSE ]; then
