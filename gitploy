@@ -727,23 +727,32 @@ rm_mod_files() {
 
 	[ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
 	for line in $(cat "$deployed_file" 2>/dev/null); do
-	if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
-		echostd $line
-		# Remove deployed file and empty dirs
-		if [ $DRY_RUN -eq $GD_FALSE ]; then
-			rm "$GD_ROOT/$line" 2>/dev/null
-			prev_dir=""
-			dir=$(dirname $line)
-			while [ "$dir" != "$prev_dir" ]; do
-				prev_dir=$dir
-				test_dir="$GD_ROOT/$dir"
-				if ! [ "$(ls -A $test_dir)" ]; then
-					rmdir $test_dir
-				fi
-				dir=${dir%/*}
-			done
-		fi
-	fi    
+	
+
+		IFS=',' read -a folders <<< "$_ROOTFOLDER"
+		for folder in "${folders[@]}"
+		do
+			line=$(echo "$line" | sed 's@($folder)@@g')
+		done
+
+		if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
+			echostd $line
+
+			# Remove deployed file and empty dirs
+			if [ $DRY_RUN -eq $GD_FALSE ]; then
+				rm "$GD_ROOT/$line" 2>/dev/null
+				prev_dir=""
+				dir=$(dirname $line)
+				while [ "$dir" != "$prev_dir" ]; do
+					prev_dir=$dir
+					test_dir="$GD_ROOT/$dir"
+					if ! [ "$(ls -A $test_dir)" ]; then
+						rmdir $test_dir
+					fi
+					dir=${dir%/*}
+				done
+			fi
+		fi    
 	done
 	return 0
 }
@@ -783,8 +792,14 @@ deploy_file() {
 	local root_tmp="${GD_ROOT//\//\\/}\\/"
 	echostd $(echo "$2" | sed "s/^$root_tmp//g")
 
+	local tar_file=$2
+	IFS=',' read -a folders <<< "$_ROOTFOLDER"
+	for folder in "${folders[@]}"
+	do
+		tar_file=$(echo "$2" | sed 's@($folder)@@g')
+	done
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
-		mkdir -p $(dirname $2) && cp "$1" "$2"
+		mkdir -p $(dirname $tar_file) && cp "$1" "$tar_file"
 	fi
 }
 
