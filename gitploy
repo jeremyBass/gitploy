@@ -597,14 +597,13 @@ fi
 #                 will now pull to branch (master or defined) and at head
 #===============================================================================
 mod_git_reset(){
-	local module="$GD_REPO"
-	local module_dir="$GD_DIR/$module"
+	local module_dir="$GD_DIR/$GD_REPO"
 	if [ $DRY_RUN -eq $GD_TRUE ]; then
-		echostd "'$module' module would be cleaned and reset when not in dryrun"
+		echostd "'$GD_REPO' module would be cleaned and reset when not in dryrun"
 		git clean -n
 		return 0
 	fi
-	echostd "'$module' module is being cleaned and reset"
+	echostd "'$GD_REPO' module is being cleaned and reset"
 	> "$module_dir/tag.gitploy"
 	git reset --hard
 	git clean --force
@@ -616,9 +615,7 @@ mod_git_reset(){
 #   DESCRIPTION:  get a sub-tree of a repo and track that only
 #===============================================================================
 sparse_checkout(){
-
-	local module="$GD_REPO"
-	local module_dir="$GD_DIR/$module"
+	local module_dir="$GD_DIR/$GD_REPO"
 	local source_sparse_dir="$module_dir/source/.git/info"
 	local sparse_file="$source_sparse_dir/sparse-checkout"
 
@@ -633,7 +630,7 @@ sparse_checkout(){
 		echostd "a subtree using folder '$folder'"
 	done
 	git read-tree -mu HEAD
-	echostd "'$module' is using a subtree starting at '$_ROOTFOLDER'"
+	echostd "'$GD_REPO' is using a subtree starting at '$_ROOTFOLDER'"
 	
 	#if the above don't work then
 	#if [[ $string == *,* ]]
@@ -646,7 +643,7 @@ sparse_checkout(){
 	#else
 	#	echo $_ROOTFOLDER >> .git/info/sparse-checkout
 	#fi
-	echostd "'$module' is rooted at $_ROOTFOLDER"
+	echostd "'$GD_REPO' is rooted at $_ROOTFOLDER"
 	return 0
 }
 
@@ -655,8 +652,7 @@ sparse_checkout(){
 #   DESCRIPTION:  remove a sub-tree of a repo and track everything again
 #===============================================================================
 sparse_to_full(){
-	local module="$GD_REPO"
-	local module_dir="$GD_DIR/$module"
+	local module_dir="$GD_DIR/$GD_REPO"
 	local source_dir="$module_dir/source"
 	local _dirty=""
 
@@ -708,9 +704,8 @@ require_mod_dir() {
 #   DESCRIPTION:  Removes the module as needed safely.
 #===============================================================================
 rm_mod_dir() {
-	local module="$GD_REPO"
-	local module_dir="$GD_DIR/$module"
-	if [ -n "$module" ] && [ -d "$module_dir" ]; then
+	local module_dir="$GD_DIR/$GD_REPO"
+	if [ -n "$GD_REPO" ] && [ -d "$module_dir" ]; then
 		rm -rf "$module_dir" 2>/dev/null
 	fi
 
@@ -722,8 +717,7 @@ rm_mod_dir() {
 #   DESCRIPTION:  Deletes deployed files of specified module. Could be not safe
 #===============================================================================
 rm_mod_files() {
-	local module="$GD_REPO"
-	local module_dir="$GD_DIR/$module"
+	local module_dir="$GD_DIR/$GD_REPO"
 	local deployed_file="$module_dir/deployed.gitploy"
 
 	[ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
@@ -763,18 +757,17 @@ rm_mod_files() {
 #   DESCRIPTION:  Removes specified module
 #===============================================================================
 rm_mod() {
-	local module="$GD_REPO"
-	local module_dir="$GD_DIR/$module"
+	local module_dir="$GD_DIR/$GD_REPO"
 
 	require_mod_dir
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
 		if [ $GD_UNATTENDED -eq $GD_FALSE ]; then
-			read -p "Are you sure you want to remove '$module' module? (y/n): " confirm
+			read -p "Are you sure you want to remove '$GD_REPO' module? (y/n): " confirm
 			[ "$confirm" != "y" ] && [ "$confirm" != "" ] && echo "Aborting..." && return 0
 		fi
 	fi
 
-	echostd "Removing '$module' module..."
+	echostd "Removing '$GD_REPO' module..."
 	sleep 1  
 
 	rm_mod_files || return 1
@@ -811,8 +804,7 @@ deploy_file() {
 #                 deployed files for easy removal later
 #===============================================================================
 mv_files() {
-	local module="$GD_REPO"
-	local module_dir="$GD_DIR/$module"
+	local module_dir="$GD_DIR/$GD_REPO"
 	local source_dir="$module_dir/source"
 	local includes_file="$module_dir/includes.gitploy"
 	local excludes_file="$module_dir/excludes.gitploy"
@@ -876,15 +868,15 @@ mv_files() {
 #===============================================================================
 build_deploy_file() {
 	IFS=$'\n'
-	local module="$GD_REPO"
-	local module_dir="$GD_DIR/$module"
+
+	local module_dir="$GD_DIR/$GD_REPO"
 	local source_dir="$module_dir/source"
 	local includes_file="$module_dir/includes.gitploy"
 	local excludes_file="$module_dir/excludes.gitploy"
 	local modman_file="$source_dir/modman"
 	local deployed_file="$module_dir/deployed.gitploy"
 
-	echoinfo "Building '$module' deployment"
+	echoinfo "Building '$GD_REPO' deployment"
 	cd "$source_dir"
 
 	for file in $(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///'); do
