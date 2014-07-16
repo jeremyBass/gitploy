@@ -721,24 +721,26 @@ rm_mod_files() {
 	local deployed_file="$module_dir/deployed.gitploy"
 	local _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
 	
-	[ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
+	[ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would be remove files-" || echoinfo "Removing files-"
+	
 	for line in $(cat "$deployed_file" 2>/dev/null); do
 	
-		
+		local tar_file=$line
+	
 		IFS=',' read -a folders <<< "$_ROOTFOLDER"
 		for folder in "${folders[@]}"
 		do
-			line=${line#$folder}
+			tar_file=${line#$folder}
 		done
 
-		if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
-			echostd $line
+		if ! [ -z "$tar_file" ] && [ -f "$GD_ROOT/$tar_file" ]; then
+			echostd $tar_file
 
 			# Remove deployed file and empty dirs
 			if [ $DRY_RUN -eq $GD_FALSE ]; then
-				rm "$GD_ROOT/$line" 2>/dev/null
+				rm "$GD_ROOT/$tar_file" 2>/dev/null
 				prev_dir=""
-				dir=$(dirname $line)
+				dir=$(dirname "$GD_ROOT/$tar_file")
 				while [ "$dir" != "$prev_dir" ]; do
 					prev_dir=$dir
 					test_dir="$GD_ROOT/$dir"
