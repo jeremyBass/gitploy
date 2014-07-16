@@ -1265,7 +1265,7 @@ case "$ACTION" in
 
 	success=$GD_TRUE
 	repo="$1"; shift
-	create_module "$repo" "$GD_REPO" || success=$GD_FALSE
+	create_module "$repo" || success=$GD_FALSE
 
 	cd "$GD_DIR"
 
