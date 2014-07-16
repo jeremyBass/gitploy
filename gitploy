@@ -1151,7 +1151,7 @@ mod_info_inline(){
 		[ -s "$module_dir/branch.gitploy" ] && current_branch=$(cat "$module_dir/branch.gitploy")
 		info="$info (branch: $current_branch)"
 	fi
-	printf "$(tput bold)$module$(tput sgr0)\n\s\s--\s$info\n" "$module"
+	printf "$(tput bold)$module$(tput sgr0)\n  >> $info\n" "$module"
 	return 0
 }
 
