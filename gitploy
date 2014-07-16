@@ -790,7 +790,7 @@ deploy_file() {
 	IFS=',' read -a folders <<< "$_ROOTFOLDER"
 	for folder in "${folders[@]}"
 	do
-		tar_file=$(echo "$2" | sed 's@.*?$folder.*?@@g')
+		tar_file=$(echo "$2" | sed 's@(.*?)$folder(.*?)@\1\2@g')
 	done
 	
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
