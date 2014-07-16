@@ -740,9 +740,9 @@ rm_mod_files() {
 		
 		local file=$GD_ROOT/${tar_file#$GD_ROOT}
 		
-		echostd "looking for $file"
+		
 		if ! [ -z "$file" ] && [ -f "$file" ] && [ "x$file" != "x$GD_ROOT/" ]; then
-
+			echostd "-- $file"
 			# Remove deployed file and empty dirs
 			if [ $DRY_RUN -eq $GD_FALSE ]; then
 				rm "$file" 2>/dev/null
@@ -803,7 +803,7 @@ deploy_file() {
 	done
 	
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
-		echo "$tar_file"
+		echo "++ $tar_file"
 		mkdir -p $(dirname "$GD_ROOT/$tar_file") && cp "$file" "$GD_ROOT/$tar_file"
 	fi
 }
@@ -1073,7 +1073,7 @@ update_mod() {
 				# copy the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
 					mkdir -p $(dirname "$GD_ROOT/$line") && cp "$line" "$GD_ROOT/$line"
-					echostd "Updating: $line"
+					echostd "++: $line"
 				fi
 			fi
 		done
@@ -1084,7 +1084,7 @@ update_mod() {
 				# delete the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
 					rm "$GD_ROOT/$line" 2>/dev/null
-					echostd "Deleting: $line"
+					echostd "--: $line"
 				fi
 			fi
 		done
