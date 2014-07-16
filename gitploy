@@ -887,7 +887,7 @@ build_deploy_file() {
 	local modman_file="$source_dir/modman"
 	local deployed_file="$module_dir/deployed.gitploy"
 
-	echoinfo "Building '$GD_REPO' deployment"
+	echostd "Building '$GD_REPO' deployment"
 	cd "$source_dir"
 
 	for file in $(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///'); do
