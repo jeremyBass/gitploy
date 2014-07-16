@@ -739,7 +739,6 @@ rm_mod_files() {
 		done
 		echostd "looking for $tar_file"
 		if ! [ -z "$tar_file" ] && [ -f "$GD_ROOT/$tar_file" ]; then
-			echostd $tar_file
 
 			# Remove deployed file and empty dirs
 			if [ $DRY_RUN -eq $GD_FALSE ]; then
@@ -748,7 +747,7 @@ rm_mod_files() {
 				dir=$(dirname "$GD_ROOT/$tar_file")
 				while [ "$dir" != "$prev_dir" ]; do
 					prev_dir=$dir
-					test_dir="$GD_ROOT/$dir"
+					test_dir="$dir"
 					if ! [ "$(ls -A $test_dir)" ]; then
 						rmdir $test_dir
 					fi
