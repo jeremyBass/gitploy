@@ -719,6 +719,7 @@ rm_mod_dir() {
 #   DESCRIPTION:  Deletes deployed files of specified module. Could be not safe
 #===============================================================================
 rm_mod_files() {
+	IFS=$'\n'
 	local module_dir="$GD_DIR/$GD_REPO"
 	local deployed_file="$module_dir/deployed.gitploy"
 	local _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
@@ -764,6 +765,7 @@ rm_mod_files() {
 #   DESCRIPTION:  Removes specified module
 #===============================================================================
 rm_mod() {
+	IFS=$'\n'
 	local module_dir="$GD_DIR/$GD_REPO"
 
 	require_mod_dir
