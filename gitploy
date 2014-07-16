@@ -1210,6 +1210,9 @@ create_module() {
 		echoerr "An error occurred while cloning submodules of $repo"
 	fi
 
+	> "$module_dir/deployed.gitploy"
+	build_deploy_file
+
 	# Save includes filter if not empty
 	[ -z "$INCLUDES" ] || echo -e "$INCLUDES" > "$include_cache"
 
