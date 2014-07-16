@@ -732,7 +732,7 @@ rm_mod_files() {
 		IFS=',' read -a folders <<< "$_ROOTFOLDER"
 		for folder in "${folders[@]}"
 		do
-			tar_file=${line#$folder}
+			tar_file=${tar_file#$folder}
 		done
 		echostd "looking for $tar_file"
 		if ! [ -z "$tar_file" ] && [ -f "$GD_ROOT/$tar_file" ]; then
