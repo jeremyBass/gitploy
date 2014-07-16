@@ -793,6 +793,7 @@ deploy_file() {
 		tar_file=$(echo "$2" | sed 's@($folder)@@g')
 	done
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
+		echo "mv: $1 => $tar_file"
 		mkdir -p $(dirname $tar_file) && cp "$1" "$tar_file"
 	fi
 }
