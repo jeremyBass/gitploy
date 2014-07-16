@@ -783,20 +783,16 @@ rm_mod() {
 #   DESCRIPTION:  Copies specified file to root directory
 #===============================================================================
 deploy_file() {
-
 	local file=$1
-	
-	echostd $file
-	
 	local tar_file="$file"
 	IFS=',' read -a folders <<< "$_ROOTFOLDER"
 	for folder in "${folders[@]}"
 	do
-		tar_file=$(echo "$file" | sed 's@^$folder@@g')
+		tar_file=${file#$folder}
 	done
 	
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
-		echo "mv: $file => $tar_file"
+		echo "$tar_file"
 		mkdir -p $(dirname "$GD_ROOT/$tar_file") && cp "$file" "$GD_ROOT/$tar_file"
 	fi
 }
