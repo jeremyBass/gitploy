@@ -783,19 +783,21 @@ rm_mod() {
 #   DESCRIPTION:  Copies specified file to root directory
 #===============================================================================
 deploy_file() {
-	local root_tmp="${GD_ROOT//\//\\/}\\/"
-	echostd $(echo "$2" | sed "s/^$root_tmp//g")
 
-	local tar_file=$2
+	local file=$1
+	
+	echostd $file
+	
+	local tar_file="$GD_ROOT/$file"
 	IFS=',' read -a folders <<< "$_ROOTFOLDER"
 	for folder in "${folders[@]}"
 	do
-		tar_file=$(echo "$2" | sed 's@(.*?)$folder(.*?)@\1\2@g')
+		tar_file=$(echo "$file" | sed 's@^$folder@@g')
 	done
 	
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
-		echo "mv: $1 => $tar_file"
-		mkdir -p $(dirname $tar_file) && cp "$1" "$tar_file"
+		echo "mv: $file => $tar_file"
+		mkdir -p $(dirname $tar_file) && cp "$file" "$tar_file"
 	fi
 }
 
@@ -849,12 +851,12 @@ mv_files() {
 						src="${src//\//\\/}"
 						dest="${dest//\//\\/}"
 						target=$(echo $file | sed "s/$src/$dest/g")
-						deploy_file "$file" "$GD_ROOT/$target"
-						echo "$target" >> "$deployed_file"
+						deploy_file "$file" #"$GD_ROOT/$target"
+						echo "$file" >> "$deployed_file"
 					fi
 				done
 			else
-				deploy_file "$file" "$GD_ROOT/$target"
+				deploy_file "$file" #"$GD_ROOT/$target"
 				echo "$file" >> "$deployed_file"
 			fi
 		fi
