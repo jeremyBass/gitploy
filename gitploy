@@ -942,7 +942,9 @@ update_mod() {
 	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 	local source_dir="$module_dir/source"
-
+	local _ROOTFOLDER=""
+	[ -s "$module_dir/rooted.gitploy" ] && _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
+		
 	require_mod_dir
 
 	if [ $GD_REFRESH = $GD_TRUE ]; then
@@ -958,10 +960,16 @@ update_mod() {
 		# update update.gitploy files
 		for line in $(cat "$module_dir/deployed.gitploy" 2>/dev/null); do
 			if ! [ -z "$line" ]; then
+				local re_file=$line
+				IFS=',' read -a folders <<< "$_ROOTFOLDER"
+				for folder in "${folders[@]}"
+				do
+					re_file=${re_file#$folder}
+				done
 				# copy the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
-					mkdir -p $(dirname "$GD_ROOT/$line") && cp "$line" "$GD_ROOT/$line"
-					echostd "Refreshing: $line"
+					mkdir -p $(dirname "$GD_ROOT/$re_file") && cp "$line" "$GD_ROOT/$re_file"
+					echostd "Refreshing: $re_file"
 				fi
 			fi
 		done
@@ -972,7 +980,7 @@ update_mod() {
 		> "$module_dir/delete.gitploy"
 		> "$module_dir/deployed.gitploy"
 		> "$module_dir/diff.gitploy"
-		local _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
+
 		
 
 		cd "$source_dir"
