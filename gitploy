@@ -722,7 +722,8 @@ rm_mod_files() {
 	IFS=$'\n'
 	local module_dir="$GD_DIR/$GD_REPO"
 	local deployed_file="$module_dir/deployed.gitploy"
-	local _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
+	
+	[ -s "$module_dir/rooted.gitploy" ] && _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
 	
 	[ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would be remove files-" || echoinfo "Removing files-"
 	
@@ -731,16 +732,18 @@ rm_mod_files() {
 	for line in $(cat "$deployed_file" 2>/dev/null); do
 	
 		local tar_file=$line
-	
-		IFS=',' read -a folders <<< "$_ROOTFOLDER"
-		for folder in "${folders[@]}"
-		do
-			tar_file=${tar_file#$folder}
-		done
 		
+		if [ -z "$_ROOTFOLDER" ];
+		then
+			IFS=',' read -a folders <<< "$_ROOTFOLDER"
+			for folder in "${folders[@]}"
+			do
+				tar_file=${tar_file#$folder}
+			done
+		fi
+
 		local file=$GD_ROOT/${tar_file#$GD_ROOT}
-		
-		
+
 		if ! [ -z "$file" ] && [ -f "$file" ] && [ "x$file" != "x$GD_ROOT/" ]; then
 			echostd "-- $file"
 			# Remove deployed file and empty dirs
@@ -797,7 +800,6 @@ deploy_file() {
 	local file=$1
 	local tar_file="$file"
 	
-	[ -z "$_ROOTFOLDER" ] && _ROOTFOLDER=""
 	[ -s "$module_dir/rooted.gitploy" ] && _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
 	
 	if [ -z "$_ROOTFOLDER" ];
