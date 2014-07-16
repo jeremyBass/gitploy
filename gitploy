@@ -413,9 +413,9 @@ applyaliases() {
 #   DESCRIPTION:  update the gitploy script
 #===============================================================================
 __update_gitploy(){
-	local update_url= https://raw.githubusercontent.com/jeremyBass/gitploy/master/gitploy?$(echo date|md5sum)
+	local update_url=https://raw.githubusercontent.com/jeremyBass/gitploy/master/gitploy?$(echo date|md5sum)
 	echostd "Updating gitploy from $update_url"
-	curl $update_url | sudo sh -s -- install
+	curl "$update_url" | sudo sh -s -- install
 	return 0
 }
 
