@@ -958,6 +958,7 @@ update_mod() {
 		build_deploy_file
 
 		# update update.gitploy files
+		IFS=$'\n'
 		for line in $(cat "$module_dir/deployed.gitploy" 2>/dev/null); do
 			if ! [ -z "$line" ]; then
 				local re_file=$line
@@ -1056,6 +1057,7 @@ update_mod() {
 			return 0
 		fi
 		# update update.gitploy files
+		IFS=$'\n'
 		for line in $(cat "$module_dir/update.gitploy" 2>/dev/null); do
 			if ! [ -z "$line" ]; then
 				local up_file=$line
@@ -1074,6 +1076,7 @@ update_mod() {
 		done
 
 		# delete delete.gitploy files
+		IFS=$'\n'
 		for line in $(cat "$module_dir/delete.gitploy" 2>/dev/null); do
 		
 			local del_file=$line
