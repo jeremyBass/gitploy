@@ -796,11 +796,18 @@ rm_mod() {
 deploy_file() {
 	local file=$1
 	local tar_file="$file"
-	IFS=',' read -a folders <<< "$_ROOTFOLDER"
-	for folder in "${folders[@]}"
-	do
-		tar_file=${file#$folder}
-	done
+	
+	[ -z "$_ROOTFOLDER" ] && _ROOTFOLDER=""
+	[ -s "$module_dir/rooted.gitploy" ] && _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
+	
+	if [ -z "$_ROOTFOLDER" ];
+	then
+		IFS=',' read -a folders <<< "$_ROOTFOLDER"
+		for folder in "${folders[@]}"
+		do
+			tar_file=${file#$folder}
+		done
+	fi
 	
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
 		echostd "++ $tar_file"
