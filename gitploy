@@ -723,7 +723,7 @@ rm_mod_files() {
 	[ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would remove files:" || echoinfo "Removing files:"
 	for line in $(cat "$deployed_file" 2>/dev/null); do
 	
-
+		local _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
 		IFS=',' read -a folders <<< "$_ROOTFOLDER"
 		for folder in "${folders[@]}"
 		do
@@ -962,6 +962,8 @@ update_mod() {
 		> "$module_dir/delete.gitploy"
 		> "$module_dir/deployed.gitploy"
 		> "$module_dir/diff.gitploy"
+		local _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
+		
 
 		cd "$source_dir"
 		local tagcheck=$(git fetch --tags)
@@ -1026,9 +1028,7 @@ update_mod() {
 		[ $DRY_RUN -eq $GD_TRUE ] && git checkout --quiet "$old_commit"
 		[ "$count" = "" ] && echostd "No changes found" && return 0
 
-		#we are going to controll the root folder the file is comeing from
-		#we have a sparse tree at this point, but it may be in parent folders, so 
-		#what will happen is we need to iteratate over the list and remove the parent folder paths
+		
 		IFS=',' read -a folders <<< "$_ROOTFOLDER"
 		for folder in "${folders[@]}"
 		do
@@ -1195,7 +1195,7 @@ create_module() {
 	fi
 
 	echo "$_BRANCH" > "$module_dir/branch.gitploy"
-
+	echo "$_ROOTFOLDER" > "$module_dir/rooted.gitploy"
 	[ -z "$_ROOTFOLDER" ] || sparse_checkout
 
 	echostd "Fetching submodules..."
