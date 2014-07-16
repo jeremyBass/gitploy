@@ -1019,12 +1019,23 @@ update_mod() {
 		#we are going to controll the root folder the file is comeing from
 		#we have a sparse tree at this point, but it may be in parent folders, so 
 		#what will happen is we need to iteratate over the list and remove the parent folder paths
-		#	IFS=',' read -a folders <<< "$_ROOTFOLDER"
-		#	for folder in "${folders[@]}"
-		#	do
-		#		echo $folder >> "$source_sparse_dir/sparse-checkout"
-		#		echostd "a subtree using folder '$folder'"
-		#	done
+		IFS=',' read -a folders <<< "$_ROOTFOLDER"
+		for folder in "${folders[@]}"
+		do
+			#echo $folder >> "$source_sparse_dir/sparse-checkout"
+			#echostd "a subtree using folder '$folder'"
+
+			sed 's@^.*?${folder}(.*$)@\1@g' "$module_dir/update.gitploy"
+			sed 's@^.*?${folder}(.*$)@\1@g' "$module_dir/delete.gitploy"
+
+			#for line in $(cat "$deployed_file" 2>/dev/null); do
+			#	if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
+			#		echostd 
+			#		awk 'NR==4 {$0="$line"} 1' input_file.txt
+			#	fi
+			#done
+
+		done
 
 
 
