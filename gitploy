@@ -803,7 +803,7 @@ deploy_file() {
 	done
 	
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
-		echo "++ $tar_file"
+		echostd "++ $tar_file"
 		mkdir -p $(dirname "$GD_ROOT/$tar_file") && cp "$file" "$GD_ROOT/$tar_file"
 	fi
 }
@@ -961,7 +961,7 @@ update_mod() {
 				# copy the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
 					mkdir -p $(dirname "$GD_ROOT/$line") && cp "$line" "$GD_ROOT/$line"
-					echostd "Updating: $line"
+					echostd "Refreshing: $line"
 				fi
 			fi
 		done
@@ -1038,26 +1038,6 @@ update_mod() {
 		[ $DRY_RUN -eq $GD_TRUE ] && git checkout --quiet "$old_commit"
 		[ "$count" = "" ] && echostd "No changes found" && return 0
 
-		
-		IFS=',' read -a folders <<< "$_ROOTFOLDER"
-		for folder in "${folders[@]}"
-		do
-			#echo $folder >> "$source_sparse_dir/sparse-checkout"
-			#echostd "a subtree using folder '$folder'"
-
-			sed 's@^.*?${folder}(.*$)@\1@g' "$module_dir/update.gitploy"
-			sed 's@^.*?${folder}(.*$)@\1@g' "$module_dir/delete.gitploy"
-
-			#for line in $(cat "$deployed_file" 2>/dev/null); do
-			#	if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
-			#		echostd 
-			#		awk 'NR==4 {$0="$line"} 1' input_file.txt
-			#	fi
-			#done
-
-		done
-
-
 
 		if [ $DRY_RUN -eq $GD_TRUE ]; then
 			echoinfo "Would modify:"
@@ -1070,21 +1050,37 @@ update_mod() {
 		# update update.gitploy files
 		for line in $(cat "$module_dir/update.gitploy" 2>/dev/null); do
 			if ! [ -z "$line" ]; then
+				local up_file=$line
+				IFS=',' read -a folders <<< "$_ROOTFOLDER"
+				for folder in "${folders[@]}"
+				do
+					up_file=${up_file#$folder}
+				done
+			
 				# copy the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
-					mkdir -p $(dirname "$GD_ROOT/$line") && cp "$line" "$GD_ROOT/$line"
-					echostd "++: $line"
+					mkdir -p $(dirname "$GD_ROOT/$up_file") && cp "$line" "$GD_ROOT/$up_file"
+					echostd "++: $up_file"
 				fi
 			fi
 		done
 
 		# delete delete.gitploy files
 		for line in $(cat "$module_dir/delete.gitploy" 2>/dev/null); do
-			if ! [ -z "$line" ] && [ -f "$GD_ROOT/$line" ]; then
+		
+			local del_file=$line
+			IFS=',' read -a folders <<< "$_ROOTFOLDER"
+			for folder in "${folders[@]}"
+			do
+				del_file=${del_file#$folder}
+			done
+		
+		
+			if ! [ -z "$del_file" ] && [ -f "$GD_ROOT/$del_file" ]; then
 				# delete the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
-					rm "$GD_ROOT/$line" 2>/dev/null
-					echostd "--: $line"
+					rm "$GD_ROOT/$del_file" 2>/dev/null
+					echostd "--: $del_file"
 				fi
 			fi
 		done
