@@ -738,16 +738,16 @@ rm_mod_files() {
 			tar_file=${tar_file#$folder}
 		done
 		
-		tar_file=$GD_ROOT/${tar_file#$GD_ROOT}
+		local file=$GD_ROOT/${tar_file#$GD_ROOT}
 		
-		echostd "looking for $tar_file"
-		if ! [ -z "$tar_file" ] && [ -f "$tar_file" ] && [ "x$tar_file" != "x$GD_ROOT/" ]; then
+		echostd "looking for $file"
+		if ! [ -z "$file" ] && [ -f "$file" ] && [ "x$file" != "x$GD_ROOT/" ]; then
 
 			# Remove deployed file and empty dirs
 			if [ $DRY_RUN -eq $GD_FALSE ]; then
-				rm "$tar_file" 2>/dev/null
+				rm "$file" 2>/dev/null
 				prev_dir=""
-				dir=$(dirname "$tar_file")
+				dir=$(dirname "$file")
 				while [ "$dir" != "$prev_dir" ]; do
 					prev_dir=$dir
 					test_dir="$dir"
