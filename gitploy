@@ -797,7 +797,7 @@ deploy_file() {
 	
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
 		echo "mv: $file => $tar_file"
-		mkdir -p $(dirname $tar_file) && cp "$file" "$GD_ROOT/$tar_file"
+		mkdir -p $(dirname "$GD_ROOT/$tar_file") && cp "$file" "$GD_ROOT/$tar_file"
 	fi
 }
 
