@@ -617,7 +617,7 @@ mod_git_reset(){
 #===============================================================================
 sparse_checkout(){
 
-	local module="$1"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 	local source_sparse_dir="$module_dir/source/.git/info"
 	local sparse_file="$source_sparse_dir/sparse-checkout"
@@ -655,7 +655,7 @@ sparse_checkout(){
 #   DESCRIPTION:  remove a sub-tree of a repo and track everything again
 #===============================================================================
 sparse_to_full(){
-	local module="$1"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 	local source_dir="$module_dir/source"
 	local _dirty=""
@@ -975,7 +975,7 @@ update_mod() {
 
 		local old_commit=$(git rev-parse HEAD)
 
-		[ "x$_ROOTFOLDER" == "xfalse" ] && sparse_to_full "$module"
+		[ "x$_ROOTFOLDER" == "xfalse" ] && sparse_to_full
 
 
 		# If module was fetched with a specific tag
@@ -1202,10 +1202,10 @@ create_module() {
 
 	echo "$_BRANCH" > "$module_dir/branch.gitploy"
 
-	[ -z "$_ROOTFOLDER" ] || sparse_checkout "$module"
+	[ -z "$_ROOTFOLDER" ] || sparse_checkout
 
 	echostd "Fetching submodules..."
-		if ! git submodule --quiet update --init --recursive; then
+	if ! git submodule --quiet update --init --recursive; then
 		rm_mod_dir
 		echoerr "An error occurred while cloning submodules of $repo"
 	fi
