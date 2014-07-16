@@ -1150,7 +1150,7 @@ mod_info_inline(){
 
 	if [ -s "$module_dir/rooted.gitploy" ]; then
 		local rooted=$(cat "$module_dir/rooted.gitploy")
-		info="$info  rooted from: $rooted "
+		info="$info  rooted from: $rooted"
 	fi
 
 
@@ -1159,7 +1159,7 @@ mod_info_inline(){
 		url="$repo"
 	fi
 
-	printf "$(tput bold)$module$(tput sgr0) ( $info )\n->> $url\n" "$module"
+	printf "$(tput bold)$module$(tput sgr0) ($info )\n->> $url\n" "$module"
 	return 0
 }
 
