@@ -819,7 +819,7 @@ mv_files() {
 	local modman_file="$source_dir/modman"
 	local deployed_file="$module_dir/deployed.gitploy"
 
-	> "$deployed_file" #creat empty file
+	#> "$deployed_file" #creat empty file
 	cd "$source_dir" || return 1
 
 	IFS=$'\n'; set -f; files=($(find . -type f -not -iwholename '*.git*' | sed 's/^\.\///'))
