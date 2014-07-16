@@ -722,7 +722,9 @@ rm_mod_files() {
 	local _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
 	
 	[ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would be remove files-" || echoinfo "Removing files-"
+	
 	echo $_ROOTFOLDER
+	
 	for line in $(cat "$deployed_file" 2>/dev/null); do
 	
 		local tar_file=$line
