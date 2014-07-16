@@ -802,7 +802,7 @@ deploy_file() {
 	local module_dir="$GD_DIR/$GD_REPO"
 	
 	[ -s "$module_dir/rooted.gitploy" ] && _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
-	
+	echo "starting from /$_ROOTFOLDER"
 	if [ -z "$_ROOTFOLDER" ];
 	then
 		IFS=',' read -a folders <<< "$_ROOTFOLDER"
