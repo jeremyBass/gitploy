@@ -799,6 +799,7 @@ rm_mod() {
 deploy_file() {
 	local file=$1
 	local tar_file="$file"
+	local module_dir="$GD_DIR/$GD_REPO"
 	
 	[ -s "$module_dir/rooted.gitploy" ] && _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
 	
