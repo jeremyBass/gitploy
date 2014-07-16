@@ -597,7 +597,7 @@ fi
 #                 will now pull to branch (master or defined) and at head
 #===============================================================================
 mod_git_reset(){
-	local module="$1"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 	if [ $DRY_RUN -eq $GD_TRUE ]; then
 		echostd "'$module' module would be cleaned and reset when not in dryrun"
@@ -699,7 +699,7 @@ mod_set_latest_tag(){
 #   DESCRIPTION:  Checks if module dir exists or quit.
 #===============================================================================
 require_mod_dir() {
-	[ -d "$GD_DIR/$1" ] || echoerr "Module '$1' does not exist"
+	[ -d "$GD_DIR/$GD_REPO" ] || echoerr "Module '$GD_REPO' does not exist"
 	return 0
 }
 
@@ -708,7 +708,7 @@ require_mod_dir() {
 #   DESCRIPTION:  Removes the module as needed safely.
 #===============================================================================
 rm_mod_dir() {
-	local module="$1"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 	if [ -n "$module" ] && [ -d "$module_dir" ]; then
 		rm -rf "$module_dir" 2>/dev/null
@@ -722,7 +722,7 @@ rm_mod_dir() {
 #   DESCRIPTION:  Deletes deployed files of specified module. Could be not safe
 #===============================================================================
 rm_mod_files() {
-	local module="$1"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 	local deployed_file="$module_dir/deployed.gitploy"
 
@@ -763,10 +763,10 @@ rm_mod_files() {
 #   DESCRIPTION:  Removes specified module
 #===============================================================================
 rm_mod() {
-	local module="$1"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 
-	require_mod_dir "$module"
+	require_mod_dir
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
 		if [ $GD_UNATTENDED -eq $GD_FALSE ]; then
 			read -p "Are you sure you want to remove '$module' module? (y/n): " confirm
@@ -777,10 +777,10 @@ rm_mod() {
 	echostd "Removing '$module' module..."
 	sleep 1  
 
-	rm_mod_files "$module" || return 1
+	rm_mod_files || return 1
 
 	[ $DRY_RUN -eq $GD_TRUE ] && return 0
-	rm_mod_dir "$module"
+	rm_mod_dir
 
 	return $?
 }
@@ -811,7 +811,7 @@ deploy_file() {
 #                 deployed files for easy removal later
 #===============================================================================
 mv_files() {
-	local module="$1"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 	local source_dir="$module_dir/source"
 	local includes_file="$module_dir/includes.gitploy"
@@ -875,7 +875,7 @@ mv_files() {
 #===============================================================================
 build_deploy_file() {
 	IFS=$'\n'
-	local module="$1"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 	local source_dir="$module_dir/source"
 	local includes_file="$module_dir/includes.gitploy"
@@ -935,11 +935,11 @@ build_deploy_file() {
 #===============================================================================
 update_mod() {
 	IFS=$'\n'
-	local module="$1"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 	local source_dir="$module_dir/source"
 
-	require_mod_dir "$module"
+	require_mod_dir
 
 	if [ $GD_REFRESH = $GD_TRUE ]; then
 		echoinfo "Refreshing '$module' module..."
@@ -949,7 +949,7 @@ update_mod() {
 			[ -s "$module_dir/branch.gitploy" ] && _BRANCH=$(cat "$module_dir/branch.gitploy")
 		fi
 		> "$module_dir/deployed.gitploy"
-		build_deploy_file "$module"
+		build_deploy_file
 
 		# update update.gitploy files
 		for line in $(cat "$module_dir/deployed.gitploy" 2>/dev/null); do
@@ -986,8 +986,8 @@ update_mod() {
 					echostd "'$module' module was fetched from tag '$repo_tag' and thus cannot be updated without -t option"
 					return 1
 				else
-					mod_git_reset "$module"
-					update_mod "$module"
+					mod_git_reset
+					update_mod
 					return 0
 				fi
 			fi
@@ -1086,7 +1086,7 @@ update_mod() {
 		done
 
 		# update the deployed.gitploy file
-		if build_deploy_file "$module";
+		if build_deploy_file;
 		then
 			return 0
 		else
@@ -1101,10 +1101,10 @@ update_mod() {
 #   DESCRIPTION:  echo out file info.
 #===============================================================================
 mod_info() {
-	local module="$1"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 
-	require_mod_dir "$module"
+	require_mod_dir
 
 	echostd "Information about '$module' module:"
 	if [ -s "$module_dir/repository.gitploy" ]; then
@@ -1132,11 +1132,11 @@ mod_info() {
 #   DESCRIPTION:  print out file info.
 #===============================================================================
 mod_info_inline(){
-	local module="$1"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
 	local info=""
 
-	require_mod_dir "$module"
+	require_mod_dir
 
 	if [ -s "$module_dir/repository.gitploy" ]; then
 		local repo=$(cat "$module_dir/repository.gitploy")
@@ -1163,7 +1163,7 @@ mod_info_inline(){
 #===============================================================================
 create_module() {
 	local repo="$1"
-	local module="$2"
+	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"; #shift 2
 	local source_dir="$module_dir/source"
 	local exclude_cache="$module_dir/excludes.gitploy"
@@ -1173,7 +1173,7 @@ create_module() {
 
 	echoinfo "Cloning $repo..."
 	if ! git clone --quiet -- $repo "$source_dir"; then
-		rm_mod_dir "$module"
+		rm_mod_dir
 		echoerr "An error occurred while cloning repository"
 	fi
 
@@ -1185,18 +1185,18 @@ create_module() {
 	git config core.filemode false
 
 	if [ -n "$_TAG" ]; then
-		mod_set_latest_tag()
+		mod_set_latest_tag
 		if [ -z $(git tag -l "$_TAG") ]; then
-			rm_mod_dir "$module"
+			rm_mod_dir
 			echoerr "Tag '$_TAG' does not exist"
 		fi
 		if ! git checkout --quiet "$_TAG"; then
-			rm_mod_dir "$module"
+			rm_mod_dir
 			echoerr "An error occurred while fetching tag $_TAG"
 		fi
 		echo "$_TAG" > "$module_dir/tag.gitploy"
 	elif ! git checkout --quiet "$_BRANCH"; then
-		rm_mod_dir "$module"
+		rm_mod_dir
 		echoerr "An error occurred while fetching branch $_BRANCH"
 	fi
 
@@ -1206,7 +1206,7 @@ create_module() {
 
 	echostd "Fetching submodules..."
 		if ! git submodule --quiet update --init --recursive; then
-		rm_mod_dir "$module"
+		rm_mod_dir
 		echoerr "An error occurred while cloning submodules of $repo"
 	fi
 
@@ -1241,7 +1241,8 @@ case "$ACTION" in
 	IFS=$'\n'
 	for module in $(ls -1 "$GD_DIR"); do
 		[ -d "$GD_DIR/$module" ] || continue;
-		mod_info_inline "$module"
+		GD_REPO=$module
+		mod_info_inline
 	done
 	echostd "$count module(s) found"
 	exit 0
@@ -1251,29 +1252,29 @@ case "$ACTION" in
 	# Install new repo
 	echostd "Starting repo clone"
 	GD_REPO="$1"; shift
-	module=$GD_REPO
-	[ -z "$module" ] && echoerr "No repo specified"
-	repo_dir="$GD_DIR/$module"
-	[[ "$module" =~ [^a-z0-9_-]+ ]] &&
-		echoerr "You cannot add a repo containingmore then [^a-zA-Z0-9_-]+ pattern\nModule specified: $module"
+
+	[ -z "$GD_REPO" ] && echoerr "No repo specified"
+	repo_dir="$GD_DIR/$GD_REPO"
+	[[ "$GD_REPO" =~ [^a-z0-9_-]+ ]] &&
+		echoerr "You cannot add a repo containingmore then [^a-zA-Z0-9_-]+ pattern\nModule specified: $GD_REPO"
 
 	[ -d "$repo_dir" ] && echoerr "A module with this name already exists"
 
 	success=$GD_TRUE
 	repo="$1"; shift
-	create_module "$repo" "$module" || success=$GD_FALSE
+	create_module "$repo" "$GD_REPO" || success=$GD_FALSE
 
 	cd "$GD_DIR"
 
 	if [ $success -eq $GD_TRUE ]; then
-		if require_mod_dir "$module" &&
-			mv_files "$module";
+		if require_mod_dir &&
+			mv_files;
 			then
-			[ $DRY_RUN -eq $GD_FALSE ] && echofin "Installation complete" || rm_mod_dir "$module"
+			[ $DRY_RUN -eq $GD_FALSE ] && echofin "Installation complete" || rm_mod_dir
 		fi
 	else
-		require_mod_dir "$module"
-		echoerr "Error cloning '$module', operation cancelled"
+		require_mod_dir
+		echoerr "Error cloning '$GD_REPO', operation cancelled"
 	fi
 	exit 0
 	;;
@@ -1287,9 +1288,10 @@ case "$ACTION" in
 		require_mods
 		errors=0
 		for module in $(ls -1 "$GD_DIR"); do
-			[ -d "$GD_DIR/$module" ] || continue;
-			if ! update_mod "$module"; then
-				echoinfo "-e" "Error occurred while updating '$module'"
+			GD_REPO=$module
+			[ -d "$GD_DIR/$GD_REPO" ] || continue;
+			if ! update_mod; then
+				echoinfo "-e" "Error occurred while updating '$GD_REPO'"
 				errors=$((errors+1))
 			fi
 		done
@@ -1297,10 +1299,10 @@ case "$ACTION" in
 	else
 		# Update specified module
 		GD_REPO="$1"; shift
-		module=$GD_REPO
-		[ -z "$module" ] && echoerr "No module specified"
-		if ! update_mod "$module"; then
-			echoerr "Error updating '$module', operation cancelled"
+
+		[ -z "$GD_REPO" ] && echoerr "No module specified"
+		if ! update_mod; then
+			echoerr "Error updating '$GD_REPO', operation cancelled"
 		fi
 	fi
 	echofin "Updated tracked repositories"
@@ -1316,9 +1318,10 @@ case "$ACTION" in
 		require_mods
 		errors=0
 		for module in $(ls -1 "$GD_DIR"); do
-			[ -d "$GD_DIR/$module" ] || continue
-			if ! rm_mod "$module"; then
-				echoinfo "Error occurred while removing '$module' module"
+			GD_REPO=$module
+			[ -d "$GD_DIR/$GD_REPO" ] || continue
+			if ! rm_mod; then
+				echoinfo "Error occurred while removing '$GD_REPO' module"
 				errors=$((errors+1))
 			fi
 		done
@@ -1326,11 +1329,10 @@ case "$ACTION" in
 	else
 		# Remove specified module
 		GD_REPO="$1"; shift
-		module=$GD_REPO
-		[ -z "$module" ] && echoerr "No module specified"
+		[ -z "$GD_REPO" ] && echoerr "No module specified"
 
-		if ! require_mod_dir "$module" || ! rm_mod "$module"; then
-			echoinfo "Error removing '$module', operation cancelled"
+		if ! require_mod_dir || ! rm_mod; then
+			echoinfo "Error removing '$GD_REPO', operation cancelled"
 		fi
 
 	fi
@@ -1342,37 +1344,35 @@ case "$ACTION" in
   info)
 	# Show information about specified module
 	GD_REPO="$1"; shift
-	module=$GD_REPO
-	[ -z "$module" ] && echoerr "No module specified"
 
-	mod_info "$module"
+	[ -z "$GD_REPO" ] && echoerr "No module specified"
+
+	mod_info
 	;;
 
   files)
 	# List deployed files of specified module
 	[ $# -gt 0 ] || echoerr "No module specified"
 	GD_REPO="$1"; shift
-	module=$GD_REPO
-	[ -z "$module" ] && echoerr "No module specified"
 
-	require_mod_dir "$module"
+	[ -z "$GD_REPO" ] && echoerr "No module specified"
 
-	echoinfo "Deployed files of '$module' module:"
+	require_mod_dir
+
+	echoinfo "Deployed files of '$GD_REPO' module:"
 	sleep 1
-	module_dir="$GD_DIR/$module"
-	cat "$module_dir/deployed.gitploy"
+	cat "$GD_DIR/$GD_REPO/deployed.gitploy"
 	;;
 
 
   proxy)
 	# Run git command into specified module
 	GD_REPO="$1"; shift
-	module=$GD_REPO
-	[ -z "$module" ] && echoerr "No module specified"
+	[ -z "$GD_REPO" ] && echoerr "No module specified"
 
-	require_mod_dir "$module"
+	require_mod_dir
 
-	cd "$GD_DIR/$module/source"
+	cd "$GD_DIR/$GD_REPO/source"
 
 	git "$@"
 	;;
