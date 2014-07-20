@@ -972,11 +972,15 @@ update_mod() {
 		for line in $(cat "$module_dir/deployed.gitploy" 2>/dev/null); do
 			if ! [ -z "$line" ]; then
 				local re_file=$line
-				IFS=',' read -a folders <<< "$_ROOTFOLDER"
-				for folder in "${folders[@]}"
-				do
-					re_file=${re_file#$folder}
-				done
+				
+				if ! [ -z "$_ROOTFOLDER" ];
+				then
+					IFS=',' read -a folders <<< "$_ROOTFOLDER"
+					for folder in "${folders[@]}"
+					do
+						re_file=${re_file#$folder}
+					done
+				fi
 				# copy the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
 					mkdir -p $(dirname "$GD_ROOT/$re_file") && cp "$line" "$GD_ROOT/$re_file"
@@ -1070,13 +1074,18 @@ update_mod() {
 		IFS=$'\n'
 		for line in $(cat "$module_dir/update.gitploy" 2>/dev/null); do
 			if ! [ -z "$line" ]; then
+
 				local up_file=$line
-				IFS=',' read -a folders <<< "$_ROOTFOLDER"
-				for folder in "${folders[@]}"
-				do
-					up_file=${up_file#$folder}
-				done
-			
+				
+				if ! [ -z "$_ROOTFOLDER" ];
+				then
+					IFS=',' read -a folders <<< "$_ROOTFOLDER"
+					for folder in "${folders[@]}"
+					do
+						up_file=${up_file#$folder}
+					done
+				fi
+				
 				# copy the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
 					mkdir -p $(dirname "$GD_ROOT/$up_file") && cp "$line" "$GD_ROOT/$up_file"
@@ -1090,13 +1099,16 @@ update_mod() {
 		for line in $(cat "$module_dir/delete.gitploy" 2>/dev/null); do
 		
 			local del_file=$line
-			IFS=',' read -a folders <<< "$_ROOTFOLDER"
-			for folder in "${folders[@]}"
-			do
-				del_file=${del_file#$folder}
-			done
-		
-		
+				
+			if ! [ -z "$_ROOTFOLDER" ];
+			then
+				IFS=',' read -a folders <<< "$_ROOTFOLDER"
+				for folder in "${folders[@]}"
+				do
+					del_file=${del_file#$folder}
+				done
+			fi
+			
 			if ! [ -z "$del_file" ] && [ -f "$GD_ROOT/$del_file" ]; then
 				# delete the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
