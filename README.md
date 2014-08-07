@@ -194,6 +194,10 @@ There is only one step that needs to be done:
 	```
 	
 
+####Trouble Shooting agent forwarding
+There are a few cases that the agent forwarded can be lost.  If you  `ssh-add -L` and don't see your key, then try to log off the server and log back in.   That normally will correct the issue.
+
+
 ##Moving from tag to branch
 This is no issue as you just need to run an update with the `-b` option.  For example
 
