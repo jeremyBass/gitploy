@@ -598,7 +598,7 @@ resolve_install_root(){
 	local install="$module_dir/install_root.gitploy"
 
 	#at this point we are reading a user input
-	if [ -z "$_INSTALL_PATH" ]; then
+	if [ "x$_INSTALL_PATH" -nq "x" ]; then
 		_INSTALL_PATH= $( $_INSTALL_PATH | sed 's/^\/?\(.*\)\/?$/\1/')/
 		echo "$_INSTALL_PATH" > "$install" #save value
 		return 0
