@@ -1275,6 +1275,7 @@ create_module() {
 
 	echo "$_BRANCH" > "$module_dir/branch.gitploy"
 	echo "$_ROOTFOLDER" > "$module_dir/rooted.gitploy"
+	echo "$_INSTALL_PATH" > "$module_dir/install_root.gitploy"
 	[ -z "$_ROOTFOLDER" ] || sparse_checkout
 
 	echostd "Fetching submodules..."
