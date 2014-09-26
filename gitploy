@@ -508,7 +508,7 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
 	e) merge_exclude "$OPTARG"
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
-	p) _INSTALL_PATH $("$OPTARG" | sed 's/^\/?\(.*\)\/?$/\1/')/ #trim /
+	p) _INSTALL_PATH=$("$OPTARG" | sed 's/^\/?\(.*\)\/?$/\1/')/ #trim /
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 
@@ -834,7 +834,7 @@ deploy_file() {
 	fi
 	
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
-		resolve_install_root();
+		resolve_install_root()
 		echostd "++ $tar_file"
 		
 		mkdir -p $(dirname "$GD_ROOT/$tar_file") && cp "$file" "$GD_ROOT/$tar_file"
