@@ -1314,7 +1314,7 @@ case "$ACTION" in
 	for module in $(ls -1 "$GD_DIR"); do
 		[ -d "$GD_DIR/$module" ] || continue;
 		GD_REPO=$module
-		resolve_install_root()
+		resolve_install_root
 		mod_info_inline
 	done
 	echostd "$count module(s) found"
@@ -1335,7 +1335,7 @@ case "$ACTION" in
 
 	success=$GD_TRUE
 	repo="$1"; shift
-	resolve_install_root()
+	resolve_install_root
 	create_module "$repo" || success=$GD_FALSE
 
 	cd "$GD_DIR"
@@ -1363,7 +1363,7 @@ case "$ACTION" in
 		errors=0
 		for module in $(ls -1 "$GD_DIR"); do
 			GD_REPO=$module
-			resolve_install_root()
+			resolve_install_root
 			[ -d "$GD_DIR/$GD_REPO" ] || continue;
 			if ! update_mod; then
 				echoinfo "-e" "Error occurred while updating '$GD_REPO'"
@@ -1374,7 +1374,7 @@ case "$ACTION" in
 	else
 		# Update specified module
 		GD_REPO="$1"; shift
-		resolve_install_root()
+		resolve_install_root
 		[ -z "$GD_REPO" ] && echoerr "No module specified"
 		if ! update_mod; then
 			echoerr "Error updating '$GD_REPO', operation cancelled"
@@ -1394,7 +1394,7 @@ case "$ACTION" in
 		errors=0
 		for module in $(ls -1 "$GD_DIR"); do
 			GD_REPO=$module
-			resolve_install_root()
+			resolve_install_root
 			[ -d "$GD_DIR/$GD_REPO" ] || continue
 			if ! rm_mod; then
 				echoinfo "Error occurred while removing '$GD_REPO' module"
@@ -1405,7 +1405,7 @@ case "$ACTION" in
 	else
 		# Remove specified module
 		GD_REPO="$1"; shift
-		resolve_install_root()
+		resolve_install_root
 		[ -z "$GD_REPO" ] && echoerr "No module specified"
 
 		if ! require_mod_dir || ! rm_mod; then
@@ -1421,7 +1421,7 @@ case "$ACTION" in
   info)
 	# Show information about specified module
 	GD_REPO="$1"; shift
-	resolve_install_root()
+	resolve_install_root
 	[ -z "$GD_REPO" ] && echoerr "No module specified"
 
 	mod_info
@@ -1431,7 +1431,7 @@ case "$ACTION" in
 	# List deployed files of specified module
 	[ $# -gt 0 ] || echoerr "No module specified"
 	GD_REPO="$1"; shift
-	resolve_install_root()
+	resolve_install_root
 	[ -z "$GD_REPO" ] && echoerr "No module specified"
 
 	require_mod_dir
@@ -1445,7 +1445,7 @@ case "$ACTION" in
   proxy)
 	# Run git command into specified module
 	GD_REPO="$1"; shift
-	resolve_install_root()
+	resolve_install_root
 	[ -z "$GD_REPO" ] && echoerr "No module specified"
 
 	require_mod_dir
