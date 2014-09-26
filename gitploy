@@ -599,7 +599,7 @@ resolve_install_root(){
 
 	#at this point we are reading a user input
 	if ! [ -z "$_INSTALL_PATH" ]; then
-		_INSTALL_PATH=$( echo $_in | sed -e 's:^/*::' -e 's:/*$::')"/"
+		_INSTALL_PATH=$( echo $_INSTALL_PATH | sed -e 's:^/*::' -e 's:/*$::')"/"
 		echo "$_INSTALL_PATH" > "$install" #save value
 		return 0
 	fi
@@ -609,7 +609,7 @@ resolve_install_root(){
 
 	[ -s "$install" ] && target_install=$(cat "$install")
 	if ! [ -z "$target_install" ]; then
-		_INSTALL_PATH=$( echo $_in | sed -e 's:^/*::' -e 's:/*$::')"/"
+		_INSTALL_PATH=$( echo $target_install | sed -e 's:^/*::' -e 's:/*$::')"/"
 		return 0
 	fi
 	_INSTALL_PATH=""
