@@ -79,6 +79,7 @@ usage() {
                block all stdout
   -w   (Wall Broadcasting) tell anyone on the server you are about to
                            run an action
+  -p   (Path installed) Where is the repo installed to from root (beta)
          
 
 END
@@ -98,14 +99,13 @@ GD_FALSE=0
 
 #- run constants
 GD_FOLDER=".gitploy"
+_INSTALL_PATH=""
 GD_ROOT=$(pwd -P)
-GD_DIR="$GD_ROOT/$GD_FOLDER"
+GD_DIR="$GD_ROOT/$_INSTALL_PATH$GD_FOLDER"
 GD_REPO=""
 
 #- Set private repo vars
 GD_ORG=""
-GD_USR=""
-GD_PWD=""
 
 #- git repo api settings
 GD_API_URL="https://api.github.com"
@@ -476,7 +476,7 @@ fi
 #fill out
 
 # Handle options
-while getopts "zhvdurqw:c:i:e:o:b:t:f:p:a:g" opt; do
+while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
   case $opt in
 
 	#flag----------------------
@@ -508,6 +508,9 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:a:g" opt; do
 	e) merge_exclude "$OPTARG"
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
+	p) _INSTALL_PATH $("$OPTARG" | sed 's/^\/?\(.*\)\/?$/\1/')/ #trim /
+	  shift $((OPTIND-1)); OPTIND=1
+	  ;;
 
 	#git options---------------
 	o ) _OWNER=$OPTARG
@@ -521,12 +524,6 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:a:g" opt; do
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 	f) _ROOTFOLDER=$OPTARG
-	  shift $((OPTIND-1)); OPTIND=1
-	  ;;
-	p) GD_PWD=$OPTARG
-	  shift $((OPTIND-1)); OPTIND=1
-	  ;;
-	a) GD_USR=$OPTARG
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 	g) GD_ORG=$OPTARG
