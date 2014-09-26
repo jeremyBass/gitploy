@@ -99,10 +99,10 @@ GD_FALSE=0
 
 #- run constants
 GD_FOLDER=".gitploy"
-_INSTALL_PATH=""
 GD_ROOT=$(pwd -P)
-GD_DIR="$GD_ROOT/$_INSTALL_PATH$GD_FOLDER"
+GD_DIR="$GD_ROOT/$GD_FOLDER"
 GD_REPO=""
+_INSTALL_PATH=""
 
 #- Set private repo vars
 GD_ORG=""
@@ -589,6 +589,30 @@ if [ $GD_RECURSIVE -eq $GD_TRUE ]; then
   sleep 1
 fi
 
+#===  FUNCTION  ================================================================
+#          NAME:  resolve_install_root
+#   DESCRIPTION:  build the path the repo is install to rooted from gitploy init
+#===============================================================================
+resolve_install_root(){
+	local module_dir="$GD_DIR/$GD_REPO"
+	local install="$module_dir/install_root.gitploy"
+
+	#at this point we are reading a user input
+	if [ -z "$_INSTALL_PATH" ]; then
+		_INSTALL_PATH= $( $_INSTALL_PATH | sed 's/^\/?\(.*\)\/?$/\1/')/
+		echo "$_INSTALL_PATH" > "$install" #save value
+		return 0
+	fi
+
+	#there was no user input so we will read from file
+	local target_install=$(cat "$install")
+	if [ -z "$target_install" ]; then
+		_INSTALL_PATH=$( "$target_install" | sed 's/^\/?\(.*\)\/?$/\1/')/
+		return 0
+	fi
+	_INSTALL_PATH=""
+	return 0
+}
 
 #===  FUNCTION  ================================================================
 #          NAME:  mod_git_reset
@@ -739,7 +763,7 @@ rm_mod_files() {
 			done
 		fi
 
-		local file=$GD_ROOT/${tar_file#$GD_ROOT}
+		local file=$GD_ROOT/$_INSTALL_PATH${tar_file#$GD_ROOT}
 
 		if ! [ -z "$file" ] && [ -f "$file" ] && [ "x$file" != "x$GD_ROOT/" ]; then
 			echostd "-- $file"
@@ -805,12 +829,14 @@ deploy_file() {
 		IFS=',' read -a folders <<< "$_ROOTFOLDER"
 		for folder in "${folders[@]}"
 		do
-			tar_file=${file#$folder}
+			tar_file=$_INSTALL_PATH${file#$folder}
 		done
 	fi
 	
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
+		resolve_install_root();
 		echostd "++ $tar_file"
+		
 		mkdir -p $(dirname "$GD_ROOT/$tar_file") && cp "$file" "$GD_ROOT/$tar_file"
 	fi
 }
@@ -828,6 +854,7 @@ mv_files() {
 	local excludes_file="$module_dir/excludes.gitploy"
 	local modman_file="$source_dir/modman"
 	local deployed_file="$module_dir/deployed.gitploy"
+	local install="$module_dir/install_root.gitploy"
 
 	> "$deployed_file" #creat empty file
 	cd "$source_dir" || return 1
@@ -865,12 +892,12 @@ mv_files() {
 						src="${src//\//\\/}"
 						dest="${dest//\//\\/}"
 						target=$(echo $file | sed "s/$src/$dest/g")
-						deploy_file "$file" #"$GD_ROOT/$target"
+						deploy_file "$file"
 						echo "$file" >> "$deployed_file"
 					fi
 				done
 			else
-				deploy_file "$file" #"$GD_ROOT/$target"
+				deploy_file "$file"
 				echo "$file" >> "$deployed_file"
 			fi
 		fi
@@ -1109,7 +1136,7 @@ update_mod() {
 			if ! [ -z "$del_file" ] && [ -f "$GD_ROOT/$del_file" ]; then
 				# delete the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
-					rm "$GD_ROOT/$del_file" 2>/dev/null
+					rm "$GD_ROOT/$_INSTALL_PATH$del_file" 2>/dev/null
 					echostd "--: $del_file"
 				fi
 			fi
@@ -1183,6 +1210,10 @@ mod_info_inline(){
 		info="$info  rooted from: $rooted"
 	fi
 
+	if [ -s "$module_dir/install_root.gitploy" ]; then
+		local install_root=$(cat "$module_dir/install_root.gitploy")
+		info="$info  install in: $install_root"
+	fi
 
 	if [ -s "$module_dir/repository.gitploy" ]; then
 		local repo=$(cat "$module_dir/repository.gitploy")
@@ -1260,7 +1291,6 @@ create_module() {
 	return 0
 }
 
-
 #-----------------------------------------------------------------------
 #  Handle action
 #-----------------------------------------------------------------------
@@ -1283,6 +1313,7 @@ case "$ACTION" in
 	for module in $(ls -1 "$GD_DIR"); do
 		[ -d "$GD_DIR/$module" ] || continue;
 		GD_REPO=$module
+		resolve_install_root()
 		mod_info_inline
 	done
 	echostd "$count module(s) found"
@@ -1303,6 +1334,7 @@ case "$ACTION" in
 
 	success=$GD_TRUE
 	repo="$1"; shift
+	resolve_install_root()
 	create_module "$repo" || success=$GD_FALSE
 
 	cd "$GD_DIR"
@@ -1330,6 +1362,7 @@ case "$ACTION" in
 		errors=0
 		for module in $(ls -1 "$GD_DIR"); do
 			GD_REPO=$module
+			resolve_install_root()
 			[ -d "$GD_DIR/$GD_REPO" ] || continue;
 			if ! update_mod; then
 				echoinfo "-e" "Error occurred while updating '$GD_REPO'"
@@ -1340,7 +1373,7 @@ case "$ACTION" in
 	else
 		# Update specified module
 		GD_REPO="$1"; shift
-
+		resolve_install_root()
 		[ -z "$GD_REPO" ] && echoerr "No module specified"
 		if ! update_mod; then
 			echoerr "Error updating '$GD_REPO', operation cancelled"
@@ -1360,6 +1393,7 @@ case "$ACTION" in
 		errors=0
 		for module in $(ls -1 "$GD_DIR"); do
 			GD_REPO=$module
+			resolve_install_root()
 			[ -d "$GD_DIR/$GD_REPO" ] || continue
 			if ! rm_mod; then
 				echoinfo "Error occurred while removing '$GD_REPO' module"
@@ -1370,6 +1404,7 @@ case "$ACTION" in
 	else
 		# Remove specified module
 		GD_REPO="$1"; shift
+		resolve_install_root()
 		[ -z "$GD_REPO" ] && echoerr "No module specified"
 
 		if ! require_mod_dir || ! rm_mod; then
@@ -1385,7 +1420,7 @@ case "$ACTION" in
   info)
 	# Show information about specified module
 	GD_REPO="$1"; shift
-
+	resolve_install_root()
 	[ -z "$GD_REPO" ] && echoerr "No module specified"
 
 	mod_info
@@ -1395,7 +1430,7 @@ case "$ACTION" in
 	# List deployed files of specified module
 	[ $# -gt 0 ] || echoerr "No module specified"
 	GD_REPO="$1"; shift
-
+	resolve_install_root()
 	[ -z "$GD_REPO" ] && echoerr "No module specified"
 
 	require_mod_dir
@@ -1409,6 +1444,7 @@ case "$ACTION" in
   proxy)
 	# Run git command into specified module
 	GD_REPO="$1"; shift
+	resolve_install_root()
 	[ -z "$GD_REPO" ] && echoerr "No module specified"
 
 	require_mod_dir
