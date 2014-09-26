@@ -508,7 +508,7 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
 	e) merge_exclude "$OPTARG"
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
-	p) _INSTALL_PATH=$("$OPTARG" | sed 's/^\/?\(.*\)\/?$/\1/')/ #trim /
+	p) _INSTALL_PATH=$( echo $OPTARG | sed -e 's:^/*::' -e 's:/*$::')"/" #trim /
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 
