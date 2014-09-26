@@ -605,7 +605,9 @@ resolve_install_root(){
 	fi
 
 	#there was no user input so we will read from file
-	local target_install=$(cat "$install")
+	local target_install=""
+
+	[ -s "$install" ] && target_install=$(cat "$install")
 	if [ -z "$target_install" ]; then
 		_INSTALL_PATH=$( "$target_install" | sed 's/^\/?\(.*\)\/?$/\1/')/
 		return 0
