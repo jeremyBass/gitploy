@@ -1008,7 +1008,7 @@ update_mod() {
 				fi
 				# copy the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
-					mkdir -p $(dirname "$GD_ROOT/$re_file") && cp "$line" "$GD_ROOT/$re_file"
+					mkdir -p $(dirname "$GD_ROOT/$_INSTALL_PATH$re_file") && cp "$line" "$GD_ROOT/$_INSTALL_PATH$re_file"
 					echostd "Refreshing: $re_file"
 				fi
 			fi
@@ -1113,8 +1113,8 @@ update_mod() {
 				
 				# copy the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
-					mkdir -p $(dirname "$GD_ROOT/$up_file") && cp "$line" "$GD_ROOT/$up_file"
-					echostd "++: $up_file"
+					mkdir -p $(dirname "$GD_ROOT/$_INSTALL_PATH$up_file") && cp "$line" "$GD_ROOT/$_INSTALL_PATH$up_file"
+					echostd "++: $_INSTALL_PATH$up_file"
 				fi
 			fi
 		done
@@ -1138,7 +1138,7 @@ update_mod() {
 				# delete the file 
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
 					rm "$GD_ROOT/$_INSTALL_PATH$del_file" 2>/dev/null
-					echostd "--: $del_file"
+					echostd "--: $_INSTALL_PATH$del_file"
 				fi
 			fi
 		done
