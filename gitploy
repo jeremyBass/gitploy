@@ -600,7 +600,7 @@ resolve_install_root(){
 	#at this point we are reading a user input
 	if ! [ -z "$_INSTALL_PATH" ]; then
 		_INSTALL_PATH=$( echo $_INSTALL_PATH | sed -e 's:^/*::' -e 's:/*$::')"/"
-		echo "$_INSTALL_PATH" > "$install" #save value
+		echo "$_INSTALL_PATH" > $install #save value
 		return 0
 	fi
 
@@ -832,16 +832,13 @@ deploy_file() {
 		IFS=',' read -a folders <<< "$_ROOTFOLDER"
 		for folder in "${folders[@]}"
 		do
-			tar_file=$_INSTALL_PATH${file#$folder}
+			tar_file=${file#$folder}
 		done
 	fi
 
-	echostd "rooted at: $_ROOTFOLDER"
-	echostd "installed at: $_INSTALL_PATH"
-
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
-		echostd "++ $tar_file"
-		mkdir -p $(dirname "$GD_ROOT/$tar_file") && cp "$file" "$GD_ROOT/$tar_file"
+		echostd "++ $_INSTALL_PATH$tar_file"
+		mkdir -p $(dirname "$GD_ROOT/$_INSTALL_PATH$tar_file") && cp "$file" "$GD_ROOT/$tar_file"
 	fi
 }
 
@@ -1216,7 +1213,7 @@ mod_info_inline(){
 
 	if [ -s "$module_dir/install_root.gitploy" ]; then
 		local install_root=$(cat "$module_dir/install_root.gitploy")
-		info="$info  install in: $install_root"
+		info="$info  install at: $install_root"
 	fi
 
 	if [ -s "$module_dir/repository.gitploy" ]; then
