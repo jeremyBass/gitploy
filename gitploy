@@ -838,7 +838,7 @@ deploy_file() {
 
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
 		echostd "++ $_INSTALL_PATH$tar_file"
-		mkdir -p $(dirname "$GD_ROOT/$_INSTALL_PATH$tar_file") && cp "$file" "$GD_ROOT/$tar_file"
+		mkdir -p $(dirname "$GD_ROOT/$_INSTALL_PATH$tar_file") && cp "$file" "$GD_ROOT/$_INSTALL_PATH$tar_file"
 	fi
 }
 
