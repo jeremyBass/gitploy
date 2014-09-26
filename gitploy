@@ -750,7 +750,8 @@ rm_mod_files() {
 	
 	[ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would be remove files-" || echoinfo "Removing files-"
 	
-	echo $_ROOTFOLDER
+	echostd "rooted at: $_ROOTFOLDER"
+	echostd "installed at: $_INSTALL_PATH"
 	
 	for line in $(cat "$deployed_file" 2>/dev/null); do
 	
@@ -834,12 +835,12 @@ deploy_file() {
 			tar_file=$_INSTALL_PATH${file#$folder}
 		done
 	fi
-	
+
+	echostd "rooted at: $_ROOTFOLDER"
+	echostd "installed at: $_INSTALL_PATH"
+
 	if [ $DRY_RUN -eq $GD_FALSE ]; then
-		resolve_install_root
-		
 		echostd "++ $tar_file"
-		
 		mkdir -p $(dirname "$GD_ROOT/$tar_file") && cp "$file" "$GD_ROOT/$tar_file"
 	fi
 }
