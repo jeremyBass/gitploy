@@ -1239,6 +1239,7 @@ create_module() {
 	local exclude_cache="$module_dir/excludes.gitploy"
 	local include_cache="$module_dir/includes.gitploy"
 
+	[ -d "$GD_DIR" ] || mkdir -p "$GD_DIR"
 	cd "$GD_DIR"
 
 	echoinfo "Cloning $repo..."
