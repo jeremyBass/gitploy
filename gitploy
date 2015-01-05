@@ -1261,12 +1261,12 @@ create_module() {
 			rm_mod_dir
 			echoerr "Tag '$_TAG' does not exist"
 		fi
-		if ! git checkout --quiet "$_TAG"; then
+		if ! git checkout -f --quiet "$_TAG"; then
 			rm_mod_dir
 			echoerr "An error occurred while fetching tag $_TAG"
 		fi
 		echo "$_TAG" > "$module_dir/tag.gitploy"
-	elif ! git checkout --quiet "$_BRANCH"; then
+	elif ! git checkout -f --quiet "$_BRANCH"; then
 		rm_mod_dir
 		echoerr "An error occurred while fetching branch $_BRANCH"
 	fi
