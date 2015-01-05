@@ -1243,7 +1243,7 @@ create_module() {
 	cd "$GD_DIR"
 
 	echoinfo "Cloning $repo..."
-	if ! git clone --quiet -- $repo "$source_dir"; then
+	if ! git clone --depth=1 --quiet -- $repo "$source_dir"; then
 		rm_mod_dir
 		echoerr "An error occurred while cloning repository"
 	fi
