@@ -509,6 +509,7 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 	p) _INSTALL_PATH=$( echo $OPTARG | sed -e 's:^/*::' -e 's:/*$::')"/" #trim /
+	  echoinfo "Installing to $_INSTALL_PATH"
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 
@@ -1242,7 +1243,7 @@ create_module() {
 	[ -d "$GD_DIR" ] || mkdir -p "$GD_DIR"
 	cd "$GD_DIR"
 	
-	resolve_install_root
+	
 	
 	echoinfo "Cloning $repo..."
 	if ! git clone --depth=1 --quiet -- $repo "$source_dir"; then
@@ -1339,6 +1340,8 @@ case "$ACTION" in
 
 	[ -d "$repo_dir" ] && echoerr "A module with this name already exists"
 	[ -d "$repo_dir" ] || mkdir -p "$repo_dir"
+	
+	resolve_install_root
 	
 	success=$GD_TRUE
 	repo="$1"; shift
