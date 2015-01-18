@@ -1067,7 +1067,7 @@ update_mod() {
 		else
 			# Ignoring -b option (switching branch) because not yet supported
 
-			if [ -z "$_BRANCH"  ] || [ "$_BRANCH" -eq "master" ]; then
+			if [ -z "$_BRANCH"  ] || [ "$_BRANCH" == "master" ]; then
 				_FOE_BRANCH="master"
 				[ -s "$module_dir/branch.gitploy" ] && _FOE_BRANCH=$(cat "$module_dir/branch.gitploy")
 				[ "$_FOE_BRANCH" -ne "master"] && _BRANCH=$_FOE_BRANCH
