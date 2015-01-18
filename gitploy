@@ -1330,11 +1330,14 @@ case "$ACTION" in
 
 	[ -z "$GD_REPO" ] && echoerr "No repo specified"
 	repo_dir="$GD_DIR/$GD_REPO"
+	[ -d "$GD_DIR" ] || mkdir -p "$GD_DIR"
+	
 	[[ "$GD_REPO" =~ [^a-z0-9_-]+ ]] &&
 		echoerr "You cannot add a repo containingmore then [^a-zA-Z0-9_-]+ pattern\nModule specified: $GD_REPO"
 
 	[ -d "$repo_dir" ] && echoerr "A module with this name already exists"
-
+	[ -d "$repo_dir" ] || mkdir -p "$repo_dir"
+	
 	success=$GD_TRUE
 	repo="$1"; shift
 	resolve_install_root
