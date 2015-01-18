@@ -1241,7 +1241,9 @@ create_module() {
 
 	[ -d "$GD_DIR" ] || mkdir -p "$GD_DIR"
 	cd "$GD_DIR"
-
+	
+	resolve_install_root
+	
 	echoinfo "Cloning $repo..."
 	if ! git clone --depth=1 --quiet -- $repo "$source_dir"; then
 		rm_mod_dir
@@ -1340,7 +1342,7 @@ case "$ACTION" in
 	
 	success=$GD_TRUE
 	repo="$1"; shift
-	resolve_install_root
+
 	create_module "$repo" || success=$GD_FALSE
 
 	cd "$GD_DIR"
