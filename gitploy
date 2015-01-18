@@ -1070,7 +1070,7 @@ update_mod() {
 			if [ -z "$_BRANCH"  ] || [[ "$_BRANCH" = "master" ]]; then
 				_FOE_BRANCH="master"
 				[ -s "$module_dir/branch.gitploy" ] && _FOE_BRANCH=$(cat "$module_dir/branch.gitploy")
-				[ "$_FOE_BRANCH" -ne "master" ] && _BRANCH=$_FOE_BRANCH
+				[ "$_FOE_BRANCH" == "master" ] && _BRANCH=$_FOE_BRANCH
 			fi
 
 			echostd "Update to branch '$_BRANCH'"
