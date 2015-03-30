@@ -341,14 +341,15 @@ check_group() {
 	fi
 
 	if [ "$GD_GROUP" != "" ]; then
-		if groups $USER | grep &>/dev/null '\b$GD_GROUP\b'; then
-			echo $GD_TRUE
+		if groups $USER | grep &>/dev/null $GD_GROUP; then
+			echostd "used group '$_FOE_GROUP' for user $USER"
+			return $GD_TRUE
 		else
 			echoerr "your not in $GD_GROUP"
 		fi
 	fi
 	echostd "used group '$_FOE_GROUP' for user $USER"
-	echo $GD_TRUE
+	return $GD_TRUE
 
 }
 
