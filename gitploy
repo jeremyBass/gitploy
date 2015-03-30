@@ -336,11 +336,11 @@ check_group() {
 	if [ -z "$GD_GROUP"  ] || [ "$GD_GROUP" = "" ]; then
 		_FOE_GROUP=""
 		[ -s "$module_dir/group.gitploy" ] && _FOE_GROUP=$(cat "$module_dir/group.gitploy")
-		[ "$_FOE_GROUP" -ne "" ] && GD_GROUP=$_FOE_GROUP
+		[ "$_FOE_GROUP" != "" ] && GD_GROUP=$_FOE_GROUP
 		echostd "going to use group '$_FOE_GROUP'"
 	fi
 
-	if [ "$GD_GROUP" -ne "" ]; then
+	if [ "$GD_GROUP" != "" ]; then
 		if groups $USER | grep &>/dev/null '\b$GD_GROUP\b'; then
 			echo $GD_TRUE
 		else
@@ -1105,7 +1105,7 @@ update_mod() {
 			if [ -z "$_BRANCH"  ] || [ "$_BRANCH" = "master" ]; then
 				_FOE_BRANCH="master"
 				[ -s "$module_dir/branch.gitploy" ] && _FOE_BRANCH=$(cat "$module_dir/branch.gitploy")
-				[ "$_FOE_BRANCH" -ne "master" ] && _BRANCH=$_FOE_BRANCH
+				[ "$_FOE_BRANCH" != "master" ] && _BRANCH=$_FOE_BRANCH
 				echostd "using non master branch '$_FOE_BRANCH'"
 			fi
 
