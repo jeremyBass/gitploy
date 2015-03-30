@@ -1072,6 +1072,7 @@ update_mod() {
 				_FOE_BRANCH="master"
 				[ -s "$module_dir/branch.gitploy" ] && _FOE_BRANCH=$(cat "$module_dir/branch.gitploy")
 				[ "$_FOE_BRANCH" = "master" ] && _BRANCH=$_FOE_BRANCH
+				echostd "using non master branch '$_FOE_BRANCH'"
 			fi
 
 			echostd "Update to branch '$_BRANCH'"
