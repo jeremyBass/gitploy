@@ -1,120 +1,21 @@
 gitploy
 =======
 
-<pre>
-  Usage :  gitploy [<b><i>&gt;git_args&lt;</i></b>] [options]
+#install
 
-  Command Examples:
+If you have rights, you can run
 
-    $>_ gitploy <b>install</b>
-                => Install gitploy itself
-    $>_ gitploy <b>init</b>
-                => Initialize .gitploy/ folder
-    $>_ gitploy <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
-                => Install a module by cloning specified git repository
-    $>_ gitploy <b>clone</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
-                => Install gitploy itself
-    $>_ gitploy <b>ls</b>
-                => List installed modules
-    $>_ gitploy <b>rm</b> <b><i>&gt;module&lt;</i></b>
-                => Remove specified module
-    $>_ gitploy <b>up</b> <b><i>&gt;module&lt;</i></b>
-                => Update specified module
-    $>_ gitploy <b>re</b> <b><i>&gt;module&lt;</i></b>
-                => Refresh files of specified module
-    $>_ gitploy <b>info</b> <b><i>&gt;module&lt;</i></b>
-                => Show information about a specific module
-    $>_ gitploy <b>files</b> <b><i>&gt;module&lt;</i></b>
-                => List deployed files of specified module
-    $>_ gitploy <b>proxy</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;git_args&lt;</i></b>
-                => Run git command into specified module
+`curl https://raw.github.com/jeremyBass/gitploy/master/gitploy | sudo sh -s -- install`
 
-                
-PLACE HOLDER EXAMPLE VALUES:
-<b><i>&gt;repository&lt;</i></b>  ==> https://github.com/account/repository.git
-<b><i>&gt;module&lt;</i></b>      ==> repository_name
-<b><i>&gt;git_args&lt;</i></b>    ==> reset --hard upstream/master
+anywhere.  It will unpack itself and locate itself with in `/usr/sbin/gitploy` and set so that it is executable.  Once you have the command run from above run this to check the install
 
-  Options:
-  -v   Show gitploy version
-  
-  -h   Show this help
-  
-  -d   (Dry run) Dry run mode (show what would be done)
-  
-  -i   (Include) Only deploys items that match the filters
-       EX:
-       $>_ gitploy <b>-i lib/ -i foo/:bar/</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
-                => will deploy only lib/ (to lib/) and foo/ (to bar/)
-                
-  -c   (Callback) Point to an action file with in the repo.  If none set, default is ` installer `
-       EX:
-       $>_ gitploy <b>-a</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
-                => will add the repo, then look for the installer file and run it
-                                
-  -e   (Exclude) Filters out listed items.  May use regex syntax
-       EX:
-       $>_ gitploy <b>-e lib/tests/ -e *.txt</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
-                => will exclude both directory lib/tests/ and file lib/README.txt
-                
-  -b   (Branch) Specify a repository branch (only for add command)
-       EX:
-       $>_ gitploy <b>-b 1.0-stable</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
-                => will checkout 1.0-stable branch of 
-                    specified repository
-                
-  -t   (Tag) Specify a repository tag (only for add and update command also <b>overpowers -b</b> )
-        Note: a value of `<b>latest</b>` will use the latest tag released
-       EX:
-       $>_ gitploy <b>-t 1.2.0</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
-                => will checkout 1.2.0 tag of specified repository
-                
-  -f   (Folder root) Set the folder in the repo to root the tracking from. 
-       EX:
-       $>_ gitploy <b>-f</b> foo/Folder <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
-                => will checkout specified repository but only starting at that folder in the repo
+`gitploy -v`
 
-  -r   (Reqursive) Move through the modules tracked reqursively
-       EX:
-       $>_ gitploy rm <b>-r</b>
-                => will remove all repositories logged
-                   <b>NOTE::</b> all repo removals will be meet with a prompt
-       
-  -u   (Unattended) This flag will accept all promots.  Use wisely as 
-                    unattended in this form, `$>_ rm -ru`, would be wiping
-                    all logged repos
-       EX:
-       $>_ gitploy rm <b>-u</b> <b><i>&gt;module&lt;</i></b>
-                => will remove named repository <b> 
-                   WITHOUT a prompt<b>
-       
-  -q   (Quite) If you must hide the verbose output,
-                this flag will block all stdout
-       EX:
-       $>_ gitploy <b>-q</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
-                => will add a new repository with out any stdout messaging
- 
-                
-  -w   (Wall Broadcasting) Some times it's important that you
-                            don't have others doing anything 
-                            while you upgrade which wall will let
-                            them know you doing something, the flag stop that
-       EX:
-       $>_ gitploy <b>-w</b> <b><i>&gt;module&lt;</i></b> </b><i>&gt;repository&lt;</i></b>
-                => will add a new repository and prevent 
-                    everyone that is logged in knowing about it       
-</pre>
+That will check the version.  For more options read below in the option section.
 
 
-##install
 
-This will get you to an installed state.  
 
-```shell
-curl  https://raw.githubusercontent.com/jeremyBass/gitploy/master/gitploy | sudo sh -s -- install
-```
-
-It will pull it's self in , regardless of where you are runing the command, and set up gitploy to be used. `gitploy` can be used for many things, as long as it's repor based.  This is why `gitploy` is installed to the root directory.
 
 ##using ssh for private repos
 
@@ -208,6 +109,79 @@ gitploy up -b master repoName
 If you were on a tag then you would have been moved off this tag and to the head of the repo under the branch of `master` (in this example)
 
 
+
+##options
+
+<pre>
+  Usage :  gitploy [<b><i>&gt;git_args&lt;</i></b>] [options]
+
+  Actions:
+    init           => Initialize .gitploy/ folder
+    ls/list        => List installed modules
+    rm/remove      => Remove specified module
+    up/update      => Update specified module
+    re/refresh     => Refresh files of specified module
+    info           => Show information about a specific module
+    files          => List deployed files of specified module
+    proxy          => Run git command into specified module
+    install        => Install gitploy
+    update_gitploy => This will update gitploy it's self
+
+
+  Command Examples:
+    ${__ScriptName} <module> <repository> //(note this installs the repo)
+    ${__ScriptName} init  
+    ${__ScriptName} ls
+    ${__ScriptName} rm <module>
+    ${__ScriptName} up <module>
+    ${__ScriptName} re <module>
+    ${__ScriptName} info <module>
+    ${__ScriptName} files <module>
+    ${__ScriptName} proxy <module> <git_args>
+    ${__ScriptName} install
+    ${__ScriptName} update_gitploy
+
+  Options:
+  -v   Show gitploy version
+  -h   Show this help
+  -d   (Dry run) Dry run mode (show what would be done)
+  -i   (Include) Only deploys items that match the filters
+  -c   (Callback) Point to an action file with in the repo.  If none set,
+                  default is installer
+  -e   (Exclude) Filters out listed items.  May use regex syntax
+  -b   (Branch) Specify a repository branch (only for add command)
+  -t   (Tag) Specify a repository tag (only for add and update command
+             also overpowers -b ) 
+  -z   (Reset) Reset a repo on operation.  Really only applies to updates.
+               You will move from tag to branch at head release 
+  -f   (Folder root) Set the folder in the repo to root the tracking from. 
+           (** NOTE:: setting to false will clear the root used adn return the
+                      repo back to a normal checkout ** )
+  -r   (Reqursive) Move through the modules tracked reqursively
+  -u   (Unattended) This flag will accept all promots.
+  -q   (Quite) If you must hide the verbose output, this flag will 
+               block all stdout
+  -w   (Wall Broadcasting) tell anyone on the server you are about to
+                           run an action
+  -p   (Path installed) Where is the repo installed to from root (beta)
+  -g   (user group) if set then only that user that is in that group can operate that repo  
+             
+</pre>
+
+##ideas on usage
+
+1. use [`incron`](http://inotify.aiken.cz/?section=incron&page=doc&lang=en) to watch a folder for change, and if something changes, then redeploy the orginal files.  Ex:
+	```shell
+	/var/stores/magento/app/Mage.php IN_MODIFY cd /var/stores/ && gitploy re MAGE
+	```
+	This assumes a few things, one being that you have a full copy of Magento set up as a repo and versioned in with gitploy.  See [`magento-mirror`](https://github.com/washingtonstateuniversity/magento-mirror) where you would have ran 
+	
+	`gitploy -t 1.9.1.0 -p magneto MAGE https://github.com/washingtonstateuniversity/magento-mirror.git`
+	
+	Another thing that is assumed, other then the paths, is that you have rooted the gitploy from the `/var/stores/` folder where you'd find `/var/stores/.gitploy/MAGE` which deployed to the `magento` folder.
+
+
+
 ##Future Features
 
  - [ ] To be able to accept a git push deployment
@@ -216,20 +190,6 @@ If you were on a tag then you would have been moved off this tag and to the head
 
 Please request any features and feel free to send a pull request
 
-
-
-
-Inspiration for this script was derivate from
-
-https://github.com/saltstack/salt-bootstrap
-
-https://github.com/colinmollenhour/modman
-
-https://github.com/jreinke/modgit
-
-https://github.com/composer/composer
-
-There are ideas that echo from all points, but the goal is that one can simply managed repos that lay over each other.  As long as you will not want to make a pull request on the files, you can think of this as a sudo git.  You get dry runs, compare, and even a git proxy.  Some of the reference projects are geared to Magento, but this is not so restrictive.  The aim is to be able to handle any form of deployment strategy
 
 ##Change Log
 
