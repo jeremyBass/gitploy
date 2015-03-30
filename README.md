@@ -11,7 +11,7 @@ anywhere.  It will unpack itself and locate itself with in `/usr/sbin/gitploy` a
 
 `gitploy -v`
 
-That will check the version.  For more options read below in the option section.
+That will check the version.  For more options read below in the **- h / help** section.
 
 
 
@@ -110,7 +110,7 @@ If you were on a tag then you would have been moved off this tag and to the head
 
 
 
-##options
+##- h / help
 
 <pre>
   Usage :  gitploy [<b><i>&gt;git_args&lt;</i></b>] [options]
@@ -129,15 +129,15 @@ If you were on a tag then you would have been moved off this tag and to the head
 
 
   Command Examples:
-    gitploy [options] <module> <repository> //(note this installs the repo)
+    gitploy [options] <b><i>&gt;repo_name&lt;</i></b> <b><i>&gt;repository_uri&lt;</i></b> //(note this installs the repo)
     gitploy init  
     gitploy ls
-    gitploy rm [options] <module>
-    gitploy up [options] <module>
-    gitploy re <module>
-    gitploy info <module>
-    gitploy files <module>
-    gitploy proxy <module> <git_args>
+    gitploy rm [options] <b><i>&gt;repo_name&lt;</i></b>
+    gitploy up [options] <b><i>&gt;repo_name&lt;</i></b>
+    gitploy re <b><i>&gt;repo_name&lt;</i></b>
+    gitploy info <b><i>&gt;repo_name&lt;</i></b>
+    gitploy files <b><i>&gt;repo_name&lt;</i></b>
+    gitploy proxy <b><i>&gt;repo_name&lt;</i></b> <b><i>&gt;git_args&lt;</i></b>
     gitploy install
     gitploy update_gitploy
 
