@@ -413,7 +413,7 @@ applyaliases() {
 #   DESCRIPTION:  update the gitploy script
 #===============================================================================
 __update_gitploy(){
-	echostd "from $GITPLOY_VERSION";
+	echostd "from $__ScriptVersion";
 	local now=$(date +"%Y%m%d%H%M%S")
 	local update_url=https://raw.githubusercontent.com/jeremyBass/gitploy/master/gitploy?$(echo $now|md5sum)
 	echostd "Updating gitploy from $update_url"
