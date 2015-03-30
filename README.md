@@ -174,7 +174,7 @@ If you were on a tag then you would have been moved off this tag and to the head
 	```shell
 	/var/stores/magento/app/Mage.php IN_MODIFY cd /var/stores/ && gitploy re MAGE
 	```
-	This assumes a few things, one being that you have a full copy of Magento set up as a repo and versioned in with gitploy.  See [`magento-mirror`](https://github.com/washingtonstateuniversity/magento-mirror) where you would have ran 
+	This assumes a few things, one being that you have a full copy of [Magento](http://magento.com/) set up as a repo and versioned in with gitploy.  See [`magento-mirror`](https://github.com/washingtonstateuniversity/magento-mirror) where you would have ran 
 	
 	`gitploy -t 1.9.1.0 -p magneto MAGE https://github.com/washingtonstateuniversity/magento-mirror.git`
 	
