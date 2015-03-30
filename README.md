@@ -129,17 +129,17 @@ If you were on a tag then you would have been moved off this tag and to the head
 
 
   Command Examples:
-    ${__ScriptName} <module> <repository> //(note this installs the repo)
-    ${__ScriptName} init  
-    ${__ScriptName} ls
-    ${__ScriptName} rm <module>
-    ${__ScriptName} up <module>
-    ${__ScriptName} re <module>
-    ${__ScriptName} info <module>
-    ${__ScriptName} files <module>
-    ${__ScriptName} proxy <module> <git_args>
-    ${__ScriptName} install
-    ${__ScriptName} update_gitploy
+    gitploy [options] <module> <repository> //(note this installs the repo)
+    gitploy init  
+    gitploy ls
+    gitploy rm [options] <module>
+    gitploy up [options] <module>
+    gitploy re <module>
+    gitploy info <module>
+    gitploy files <module>
+    gitploy proxy <module> <git_args>
+    gitploy install
+    gitploy update_gitploy
 
   Options:
   -v   Show gitploy version
