@@ -1444,6 +1444,7 @@ case "$ACTION" in
 		errors=0
 		for module in $(ls -1 "$GD_DIR"); do
 			GD_REPO=$module
+			check_group
 			resolve_install_root
 			[ -d "$GD_DIR/$GD_REPO" ] || continue
 			if ! rm_mod; then
@@ -1455,6 +1456,7 @@ case "$ACTION" in
 	else
 		# Remove specified module
 		GD_REPO="$1"; shift
+		check_group
 		resolve_install_root
 		[ -z "$GD_REPO" ] && echoerr "No module specified"
 
