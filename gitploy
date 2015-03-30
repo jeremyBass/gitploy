@@ -80,6 +80,7 @@ usage() {
   -w   (Wall Broadcasting) tell anyone on the server you are about to
                            run an action
   -p   (Path installed) Where is the repo installed to from root (beta)
+  -g   (user group) if set then only that user that is in that group can operate that repo  
          
 
 END
@@ -105,7 +106,7 @@ GD_REPO=""
 _INSTALL_PATH=""
 
 #- Set private repo vars
-GD_ORG=""
+GD_GROUP=""
 
 #- git repo api settings
 GD_API_URL="https://api.github.com"
@@ -323,6 +324,35 @@ queue_callback() {
 	_CALLBACKS["file"]="path/to/file"
 }
 
+#===  FUNCTION  ================================================================
+#          NAME:  check_group
+#   DESCRIPTION:  test if the user is in the approved group
+#===============================================================================
+check_group() {
+
+	local module="$GD_REPO"
+	local module_dir="$GD_DIR/$module";
+
+	if [ -z "$GD_GROUP"  ] || [ "$GD_GROUP" = "" ]; then
+		_FOE_GROUP=""
+		[ -s "$module_dir/group.gitploy" ] && _FOE_GROUP=$(cat "$module_dir/group.gitploy")
+		[ "$_FOE_GROUP" -ne "" ] && GD_GROUP=$_FOE_GROUP
+		echostd "going to use group '$_FOE_GROUP'"
+	fi
+
+	if [ "$GD_GROUP" -ne "" ]; then
+		if groups $USER | grep &>/dev/null '\b$GD_GROUP\b'; then
+			echo $GD_TRUE
+		else
+			echoerr "your not in $GD_GROUP"
+		fi
+	fi
+	echostd "used group '$_FOE_GROUP' for user $USER"
+	echo $GD_TRUE
+
+}
+
+
 
 #===  FUNCTION  ================================================================
 #         NAME:  __build_dirs
@@ -531,7 +561,7 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
 	f) _ROOTFOLDER=$OPTARG
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
-	g) GD_ORG=$OPTARG
+	g) GD_GROUP=$OPTARG
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;; 
 
@@ -1075,7 +1105,7 @@ update_mod() {
 			if [ -z "$_BRANCH"  ] || [ "$_BRANCH" = "master" ]; then
 				_FOE_BRANCH="master"
 				[ -s "$module_dir/branch.gitploy" ] && _FOE_BRANCH=$(cat "$module_dir/branch.gitploy")
-				[ "$_FOE_BRANCH" -eq "master" ] || _BRANCH=$_FOE_BRANCH
+				[ "$_FOE_BRANCH" -ne "master" ] && _BRANCH=$_FOE_BRANCH
 				echostd "using non master branch '$_FOE_BRANCH'"
 			fi
 
@@ -1280,6 +1310,7 @@ create_module() {
 	fi
 
 	echo "$_BRANCH" > "$module_dir/branch.gitploy"
+	echo "$GD_GROUP" > "$module_dir/group.gitploy"
 	echo "$_ROOTFOLDER" > "$module_dir/rooted.gitploy"
 	echo "$_INSTALL_PATH" > "$module_dir/install_root.gitploy"
 	[ -z "$_ROOTFOLDER" ] || sparse_checkout
@@ -1370,6 +1401,7 @@ case "$ACTION" in
 
   update|up)
 	echostd "Starting repo update"
+	check_group
 	if [ $GD_RECURSIVE = $GD_TRUE ]; then
 		IFS=$'\n'
 		# Update all installed modules
