@@ -414,7 +414,8 @@ applyaliases() {
 #===============================================================================
 __update_gitploy(){
 	echostd "from $__ScriptVersion";
-	local update_url=https://raw.githubusercontent.com/jeremyBass/gitploy/master/gitploy?$(echo date %Y%m%d%H%M%S|md5sum)
+	local now=$(date +"%Y%m%d%H%M%S")
+	local update_url=https://raw.githubusercontent.com/jeremyBass/gitploy/master/gitploy?$(echo $now|md5sum)
 	echostd "Updating gitploy from $update_url"
 	curl "$update_url" | sudo sh -s -- install
 	echostd "to $__ScriptVersion";
