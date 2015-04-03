@@ -755,10 +755,21 @@ mod_set_latest_tag(){
 #          NAME:  require_mod_dir
 #   DESCRIPTION:  Checks if module dir exists or quit.
 #===============================================================================
-require_mod_dir() {
+require_mod_dir(){
 	[ -d "$GD_DIR/$GD_REPO" ] || echoerr "Module '$GD_REPO' does not exist"
 	return 0
 }
+
+#===  FUNCTION  ================================================================
+#          NAME:  check_for_change
+#   DESCRIPTION:  Checks if the repo has any changes it needs from the remote.
+#===============================================================================
+check_for_change(){
+	git branch-status
+	return 0
+}
+
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  rm_mod_dir
