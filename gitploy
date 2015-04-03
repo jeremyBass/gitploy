@@ -1115,7 +1115,8 @@ update_mod() {
 			fi
 		else
 			# Ignoring -b option (switching branch) because not yet supported
-
+			[ $(git branch-status) ] && echostd "No changes found" && return 0
+			
 			if [ -z "$_BRANCH"  ] || [ "$_BRANCH" = "master" ]; then
 				_FOE_BRANCH="master"
 				[ -s "$module_dir/branch.gitploy" ] && _FOE_BRANCH=$(cat "$module_dir/branch.gitploy")
