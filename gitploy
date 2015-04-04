@@ -17,7 +17,7 @@ touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x >
 #       CREATED: 1/1/2014
 #===============================================================================
 set -o nounset                              # Treat unset variables as an error
-__ScriptVersion="0.4.1"
+__ScriptVersion="0.4.2"
 __ScriptName="gitploy"
 
 #===  FUNCTION  ================================================================
@@ -1115,7 +1115,7 @@ update_mod() {
 			fi
 		else
 			# Ignoring -b option (switching branch) because not yet supported
-			[ $(git branch-status) ] && echostd "No changes found" && return 0
+			[ $(git branch-status) -eq $GD_FALSE ] && echostd "No changes found" && return 0
 			
 			if [ -z "$_BRANCH"  ] || [ "$_BRANCH" = "master" ]; then
 				_FOE_BRANCH="master"
