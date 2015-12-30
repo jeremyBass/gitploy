@@ -635,6 +635,7 @@ fi
 resolve_install_root(){
 	local module_dir="$GD_DIR/$GD_REPO"
 	local install="$module_dir/install_root.gitploy"
+	> "$module_dir/install_root.gitploy"
 
 	#at this point we are reading a user input
 	if ! [ -z "$_INSTALL_PATH" ]; then
