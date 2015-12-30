@@ -17,7 +17,7 @@ touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x >
 #       CREATED: 1/1/2014
 #===============================================================================
 set -o nounset                              # Treat unset variables as an error
-__ScriptVersion="0.4.3"
+__ScriptVersion="0.4.4"
 __ScriptName="gitploy"
 
 #===  FUNCTION  ================================================================
@@ -627,6 +627,26 @@ if [ $GD_RECURSIVE -eq $GD_TRUE ]; then
   echoinfo "RECURSIVE MODE ON"
   sleep 1
 fi
+
+#===  FUNCTION  ================================================================
+#          NAME:  default_folders
+#   DESCRIPTION:  create all default files just incase
+#===============================================================================
+default_folders(){
+	local module_dir="$GD_DIR/$GD_REPO"
+	> "$module_dir/install_root.gitploy"
+	> "$module_dir/update.gitploy"
+	> "$module_dir/delete.gitploy"
+	> "$module_dir/deployed.gitploy"
+	> "$module_dir/diff.gitploy"
+	> "$module_dir/includes.gitploy"
+	> "$module_dir/excludes.gitploy"
+	> "$module_dir/tag.gitploy"
+	> "$module_dir/branch.gitploy"
+	> "$module_dir/repository.gitploy"
+	> "$module_dir/rooted.gitploy"
+	> "$module_dir/group.gitploy"
+}
 
 #===  FUNCTION  ================================================================
 #          NAME:  resolve_install_root
@@ -1286,6 +1306,7 @@ mod_info_inline(){
 #                 include/exclude filters.
 #===============================================================================
 create_module() {
+	default_folders
 	local repo="$1"
 	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"; #shift 2
