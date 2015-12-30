@@ -648,19 +648,23 @@ fi
 #   DESCRIPTION:  create all default files just incase
 #===============================================================================
 default_folders(){
-	local module_dir="$GD_DIR/$GD_REPO"
-	[ -f "$module_dir/install_root.gitploy" ] || $(> "$module_dir/install_root.gitploy" && echo "made install_root.gitploy")
-	[ -f "$module_dir/update.gitploy" ] || $(> "$module_dir/update.gitploy" && echo "made update.gitploy")
-	[ -f "$module_dir/delete.gitploy" ] || $(> "$module_dir/delete.gitploy" && echo "made delete.gitploy")
-	[ -f "$module_dir/deployed.gitploy" ] || $(> "$module_dir/deployed.gitploy" && echo "made deployed.gitploy")
-	[ -f "$module_dir/diff.gitploy" ] || $(> "$module_dir/diff.gitploy" && echo "made diff.gitploy")
-	[ -f "$module_dir/includes.gitploy" ] || $(> "$module_dir/includes.gitploy" && echo "made includes.gitploy")
-	[ -f "$module_dir/excludes.gitploy" ] || $(> "$module_dir/excludes.gitploy" && echo "made excludes.gitploy")
-	[ -f "$module_dir/tag.gitploy" ] || $(> "$module_dir/tag.gitploy" && echo "made tag.gitploy")
-	[ -f "$module_dir/branch.gitploy" ] || $(> "$module_dir/branch.gitploy" && echo "made branch.gitploy")
-	[ -f "$module_dir/repository.gitploy" ] || $(> "$module_dir/repository.gitploy" && echo "made repository.gitploy")
-	[ -f "$module_dir/rooted.gitploy" ] || $(> "$module_dir/rooted.gitploy" && echo "made rooted.gitploy")
-	[ -f "$module_dir/group.gitploy" ] || $(> "$module_dir/group.gitploy" && echo "made group.gitploy")
+	local _root="$GD_DIR/$GD_REPO"
+	files=("install_root" "update" "delete" "deployed" "diff" "includes" "excludes" "tag" "branch" "repository" "rooted" "group")
+	for file in "${files[@]}"; do
+		[ ! -f "$_root/$file.gitploy" ] && > "$_root/$file.gitploy" && echo "made $file.gitploy"
+	done
+	#[ ! -f "$_root/install_root.gitploy" ] && > "$_root/install_root.gitploy" && echo "made install_root.gitploy"
+	#[ ! -f "$_root/update.gitploy" ] && > "$_root/update.gitploy" && echo "made update.gitploy"
+	#[ ! -f "$_root/delete.gitploy" ] && > "$_root/delete.gitploy" && echo "made delete.gitploy"
+	#[ ! -f "$_root/deployed.gitploy" ] && > "$_root/deployed.gitploy" && echo "made deployed.gitploy"
+	#[ ! -f "$_root/diff.gitploy" ] && > "$_root/diff.gitploy" && echo "made diff.gitploy"
+	#[ ! -f "$_root/includes.gitploy" ] && > "$_root/includes.gitploy" && echo "made includes.gitploy"
+	#[ ! -f "$_root/excludes.gitploy" ] && > "$_root/excludes.gitploy" && echo "made excludes.gitploy"
+	#[ ! -f "$_root/tag.gitploy" ] && > "$_root/tag.gitploy" && echo "made tag.gitploy"
+	#[ ! -f "$_root/branch.gitploy" ] && > "$_root/branch.gitploy" && echo "made branch.gitploy"
+	#[ ! -f "$_root/repository.gitploy" ] && > "$_root/repository.gitploy" && echo "made repository.gitploy"
+	#[ ! -f "$_root/rooted.gitploy" ] && > "$_root/rooted.gitploy" && echo "made rooted.gitploy"
+	#[ ! -f "$_root/group.gitploy" ] && > "$_root/group.gitploy" && echo "made group.gitploy"
 }
 
 #===  FUNCTION  ================================================================
