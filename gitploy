@@ -453,7 +453,6 @@ __update_gitploy(){
 	curl "$update_url" | sudo sh -s -- install
 	current_version=$(gitploy -v)
 	echostd "to $current_version";
-	applyaliases
 	return 0
 }
 
@@ -489,6 +488,7 @@ if [ "$1" = "install" ]; then
 	$(git -v 2>&1 | grep -qi "command not found") && $PKG_MANAGER install -y git
 	if [ $(gitploy -v 2>&1 | grep -qi "Version") ];then
 		echoerr "gitploy seems to be already installed"
+		applyaliases
 	else
 		if [ -f /src/deployment/gitploy ]; then
 			__install_gitploy && echostd "gitploy was installed" && exit 0
