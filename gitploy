@@ -1096,7 +1096,7 @@ update_mod() {
 				# copy the file
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
 					mkdir -p $(dirname "$GD_ROOT/$_INSTALL_PATH$re_file") && cp "$line" "$GD_ROOT/$_INSTALL_PATH$re_file"
-					echostd "Refreshing: $re_file"
+					echostd "Refreshing: $GD_ROOT/$_INSTALL_PATH$re_file"
 				fi
 			fi
 		done
