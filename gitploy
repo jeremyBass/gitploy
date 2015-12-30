@@ -1,5 +1,5 @@
 #!/bin/bash
-#note that this section is only present when you curl it in and run it.  
+#note that this section is only present when you curl it in and run it.
 #after that you will not see this block
 touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x > /tmp/out && mv /tmp/out /tmp/x && $([ -d /src/deployment ] || mkdir -p /src/deployment) && touch /src/deployment/gitploy && cat - /tmp/x > /src/deployment/gitploy && $([ -x /usr/sbin/gitploy ] || ln -s /src/deployment/gitploy /usr/sbin/gitploy) && chmod a=r+w+x /usr/sbin/gitploy && gitploy install;
 #===============================================================================
@@ -46,7 +46,7 @@ usage() {
 
   Command Examples:
     ${__ScriptName} <module> <repository> //(note this installs the repo)
-    ${__ScriptName} init  
+    ${__ScriptName} init
     ${__ScriptName} ls
     ${__ScriptName} rm <module>
     ${__ScriptName} up <module>
@@ -67,21 +67,21 @@ usage() {
   -e   (Exclude) Filters out listed items.  May use regex syntax
   -b   (Branch) Specify a repository branch (only for add command)
   -t   (Tag) Specify a repository tag (only for add and update command
-             also overpowers -b ) 
+             also overpowers -b )
   -z   (Reset) Reset a repo on operation.  Really only applies to updates.
-               You will move from tag to branch at head release 
-  -f   (Folder root) Set the folder in the repo to root the tracking from. 
+               You will move from tag to branch at head release
+  -f   (Folder root) Set the folder in the repo to root the tracking from.
            (** NOTE:: setting to false will clear the root used adn return the
                       repo back to a normal checkout ** )
   -r   (Reqursive) Move through the modules tracked reqursively
   -u   (Unattended) This flag will accept all promots.
-  -q   (Quite) If you must hide the verbose output, this flag will 
+  -q   (Quite) If you must hide the verbose output, this flag will
                block all stdout
   -w   (Wall Broadcasting) tell anyone on the server you are about to
                            run an action
   -p   (Path installed) Where is the repo installed to from root (beta)
-  -g   (user group) if set then only that user that is in that group can operate that repo  
-         
+  -g   (user group) if set then only that user that is in that group can operate that repo
+
 
 END
 }
@@ -434,7 +434,7 @@ applyaliases() {
 
 	git config --global --replace-all alias.up-sub '!f() { cd $1 && git checkout master && git pull && git submodule update --init --recursive; }; f'
 
-	git config --global --replace-all alias.branch-status '!f() { [ $(git rev-parse HEAD) = $(git ls-remote $(git rev-parse  --short --abbrev-ref @{u} | sed "s/\// /g") | cut -f1) ] && echo 0 || echo 1; }; f'
+	git config --global --replace-all alias.branch-status '!f() { search=\"Your branch is up-to-date\" && str=$(git status -uno) && [[ \"$str\" =~ \"${search}\" ]] && echo 0 || echo 1; }; f'
 
 	exit 1
 }
@@ -453,6 +453,7 @@ __update_gitploy(){
 	curl "$update_url" | sudo sh -s -- install
 	current_version=$(gitploy -v)
 	echostd "to $current_version";
+	applyaliases
 	return 0
 }
 
@@ -517,7 +518,7 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
   case $opt in
 
 	#flag----------------------
-	h)  
+	h)
 	  usage;
 	  exit 0
 	  ;;
@@ -566,7 +567,7 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
 	  ;;
 	g) GD_GROUP=$OPTARG
 	  shift $((OPTIND-1)); OPTIND=1
-	  ;; 
+	  ;;
 
 
 	\?)  echo
@@ -593,7 +594,7 @@ shift $(($OPTIND-1))
 # Start the real process
 #-----------------------------------------------------------------------
 #-----------------------------------------------------------------------
-# Assume if there are options, that it was not help or init that it's 
+# Assume if there are options, that it was not help or init that it's
 # the add action.  We should be only left with that possiblity by now
 #-----------------------------------------------------------------------
 if [ -z $ACTION ];then
@@ -656,7 +657,7 @@ resolve_install_root(){
 
 #===  FUNCTION  ================================================================
 #          NAME:  mod_git_reset
-#   DESCRIPTION:  reset a repo to the head.  It may be a tag release but we will 
+#   DESCRIPTION:  reset a repo to the head.  It may be a tag release but we will
 #                 will now pull to branch (master or defined) and at head
 #===============================================================================
 mod_git_reset(){
@@ -685,7 +686,7 @@ sparse_checkout(){
 	git config core.sparsecheckout true
 
 	> "$sparse_file"
-	
+
 	IFS=',' read -a folders <<< "$_ROOTFOLDER"
 	for folder in "${folders[@]}"
 	do
@@ -694,7 +695,7 @@ sparse_checkout(){
 	done
 	git read-tree -mu HEAD
 	echostd "'$GD_REPO' is using a subtree starting at '$_ROOTFOLDER'"
-	
+
 	#if the above don't work then
 	#if [[ $string == *,* ]]
 	#then
@@ -722,13 +723,13 @@ sparse_to_full(){
 	[ -s "$source_dir/.git/info/sparse-checkout" ] && _drity=$(cat "$source_dir/.git/info/sparse-checkout")
 
 	if [ -z "$_drity" ]; then
-		
+
 		echo "*" > "$module_dir/.git/info/sparse-checkout"
 		git read-tree -mu HEAD
 		mod_git_reset
-		
+
 		git config core.sparsecheckout false
-		
+
 	fi
 
 	return 0
@@ -739,7 +740,7 @@ sparse_to_full(){
 
 #===  FUNCTION  ================================================================
 #          NAME:  mod_set_latest_tag
-#   DESCRIPTION:  Find out what the last tagged release is for the repo and  
+#   DESCRIPTION:  Find out what the last tagged release is for the repo and
 #                 reassgin it to the global var $_TAG
 #===============================================================================
 mod_set_latest_tag(){
@@ -794,18 +795,18 @@ rm_mod_files() {
 	IFS=$'\n'
 	local module_dir="$GD_DIR/$GD_REPO"
 	local deployed_file="$module_dir/deployed.gitploy"
-	
+
 	[ -s "$module_dir/rooted.gitploy" ] && _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
-	
+
 	[ $DRY_RUN -eq $GD_TRUE ] && echoinfo "Would be remove files-" || echoinfo "Removing files-"
-	
+
 	echostd "rooted at: $_ROOTFOLDER"
 	echostd "installed at: $_INSTALL_PATH"
-	
+
 	for line in $(cat "$deployed_file" 2>/dev/null); do
-	
+
 		local tar_file=$line
-		
+
 		if ! [ -z "$_ROOTFOLDER" ];
 		then
 			IFS=',' read -a folders <<< "$_ROOTFOLDER"
@@ -833,7 +834,7 @@ rm_mod_files() {
 					dir=${dir%/*}
 				done
 			fi
-		fi    
+		fi
 	done
 	return 0
 }
@@ -855,7 +856,7 @@ rm_mod() {
 	fi
 
 	echostd "Removing '$GD_REPO' module..."
-	sleep 1  
+	sleep 1
 
 	rm_mod_files || return 1
 
@@ -873,7 +874,7 @@ deploy_file() {
 	local file=$1
 	local tar_file="$file"
 	local module_dir="$GD_DIR/$GD_REPO"
-	
+
 	[ -s "$module_dir/rooted.gitploy" ] && _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
 	#echo "starting from /$_ROOTFOLDER"
 	if ! [ -z "$_ROOTFOLDER" ];
@@ -916,7 +917,7 @@ mv_files() {
 		target="$file"
 
 		# Include filter
-		filter_include "$file" "$includes_file" $copy    
+		filter_include "$file" "$includes_file" $copy
 		copy=${_TMP_INC_FLT["copy"]}
 		target=${_TMP_INC_FLT["target"]}
 
@@ -980,7 +981,7 @@ build_deploy_file() {
 		target="$file"
 
 		# Include filter
-		filter_include "$file" "$includes_file" $copy    
+		filter_include "$file" "$includes_file" $copy
 		copy=${_TMP_INC_FLT["copy"]}
 		target=${_TMP_INC_FLT["target"]}
 
@@ -1028,7 +1029,7 @@ update_mod() {
 	local source_dir="$module_dir/source"
 	local _ROOTFOLDER=""
 	[ -s "$module_dir/rooted.gitploy" ] && _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
-		
+
 	require_mod_dir
 
 	if [ $GD_REFRESH = $GD_TRUE ]; then
@@ -1046,7 +1047,7 @@ update_mod() {
 		for line in $(cat "$module_dir/deployed.gitploy" 2>/dev/null); do
 			if ! [ -z "$line" ]; then
 				local re_file=$line
-				
+
 				if ! [ -z "$_ROOTFOLDER" ];
 				then
 					IFS=',' read -a folders <<< "$_ROOTFOLDER"
@@ -1055,7 +1056,7 @@ update_mod() {
 						re_file=${re_file#$folder}
 					done
 				fi
-				# copy the file 
+				# copy the file
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
 					mkdir -p $(dirname "$GD_ROOT/$_INSTALL_PATH$re_file") && cp "$line" "$GD_ROOT/$_INSTALL_PATH$re_file"
 					echostd "Refreshing: $re_file"
@@ -1070,7 +1071,7 @@ update_mod() {
 		> "$module_dir/deployed.gitploy"
 		> "$module_dir/diff.gitploy"
 
-		
+
 
 		cd "$source_dir"
 		local tagcheck=$(git fetch --tags)
@@ -1116,7 +1117,7 @@ update_mod() {
 		else
 			# Ignoring -b option (switching branch) because not yet supported
 			[ $(git branch-status) -eq $GD_FALSE ] && echostd "No changes found" && return 0
-			
+
 			if [ -z "$_BRANCH"  ] || [ "$_BRANCH" = "master" ]; then
 				_FOE_BRANCH="master"
 				[ -s "$module_dir/branch.gitploy" ] && _FOE_BRANCH=$(cat "$module_dir/branch.gitploy")
@@ -1142,7 +1143,7 @@ update_mod() {
 			echoinfo "Would modify:"
 			git --no-pager diff --name-only "$old_commit" "$new_commit" --diff-filter=ACMR
 			echoinfo "Would delete:"
-			git --no-pager diff --name-only "$old_commit" "$new_commit" --diff-filter=D 
+			git --no-pager diff --name-only "$old_commit" "$new_commit" --diff-filter=D
 			echostd "$count file(s) changed"
 			return 0
 		fi
@@ -1152,7 +1153,7 @@ update_mod() {
 			if ! [ -z "$line" ]; then
 
 				local up_file=$line
-				
+
 				if ! [ -z "$_ROOTFOLDER" ];
 				then
 					IFS=',' read -a folders <<< "$_ROOTFOLDER"
@@ -1161,8 +1162,8 @@ update_mod() {
 						up_file=${up_file#$folder}
 					done
 				fi
-				
-				# copy the file 
+
+				# copy the file
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
 					mkdir -p $(dirname "$GD_ROOT/$_INSTALL_PATH$up_file") && cp "$line" "$GD_ROOT/$_INSTALL_PATH$up_file"
 					echostd "++: $_INSTALL_PATH$up_file"
@@ -1173,9 +1174,9 @@ update_mod() {
 		# delete delete.gitploy files
 		IFS=$'\n'
 		for line in $(cat "$module_dir/delete.gitploy" 2>/dev/null); do
-		
+
 			local del_file=$line
-				
+
 			if ! [ -z "$_ROOTFOLDER" ];
 			then
 				IFS=',' read -a folders <<< "$_ROOTFOLDER"
@@ -1184,9 +1185,9 @@ update_mod() {
 					del_file=${del_file#$folder}
 				done
 			fi
-			
+
 			if ! [ -z "$del_file" ] && [ -f "$GD_ROOT/$del_file" ]; then
-				# delete the file 
+				# delete the file
 				if [ $DRY_RUN -eq $GD_FALSE ]; then
 					rm "$GD_ROOT/$_INSTALL_PATH$del_file" 2>/dev/null
 					echostd "--: $_INSTALL_PATH$del_file"
@@ -1279,7 +1280,7 @@ mod_info_inline(){
 
 #===  FUNCTION  ================================================================
 #          NAME:  create_module
-#   DESCRIPTION:  Creates module dir, clones git repo and optionally stores 
+#   DESCRIPTION:  Creates module dir, clones git repo and optionally stores
 #                 include/exclude filters.
 #===============================================================================
 create_module() {
@@ -1292,9 +1293,9 @@ create_module() {
 
 	[ -d "$GD_DIR" ] || mkdir -p "$GD_DIR"
 	cd "$GD_DIR"
-	
-	
-	
+
+
+
 	echoinfo "Cloning $repo..."
 	if ! git clone --depth=1 --quiet -- "$repo" "$source_dir"; then
 		rm_mod_dir
@@ -1377,7 +1378,7 @@ case "$ACTION" in
 	exit 0
 	;;
 
-  clone|add) 
+  clone|add)
 	# Install new repo
 	echostd "Starting repo clone"
 	GD_REPO="$1"; shift
@@ -1385,15 +1386,15 @@ case "$ACTION" in
 	[ -z "$GD_REPO" ] && echoerr "No repo specified"
 	repo_dir="$GD_DIR/$GD_REPO"
 	[ -d "$GD_DIR" ] || mkdir -p "$GD_DIR"
-	
+
 	[[ "$GD_REPO" =~ [^a-z0-9_-]+ ]] &&
 		echoerr "You cannot add a repo containingmore then [^a-zA-Z0-9_-]+ pattern\nModule specified: $GD_REPO"
 
 	[ -d "$repo_dir" ] && echoerr "A module with this name already exists"
 	[ -d "$repo_dir" ] || mkdir -p "$repo_dir"
-	
+
 	resolve_install_root
-	
+
 	success=$GD_TRUE
 	repo="$1"; shift
 
@@ -1416,7 +1417,7 @@ case "$ACTION" in
 
   update|up)
 	echostd "Starting repo update"
-	
+
 	if [ $GD_RECURSIVE = $GD_TRUE ]; then
 		IFS=$'\n'
 		# Update all installed modules
@@ -1527,7 +1528,7 @@ case "$ACTION" in
 	echoinfo "Updated gitploy"
 	exit 0
 	;;
-	
+
   init)
 	__build_dirs
 	echoinfo "Initialized $SCRIPT at $(pwd)/.gitploy/"
@@ -1538,7 +1539,7 @@ case "$ACTION" in
   *)
 	echoerr "Invalid action: $ACTION"
 	[ $GD_QUIET -eq $GD_FALSE ] &&  usage
-	
+
 
 esac
 
