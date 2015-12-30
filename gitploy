@@ -17,7 +17,7 @@ touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x >
 #       CREATED: 1/1/2014
 #===============================================================================
 set -o nounset                              # Treat unset variables as an error
-__ScriptVersion="0.4.4"
+__ScriptVersion="0.4.5"
 __ScriptName="gitploy"
 
 #===  FUNCTION  ================================================================
@@ -634,18 +634,18 @@ fi
 #===============================================================================
 default_folders(){
 	local module_dir="$GD_DIR/$GD_REPO"
-	> "$module_dir/install_root.gitploy"
-	> "$module_dir/update.gitploy"
-	> "$module_dir/delete.gitploy"
-	> "$module_dir/deployed.gitploy"
-	> "$module_dir/diff.gitploy"
-	> "$module_dir/includes.gitploy"
-	> "$module_dir/excludes.gitploy"
-	> "$module_dir/tag.gitploy"
-	> "$module_dir/branch.gitploy"
-	> "$module_dir/repository.gitploy"
-	> "$module_dir/rooted.gitploy"
-	> "$module_dir/group.gitploy"
+	[ -f "$module_dir/install_root.gitploy" ] || > "$module_dir/install_root.gitploy"
+	[ -f "$module_dir/update.gitploy" ] || > "$module_dir/update.gitploy"
+	[ -f "$module_dir/delete.gitploy" ] || > "$module_dir/delete.gitploy"
+	[ -f "$module_dir/deployed.gitploy" ] || > "$module_dir/deployed.gitploy"
+	[ -f "$module_dir/diff.gitploy" ] || > "$module_dir/diff.gitploy"
+	[ -f "$module_dir/includes.gitploy" ] || > "$module_dir/includes.gitploy"
+	[ -f "$module_dir/excludes.gitploy" ] || > "$module_dir/excludes.gitploy"
+	[ -f "$module_dir/tag.gitploy" ] || > "$module_dir/tag.gitploy"
+	[ -f "$module_dir/branch.gitploy" ] || > "$module_dir/branch.gitploy"
+	[ -f "$module_dir/repository.gitploy" ] || > "$module_dir/repository.gitploy"
+	[ -f "$module_dir/rooted.gitploy" ] || > "$module_dir/rooted.gitploy"
+	[ -f "$module_dir/group.gitploy" ] || > "$module_dir/group.gitploy"
 }
 
 #===  FUNCTION  ================================================================
@@ -1044,6 +1044,7 @@ build_deploy_file() {
 #   DESCRIPTION:  Updates a module
 #===============================================================================
 update_mod() {
+	default_folders
 	IFS=$'\n'
 	local module="$GD_REPO"
 	local module_dir="$GD_DIR/$module"
