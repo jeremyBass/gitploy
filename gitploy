@@ -1096,7 +1096,7 @@ update_mod() {
 
 		cd "$source_dir"
 
-		[ $(git branch-status) -eq $GD_FALSE ] && echostd "No changes found" && return 0
+		[ $(git branch-status) -eq $GD_FALSE ] && echostd "No changes found commit Heads matched" && return 0
 
 		local tagcheck=$(git fetch --tags)
 		local tagupdate=$(git fetch)
