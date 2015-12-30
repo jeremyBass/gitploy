@@ -434,7 +434,7 @@ applyaliases() {
 
 	git config --global --replace-all alias.up-sub '!f() { cd $1 && git checkout master && git pull && git submodule update --init --recursive; }; f'
 	git config --global --replace-all alias.remote-url '!f() { echo $(git config --get remote.origin.url); }; f'
-	git config --global --replace-all alias.branch-status '!f() { remote_url=$(git remote-url); tag=$(<../tag.gitploy); branch=$(<../branch.gitploy); [ \"X$tag\" != \"X\" ] && local=$(git rev-list -n 1 $tag) && remote=$(git ls-remote --tags $remote_url -t $tag | awk '\''{split($1,a,"\t"); print a[1]}'\''); [ \"X$tag\" == \"X\" ] && local=$(git rev-parse origin/$branch) && remote=$(git ls-remote $remote_url $branch | awk "{ print $1 }"); [[ \"${local}\" == \"${remote}\" ]] && echo 0 || echo 1; echo "checked $local to $remote";}; f'
+	git config --global --replace-all alias.branch-status '!f() { remote_url=$(git remote-url); tag=$(<../tag.gitploy); branch=$(<../branch.gitploy); [ \"X$tag\" != \"X\" ] && local=$(git rev-list -n 1 $tag) && remote=$(git ls-remote --tags $remote_url -t $tag | awk '\''{split($1,a,"\t"); print a[1]}'\''); [ \"X$tag\" == \"X\" ] && local=$(git rev-parse origin/$branch) && remote=$(git ls-remote $remote_url $branch | awk "{ print $1 }"); [[ \"${local}\" == \"${remote}\" ]] && echo 0 || echo 1;}; f'
 
 	exit 1
 }
