@@ -649,18 +649,18 @@ fi
 #===============================================================================
 default_folders(){
 	local module_dir="$GD_DIR/$GD_REPO"
-	[ -f "$module_dir/install_root.gitploy" ] || > "$module_dir/install_root.gitploy" && echo "made install_root.gitploy"
-	[ -f "$module_dir/update.gitploy" ] || > "$module_dir/update.gitploy" && echo "made update.gitploy"
-	[ -f "$module_dir/delete.gitploy" ] || > "$module_dir/delete.gitploy" && echo "made delete.gitploy"
-	[ -f "$module_dir/deployed.gitploy" ] || > "$module_dir/deployed.gitploy" && echo "made deployed.gitploy"
-	[ -f "$module_dir/diff.gitploy" ] || > "$module_dir/diff.gitploy" && echo "made diff.gitploy"
-	[ -f "$module_dir/includes.gitploy" ] || > "$module_dir/includes.gitploy" && echo "made includes.gitploy"
-	[ -f "$module_dir/excludes.gitploy" ] || > "$module_dir/excludes.gitploy" && echo "made excludes.gitploy"
-	[ -f "$module_dir/tag.gitploy" ] || > "$module_dir/tag.gitploy" && echo "made tag.gitploy"
-	[ -f "$module_dir/branch.gitploy" ] || > "$module_dir/branch.gitploy" && echo "made branch.gitploy"
-	[ -f "$module_dir/repository.gitploy" ] || > "$module_dir/repository.gitploy" && echo "made repository.gitploy"
-	[ -f "$module_dir/rooted.gitploy" ] || > "$module_dir/rooted.gitploy" && echo "made rooted.gitploy"
-	[ -f "$module_dir/group.gitploy" ] || > "$module_dir/group.gitploy" && echo "made group.gitploy"
+	[ -f "$module_dir/install_root.gitploy" ] || $(> "$module_dir/install_root.gitploy") && echo "made install_root.gitploy"
+	[ -f "$module_dir/update.gitploy" ] || $(> "$module_dir/update.gitploy") && echo "made update.gitploy"
+	[ -f "$module_dir/delete.gitploy" ] || $(> "$module_dir/delete.gitploy") && echo "made delete.gitploy"
+	[ -f "$module_dir/deployed.gitploy" ] || $(> "$module_dir/deployed.gitploy") && echo "made deployed.gitploy"
+	[ -f "$module_dir/diff.gitploy" ] || $(> "$module_dir/diff.gitploy") && echo "made diff.gitploy"
+	[ -f "$module_dir/includes.gitploy" ] || $(> "$module_dir/includes.gitploy") && echo "made includes.gitploy"
+	[ -f "$module_dir/excludes.gitploy" ] || $(> "$module_dir/excludes.gitploy") && echo "made excludes.gitploy"
+	[ -f "$module_dir/tag.gitploy" ] || > "$module_dir/tag.gitploy") && echo "made tag.gitploy"
+	[ -f "$module_dir/branch.gitploy" ] || $(> "$module_dir/branch.gitploy") && echo "made branch.gitploy"
+	[ -f "$module_dir/repository.gitploy" ] || $(> "$module_dir/repository.gitploy") && echo "made repository.gitploy"
+	[ -f "$module_dir/rooted.gitploy" ] || $(> "$module_dir/rooted.gitploy") && echo "made rooted.gitploy"
+	[ -f "$module_dir/group.gitploy" ] || $(> "$module_dir/group.gitploy") && echo "made group.gitploy"
 }
 
 #===  FUNCTION  ================================================================
