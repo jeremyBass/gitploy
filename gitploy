@@ -516,7 +516,8 @@ fi
 
 
 state_agr() {
-	$(echo "$1">../current/$2.gitploy);
+	local _root="$GD_DIR/$GD_REPO"
+	$(echo "$1">$_root/current/$2.gitploy);
 }
 
 #-----------------------------------------------------------------------
