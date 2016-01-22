@@ -443,7 +443,7 @@ applyaliases() {
 	git config --global --replace-all alias.remote-tag-sha '!f() { remote_url=$(git remote-url); tag=$(<../current/t.gitploy); [ \"X$tag\" != \"X\" ] && remote_sha=$(git ls-remote --tags $remote_url -t $tag | awk '\''{split($1,a,"\t"); print a[1]}'\'') || remote_sha="" ; $(echo "$remote_sha">../remote_sha.gitploy); sha=$(<../remote_sha.gitploy); echo $sha; }; f'
 
 #git remote-branch-sha
-	git config --global --replace-all alias.remote-branch-sha '!f() { remote_url=$(git remote-url); tag=$(<../current/t.gitploy); branch=$(<../cuurent/b.gitploy);[ \"X$tag\" == \"X\" ] && remote_sha=$(git ls-remote $remote_url $branch | awk '\''{split($1,a,"\t"); print a[1]}'\'') || remote_sha="" ; $(echo "$remote_sha">../remote_sha.gitploy); sha=$(<../remote_sha.gitploy); echo $sha; }; f'
+	git config --global --replace-all alias.remote-branch-sha '!f() { remote_url=$(git remote-url); tag=$(<../current/t.gitploy); branch=$(<../current/b.gitploy);[ \"X$tag\" == \"X\" ] && remote_sha=$(git ls-remote $remote_url $branch | awk '\''{split($1,a,"\t"); print a[1]}'\'') || remote_sha="" ; $(echo "$remote_sha">../remote_sha.gitploy); sha=$(<../remote_sha.gitploy); echo $sha; }; f'
 
 #git local-sha
 	git config --global --replace-all alias.local-sha '!f() { tag=$(<../tag.gitploy); branch=$(<../branch.gitploy); [ \"X$tag\" != \"X\" ] && local_sha=$(git rev-list -n 1 --tags $tag) ||  local_sha=$(git rev-parse origin/$branch); $(echo "$local_sha">../local_sha.gitploy); sha=$(<../local_sha.gitploy); echo $sha; }; f'
