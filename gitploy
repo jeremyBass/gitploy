@@ -663,7 +663,7 @@ fi
 default_folders(){
 	local _root="$GD_DIR/$GD_REPO"
 	files=("install_root" "update" "delete" "deployed" "diff" "includes" "excludes" "tag" "branch" "repository" "rooted" "group" "current/e" "current/i" "current/p" "current/o" "current/b" "current/t" "current/f" "current/g")
-	[ -d "$GD_DIR/current" ] || mkdir "$GD_DIR/current" || echoerr "Could not create .gitploy directory"
+	[ -d "$_root/current" ] || mkdir "$_root/current" || echoerr "Could not create .gitploy directory"
 	for file in "${files[@]}"; do
 		echo "checking $file.gitploy"
 		[ ! -f "$_root/$file.gitploy" ] && > "$_root/$file.gitploy" && echo "made $file.gitploy"
