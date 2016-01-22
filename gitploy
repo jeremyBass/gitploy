@@ -17,7 +17,7 @@ touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x >
 #       CREATED: 1/1/2014
 #===============================================================================
 set -o nounset                              # Treat unset variables as an error
-__ScriptVersion="0.4.10"
+__ScriptVersion="0.4.11"
 __ScriptName="gitploy"
 
 #===  FUNCTION  ================================================================
@@ -440,13 +440,13 @@ applyaliases() {
 	git config --global --replace-all alias.remote-url '!f() { _remote_url=$(git config --get remote.origin.url); $(echo "$_remote_url">../remote_url.gitploy);remote_url=$(<../remote_url.gitploy);echo $remote_url; }; f'
 
 #git remote-tag-sha
-	git config --global --replace-all alias.remote-tag-sha '!f() { remote_url=$(git remote-url); tag=$(<../tag.gitploy); [ \"X$tag\" != \"X\" ] && remote_sha=$(git ls-remote --tags $remote_url -t $tag | awk '\''{split($1,a,"\t"); print a[1]}'\'') || remote_sha="" ; $(echo "$remote_sha">../remote_sha.gitploy); sha=$(<../remote_sha.gitploy); echo $sha; }; f'
+	git config --global --replace-all alias.remote-tag-sha '!f() { remote_url=$(git remote-url); tag=$(<../current/t.gitploy); [ \"X$tag\" != \"X\" ] && remote_sha=$(git ls-remote --tags $remote_url -t $tag | awk '\''{split($1,a,"\t"); print a[1]}'\'') || remote_sha="" ; $(echo "$remote_sha">../remote_sha.gitploy); sha=$(<../remote_sha.gitploy); echo $sha; }; f'
 
 #git remote-branch-sha
-	git config --global --replace-all alias.remote-branch-sha '!f() { remote_url=$(git remote-url); tag=$(<../tag.gitploy); branch=$(<../branch.gitploy);[ \"X$tag\" == \"X\" ] && remote_sha=$(git ls-remote $remote_url $branch | awk '\''{split($1,a,"\t"); print a[1]}'\'') || remote_sha="" ; $(echo "$remote_sha">../remote_sha.gitploy); sha=$(<../remote_sha.gitploy); echo $sha; }; f'
+	git config --global --replace-all alias.remote-branch-sha '!f() { remote_url=$(git remote-url); tag=$(<../current/t.gitploy); branch=$(<../cuurent/b.gitploy);[ \"X$tag\" == \"X\" ] && remote_sha=$(git ls-remote $remote_url $branch | awk '\''{split($1,a,"\t"); print a[1]}'\'') || remote_sha="" ; $(echo "$remote_sha">../remote_sha.gitploy); sha=$(<../remote_sha.gitploy); echo $sha; }; f'
 
 #git local-sha
-	git config --global --replace-all alias.local-sha '!f() { tag=$(<../tag.gitploy); branch=$(<../branch.gitploy); [ \"X$tag\" != \"X\" ] && local_sha=$(git rev-list -n 1 $tag) ||  local_sha=$(git rev-parse origin/$branch); $(echo "$local_sha">../local_sha.gitploy); sha=$(<../local_sha.gitploy); echo $sha; }; f'
+	git config --global --replace-all alias.local-sha '!f() { tag=$(<../tag.gitploy); branch=$(<../branch.gitploy); [ \"X$tag\" != \"X\" ] && local_sha=$(git rev-list -n 1 --tags $tag) ||  local_sha=$(git rev-parse origin/$branch); $(echo "$local_sha">../local_sha.gitploy); sha=$(<../local_sha.gitploy); echo $sha; }; f'
 
 #git repo-status
 	git config --global --replace-all alias.repo-status '!f() { remote_sha=$(git remote-tag-sha); [ \"X$remote_sha\" == \"X\" ] && remote_sha=$(git remote-branch-sha); local_sha=$(git local-sha); [[ \"${local_sha}\" == \"${remote_sha}\" ]] && echo 0 || echo 1;}; f'
@@ -515,6 +515,10 @@ if [ "$1" = "install" ]; then
 fi
 
 
+state_agr() {
+	$(echo "$1">../current/$2.gitploy);
+}
+
 #-----------------------------------------------------------------------
 #  Accept action as first argument or as add | note: add is default
 #-----------------------------------------------------------------------
@@ -522,6 +526,7 @@ REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|re
 if [[ "$1" =~ $REGEX_ACTION ]]; then
 	ACTION="$1"; shift
 fi
+
 
 #-----------------------------------------------------------------------
 #  Handle command line arguments
@@ -556,31 +561,39 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
 
 	#data----------------------
 	i) merge_include "$OPTARG"
+	  state_agr "$OPTARG" "i"
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 	e) merge_exclude "$OPTARG"
+	  state_agr "$OPTARG" "e"
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 	p) _INSTALL_PATH=$( echo $OPTARG | sed -e 's:^/*::' -e 's:/*$::')"/" #trim /
 	  echoinfo "Installing to $_INSTALL_PATH"
+	  state_agr "$_INSTALL_PATH" "p"
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 
 	#git options---------------
 	o ) _OWNER=$OPTARG
+	  state_agr "$OPTARG" "o"
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 	b ) _BRANCH=$OPTARG
+	  state_agr "$_BRANCH" "b"
 	  shift $((OPTIND-1)); OPTIND=1
 	  echostd "set -b $_BRANCH"
 	  ;;
 	t ) _TAG=$OPTARG
+	  state_agr "$_TAG" "t"
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 	f) _ROOTFOLDER=$OPTARG
+	  state_agr "$_ROOTFOLDER" "f"
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 	g) GD_GROUP=$OPTARG
+	  state_agr "$GD_GROUP" "g"
 	  shift $((OPTIND-1)); OPTIND=1
 	  ;;
 
@@ -649,7 +662,7 @@ fi
 #===============================================================================
 default_folders(){
 	local _root="$GD_DIR/$GD_REPO"
-	files=("install_root" "update" "delete" "deployed" "diff" "includes" "excludes" "tag" "branch" "repository" "rooted" "group")
+	files=("install_root" "update" "delete" "deployed" "diff" "includes" "excludes" "tag" "branch" "repository" "rooted" "group" "current/e" "current/i" "current/p" "current/o" "current/b" "current/t" "current/f" "current/g")
 	for file in "${files[@]}"; do
 		echo "checking $file.gitploy"
 		[ ! -f "$_root/$file.gitploy" ] && > "$_root/$file.gitploy" && echo "made $file.gitploy"
@@ -1573,6 +1586,7 @@ case "$ACTION" in
 
 
 esac
+
 
 #-----------------------------------------------------------------------
 # Alert everyone the action is done
