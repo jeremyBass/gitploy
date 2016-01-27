@@ -514,6 +514,11 @@ if [ "$1" = "install" ]; then
 	fi
 fi
 
+if [ "$1" = "update_gitploy" ]; then
+        __update_gitploy
+        echoinfo "Updated gitploy"
+        exit 0
+fi
 
 state_agr() {
 	local _root="$GD_DIR/$GD_REPO"
@@ -523,16 +528,11 @@ state_agr() {
 #-----------------------------------------------------------------------
 #  Accept action as first argument or as add | note: add is default
 #-----------------------------------------------------------------------
-REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh|update_gitploy)"
+REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
 if [[ "$1" =~ $REGEX_ACTION ]]; then
 	ACTION="$1"; shift
 fi
 
-if [[ "$ACTION" -eq "update_gitploy" ]; then
-	__update_gitploy
-	echoinfo "Updated gitploy"
-	exit 0
-fi
 
 
 #-----------------------------------------------------------------------
@@ -1590,13 +1590,6 @@ case "$ACTION" in
 	cd "$GD_DIR/$GD_REPO/source"
 
 	git "$@"
-	;;
-
-
-  update_gitploy)
-	__update_gitploy
-	echoinfo "Updated gitploy"
-	exit 0
 	;;
 
   init)
