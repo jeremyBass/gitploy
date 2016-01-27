@@ -528,7 +528,7 @@ if [[ "$1" =~ $REGEX_ACTION ]]; then
 	ACTION="$1"; shift
 fi
 
-if [ "$ACTION" -eq "update_gitploy" ]; then
+if [[ "$ACTION" -eq "update_gitploy" ]; then
 	__update_gitploy
 	echoinfo "Updated gitploy"
 	exit 0
