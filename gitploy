@@ -17,7 +17,7 @@ touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x >
 #       CREATED: 1/1/2014
 #===============================================================================
 set -o nounset                              # Treat unset variables as an error
-__ScriptVersion="0.4.11"
+__ScriptVersion="0.4.12"
 __ScriptName="gitploy"
 
 #===  FUNCTION  ================================================================
@@ -528,6 +528,18 @@ if [[ "$1" =~ $REGEX_ACTION ]]; then
 	ACTION="$1"; shift
 fi
 
+#-----------------------------------------------------------------------
+#  read ahead and get repo name
+#-----------------------------------------------------------------------
+# Handle options
+while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
+	case "$opt" in
+	esac
+done
+
+inc="$((OPTIND))"
+GD_REPO="${!inc}";
+OPTIND=1
 
 #-----------------------------------------------------------------------
 #  Handle command line arguments
@@ -1557,7 +1569,6 @@ case "$ACTION" in
 
   proxy)
 	# Run git command into specified module
-	GD_REPO="$1"; shift
 	resolve_install_root
 	[ -z "$GD_REPO" ] && echoerr "No module specified"
 
