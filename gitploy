@@ -528,6 +528,13 @@ if [[ "$1" =~ $REGEX_ACTION ]]; then
 	ACTION="$1"; shift
 fi
 
+if [ "$ACTION" -eq "update_gitploy" ]; then
+	__update_gitploy
+	echoinfo "Updated gitploy"
+	exit 0
+fi
+
+
 #-----------------------------------------------------------------------
 #  read ahead and get repo name
 #-----------------------------------------------------------------------
@@ -670,11 +677,7 @@ if [ $GD_RECURSIVE -eq $GD_TRUE ]; then
 fi
 
 
-if [ $ACTION -eq "update_gitploy" ]; then
-	__update_gitploy
-	echoinfo "Updated gitploy"
-	exit 0
-fi
+
 
 
 
