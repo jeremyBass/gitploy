@@ -29,37 +29,33 @@ IFS=$''
 usage() {
     cat << END
   version : ${__ScriptVersion}
-  Usage :  ${__ScriptName} [<command>] [options]
+  Usage :  ${__ScriptName} [<action>] [-options] [<repo_name>] [<remote_url>]
 
   Actions:
-    init           => Initialize .gitploy/ folder
-    ls/list        => List installed modules
-    rm/remove      => Remove specified module
-    up/update      => Update specified module
-    re/refresh     => Refresh files of specified module
-    info           => Show information about a specific module
-    files          => List deployed files of specified module
-    proxy          => Run git command into specified module
-    install        => Install gitploy
-    update_gitploy => This will update gitploy it's self
+    [init/add/clone]=> clone the named repo, <action> default here
+    init            => Initialize .gitploy/ folder
+    ls/list         => List installed modules
+    rm/remove       => Remove specified module
+    up/update       => Update specified module
+    re/refresh      => Refresh files of specified module
+    info            => Show information about a specific module
+    files           => List deployed files of specified module
+    proxy           => Run git command into specified module
+    install         => Install gitploy
+    update_gitploy  => This will update gitploy it's self
 
 
   Command Examples:
-    ${__ScriptName} <module> <repository> //(note this installs the repo)
-    ${__ScriptName} init
-    ${__ScriptName} ls
-    ${__ScriptName} rm <module>
-    ${__ScriptName} up <module>
-    ${__ScriptName} re <module>
-    ${__ScriptName} info <module>
-    ${__ScriptName} files <module>
-    ${__ScriptName} proxy <module> <git_args>
+    ${__ScriptName} <repo_name> <remote_url> //(note this installs the repo)
+    ${__ScriptName} up <repo_name>
+    ${__ScriptName} proxy <repo_name> <git_args>
     ${__ScriptName} install
     ${__ScriptName} update_gitploy
 
   Options:
   -v   Show gitploy version
   -h   Show this help
+  -m   Mode when updating gitploy itself
   -d   (Dry run) Dry run mode (show what would be done)
   -i   (Include) Only deploys items that match the filters
   -c   (Callback) Point to an action file with in the repo.  If none set,
