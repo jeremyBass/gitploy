@@ -29,37 +29,33 @@ IFS=$''
 usage() {
     cat << END
   version : ${__ScriptVersion}
-  Usage :  ${__ScriptName} [<command>] [options]
+  Usage :  ${__ScriptName} [<action>] [-options] [<repo_name>] [<remote_url>]
 
   Actions:
-    init           => Initialize .gitploy/ folder
-    ls/list        => List installed modules
-    rm/remove      => Remove specified module
-    up/update      => Update specified module
-    re/refresh     => Refresh files of specified module
-    info           => Show information about a specific module
-    files          => List deployed files of specified module
-    proxy          => Run git command into specified module
-    install        => Install gitploy
-    update_gitploy => This will update gitploy it's self
+    [init/add/clone]=> clone the named repo, <action> default here
+    init            => Initialize .gitploy/ folder
+    ls/list         => List installed modules
+    rm/remove       => Remove specified module
+    up/update       => Update specified module
+    re/refresh      => Refresh files of specified module
+    info            => Show information about a specific module
+    files           => List deployed files of specified module
+    proxy           => Run git command into specified module
+    install         => Install gitploy
+    update_gitploy  => This will update gitploy it's self
 
 
   Command Examples:
-    ${__ScriptName} <module> <repository> //(note this installs the repo)
-    ${__ScriptName} init
-    ${__ScriptName} ls
-    ${__ScriptName} rm <module>
-    ${__ScriptName} up <module>
-    ${__ScriptName} re <module>
-    ${__ScriptName} info <module>
-    ${__ScriptName} files <module>
-    ${__ScriptName} proxy <module> <git_args>
+    ${__ScriptName} <repo_name> <remote_url> //(note this installs the repo)
+    ${__ScriptName} up <repo_name>
+    ${__ScriptName} proxy <repo_name> <git_args>
     ${__ScriptName} install
     ${__ScriptName} update_gitploy
 
   Options:
   -v   Show gitploy version
   -h   Show this help
+  -m   Mode when updating gitploy itself
   -d   (Dry run) Dry run mode (show what would be done)
   -i   (Include) Only deploys items that match the filters
   -c   (Callback) Point to an action file with in the repo.  If none set,
@@ -215,7 +211,7 @@ echofin() {
 	fi
 }
 
-#-----------------------------------------------------------------------
+
 #  Show help there is nothing but the command or action is "help"
 #-----------------------------------------------------------------------
 if [[ $# -eq 0 ]];then
@@ -226,6 +222,69 @@ if [[ "$1" = "help" ]];then
 	usage
 	exit 0
 fi
+
+#===  FUNCTION  ================================================================
+#          NAME:  __update_gitploy
+#   DESCRIPTION:  update the gitploy script
+#===============================================================================
+__update_gitploy(){
+	shift #removing the action update_gitploy
+	echostd "from $__ScriptVersion";
+	local now=$(date +"%Y%m%d%H%M%S")
+	local _url=https://raw.githubusercontent.com/jeremyBass/gitploy/dev/gitploy
+
+	local GD_MODE=0
+	while getopts "m" opt; do
+	  case $opt in
+		m) GD_MODE="$OPTARG"
+		  shift "$((OPTIND-1))"; OPTIND=1
+		  ;;
+	  esac
+	done
+	shift $(($OPTIND-1))
+
+	if [ "x$GD_MODE" != "x$GD_FALSE" ]; then
+		if ! [[ $GD_MODE =~ '^[0-9]+([.][0-9]+)?$' ]] ; then
+			_url=https://github.com/jeremyBass/gitploy/releases/download/$GD_MODE/gitploy
+		else
+			_url=https://raw.githubusercontent.com/jeremyBass/gitploy/$GD_MODE/gitploy
+		fi
+	fi
+
+	echostd "Updating gitploy from $_url"
+	curl "$_url?$(echo $now|md5sum)" | sudo sh -s -- install
+	current_version=$(gitploy -v)
+	echostd "to $current_version";
+	return 0
+}
+
+#  test if we need to do an update first off
+#-----------------------------------------------------------------------
+if [ "$1" = "update_gitploy" ]; then
+        __update_gitploy
+        echoinfo "Updated gitploy"
+        exit 0
+fi
+
+#  Accept action as first argument or as add | note: add is default
+#-----------------------------------------------------------------------
+REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
+if [[ "$1" =~ $REGEX_ACTION ]]; then
+	ACTION="$1"; shift
+fi
+
+#  read ahead and get repo name
+#-----------------------------------------------------------------------
+while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do #fastforward the head
+	case "$opt" in
+	esac
+done
+
+index="$((OPTIND))"
+GD_REPO="${!index}"; # set repo
+OPTIND=1 #reset the head
+
+
 
 #===  FUNCTION  ================================================================
 #          NAME:  merge_include
@@ -382,9 +441,6 @@ __symlink_exc() {
 	fi
 }
 
-
-
-
 #===  FUNCTION  ================================================================
 #          NAME:  __proxy_init
 #   DESCRIPTION:  in process of making executable, it may be stored in the wrong
@@ -454,45 +510,6 @@ applyaliases() {
 	exit 1
 }
 
-
-
-#===  FUNCTION  ================================================================
-#          NAME:  __update_gitploy
-#   DESCRIPTION:  update the gitploy script
-#===============================================================================
-__update_gitploy(){
-	shift #removing the action update_gitploy
-	echostd "from $__ScriptVersion";
-	local now=$(date +"%Y%m%d%H%M%S")
-	local _url=https://raw.githubusercontent.com/jeremyBass/gitploy/dev/gitploy
-
-	local GD_MODE=0
-	while getopts "m" opt; do
-	  case $opt in
-		m) GD_MODE="$OPTARG"
-		  shift $((OPTIND-1)); OPTIND=1
-		  ;;
-	  esac
-	done
-	shift $(($OPTIND-1))
-
-	if [ "x$GD_MODE" != "x$GD_FALSE" ]; then
-		if ! [[ $GD_MODE =~ '^[0-9]+([.][0-9]+)?$' ]] ; then
-			_url=https://github.com/jeremyBass/gitploy/releases/download/$GD_MODE/gitploy
-		else
-			_url=https://raw.githubusercontent.com/jeremyBass/gitploy/$GD_MODE/gitploy
-		fi
-	fi
-
-	echostd "Updating gitploy from $_url"
-	curl "$_url?$(echo $now|md5sum)" | sudo sh -s -- install
-	current_version=$(gitploy -v)
-	echostd "to $current_version";
-	return 0
-}
-
-
-
 #===  FUNCTION  ================================================================
 #          NAME:  __init_gitploy
 #   DESCRIPTION:  sets up gitploy as user and system executable.
@@ -503,17 +520,6 @@ __install_gitploy(){
 	applyaliases
 	return 0
 }
-
-
-#===  FUNCTION  ================================================================
-#          NAME:  require_mods
-#   DESCRIPTION:  checks that there are mods.
-#===============================================================================
-require_mods() {
-  count=$(ls -A "$GD_DIR" | wc -l | sed 's/ //g')
-  [ $count -eq 0 ] && echoerr "There is no module installed"
-}
-
 
 #-----------------------------------------------------------------------
 #  If not installed, do so
@@ -534,40 +540,12 @@ if [ "$1" = "install" ]; then
 	fi
 fi
 
-if [ "$1" = "update_gitploy" ]; then
-        __update_gitploy
-        echoinfo "Updated gitploy"
-        exit 0
-fi
+
 
 state_agr() {
 	local _root="$GD_DIR/$GD_REPO"
 	$(echo "$1">$_root/current/$2.gitploy);
 }
-
-#-----------------------------------------------------------------------
-#  Accept action as first argument or as add | note: add is default
-#-----------------------------------------------------------------------
-REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
-if [[ "$1" =~ $REGEX_ACTION ]]; then
-	ACTION="$1"; shift
-fi
-
-
-
-#-----------------------------------------------------------------------
-#  read ahead and get repo name
-#-----------------------------------------------------------------------
-# Handle options
-while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
-	case "$opt" in
-	esac
-done
-
-inc="$((OPTIND))"
-GD_REPO="${!inc}";
-OPTIND=1
-
 #-----------------------------------------------------------------------
 #  Handle command line arguments
 #-----------------------------------------------------------------------
@@ -596,45 +574,45 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
 
 	#callback------------------
 	c) queue_callback "$OPTARG"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 
 	#data----------------------
 	i) merge_include "$OPTARG"
 	  state_agr "$OPTARG" "i"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 	e) merge_exclude "$OPTARG"
 	  state_agr "$OPTARG" "e"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 	p) _INSTALL_PATH=$( echo $OPTARG | sed -e 's:^/*::' -e 's:/*$::')"/" #trim /
 	  echoinfo "Installing to $_INSTALL_PATH"
 	  state_agr "$_INSTALL_PATH" "p"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 
 	#git options---------------
 	o ) _OWNER=$OPTARG
 	  state_agr "$OPTARG" "o"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 	b ) _BRANCH=$OPTARG
 	  state_agr "$_BRANCH" "b"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  echostd "set -b $_BRANCH"
 	  ;;
 	t ) _TAG=$OPTARG
 	  state_agr "$_TAG" "t"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 	f) _ROOTFOLDER=$OPTARG
 	  state_agr "$_ROOTFOLDER" "f"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 	g) GD_GROUP=$OPTARG
 	  state_agr "$GD_GROUP" "g"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 
 
@@ -649,19 +627,20 @@ shift $(($OPTIND-1))
 
 
 
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+# Options are read and everything is ready to take action
+# Start the real process
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 
 
 
-#-----------------------------------------------------------------------
 # Alert everyone there is going to be some action done
 #-----------------------------------------------------------------------
 #[ $GD_WALL -eq $GD_TRUE ] && wall -n "PLEASE NOTE: action ${ACTION} is being run from ${USER}, \n and you should pause what you are doing.  If you believe you need some time run command \n \$ wall \"STOP ACTION\" with in the next 10 secs" && sleep 10
 
 
-#-----------------------------------------------------------------------
-# Start the real process
-#-----------------------------------------------------------------------
-#-----------------------------------------------------------------------
+
+
 # Assume if there are options, that it was not help or init that it's
 # the add action.  We should be only left with that possiblity by now
 #-----------------------------------------------------------------------
@@ -671,7 +650,6 @@ if [ -z $ACTION ];then
 	fi
 fi
 
-#-----------------------------------------------------------------------
 # Initializes Dry run
 #-----------------------------------------------------------------------
 if [ $DRY_RUN -eq $GD_TRUE ]; then
@@ -679,8 +657,6 @@ if [ $DRY_RUN -eq $GD_TRUE ]; then
   sleep 1
 fi
 
-
-#-----------------------------------------------------------------------
 # Initializes UNATTENDED use
 #-----------------------------------------------------------------------
 if [ $GD_UNATTENDED -eq $GD_TRUE ]; then
@@ -688,7 +664,6 @@ if [ $GD_UNATTENDED -eq $GD_TRUE ]; then
   sleep 1
 fi
 
-#-----------------------------------------------------------------------
 # Initializes RECURSIVE use
 #-----------------------------------------------------------------------
 if [ $GD_RECURSIVE -eq $GD_TRUE ]; then
@@ -697,9 +672,9 @@ if [ $GD_RECURSIVE -eq $GD_TRUE ]; then
 fi
 
 
-
-
-
+#-#-#-#-#-#-#-#-#-------------------------------------------------------
+# FUNCTIONS SET
+#-----------------------------------------------------------------------
 
 
 #===  FUNCTION  ================================================================
@@ -1294,6 +1269,15 @@ update_mod() {
 		fi
 
 	fi
+}
+
+#===  FUNCTION  ================================================================
+#          NAME:  require_mods
+#   DESCRIPTION:  checks that there are mods.
+#===============================================================================
+require_mods() {
+  count=$(ls -A "$GD_DIR" | wc -l | sed 's/ //g')
+  [ $count -eq 0 ] && echoerr "There is no module installed"
 }
 
 #===  FUNCTION  ================================================================
