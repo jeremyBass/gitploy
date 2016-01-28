@@ -13,7 +13,21 @@ anywhere.  It will unpack itself and locate itself with in `/usr/sbin/gitploy` a
 
 That will check the version.  For more options read below in the **- h / help** section.
 
+#Updating
 
+To update you may just do
+
+`gitploy update_gitploy`
+
+which uses the master branch from the gitploy repo.  If you would like to lock it down to a version you may also do
+
+`gitploy update_gitploy -m 0.4.13`
+
+0.4.13 being the tag version you want to use.  Note you will need to check to see if it is in the repo.  There is no out right check to see if you got it correct.  If you are doing dev work you may try
+
+`gitploy update_gitploy -m dev`
+
+You may also use any branch name you wish if they exist.
 
 
 
