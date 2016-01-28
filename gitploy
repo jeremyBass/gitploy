@@ -461,11 +461,31 @@ applyaliases() {
 #   DESCRIPTION:  update the gitploy script
 #===============================================================================
 __update_gitploy(){
+	shift #removing the action update_gitploy
 	echostd "from $__ScriptVersion";
 	local now=$(date +"%Y%m%d%H%M%S")
-	local update_url=https://raw.githubusercontent.com/jeremyBass/gitploy/master/gitploy?$(echo $now|md5sum)
-	echostd "Updating gitploy from $update_url"
-	curl "$update_url" | sudo sh -s -- install
+	local _url=https://raw.githubusercontent.com/jeremyBass/gitploy/dev/gitploy
+
+	local GD_MODE=$GD_FALSE
+	while getopts "m" opt; do
+	  case $opt in
+		m) GD_MODE="$OPTARG"
+		  shift $((OPTIND-1)); OPTIND=1
+		  ;;
+	  esac
+	done
+	shift $(($OPTIND-1))
+
+	if [ $GD_MODE -ne $GD_FALSE ]; then
+		if ! [[ $GD_MODE =~ '^[0-9.]+$' ]] ; then
+			_url=https://github.com/jeremyBass/gitploy/releases/download/$GD_MODE/gitploy
+		else
+			_url=https://raw.githubusercontent.com/jeremyBass/gitploy/$GD_MODE/gitploy
+		fi
+	fi
+
+	echostd "Updating gitploy from $_url"
+	curl "$_url?$(echo $now|md5sum)" | sudo sh -s -- install
 	current_version=$(gitploy -v)
 	echostd "to $current_version";
 	return 0
