@@ -447,9 +447,6 @@ __symlink_exc() {
 	fi
 }
 
-
-
-
 #===  FUNCTION  ================================================================
 #          NAME:  __proxy_init
 #   DESCRIPTION:  in process of making executable, it may be stored in the wrong
@@ -530,8 +527,6 @@ __install_gitploy(){
 	return 0
 }
 
-
-
 #-----------------------------------------------------------------------
 #  If not installed, do so
 #-----------------------------------------------------------------------
@@ -557,9 +552,6 @@ state_agr() {
 	local _root="$GD_DIR/$GD_REPO"
 	$(echo "$1">$_root/current/$2.gitploy);
 }
-
-
-
 #-----------------------------------------------------------------------
 #  Handle command line arguments
 #-----------------------------------------------------------------------
@@ -641,19 +633,20 @@ shift $(($OPTIND-1))
 
 
 
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
+# Options are read and everything is ready to take action
+# Start the real process
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 
 
 
-#-----------------------------------------------------------------------
 # Alert everyone there is going to be some action done
 #-----------------------------------------------------------------------
 #[ $GD_WALL -eq $GD_TRUE ] && wall -n "PLEASE NOTE: action ${ACTION} is being run from ${USER}, \n and you should pause what you are doing.  If you believe you need some time run command \n \$ wall \"STOP ACTION\" with in the next 10 secs" && sleep 10
 
 
-#-----------------------------------------------------------------------
-# Start the real process
-#-----------------------------------------------------------------------
-#-----------------------------------------------------------------------
+
+
 # Assume if there are options, that it was not help or init that it's
 # the add action.  We should be only left with that possiblity by now
 #-----------------------------------------------------------------------
@@ -663,7 +656,6 @@ if [ -z $ACTION ];then
 	fi
 fi
 
-#-----------------------------------------------------------------------
 # Initializes Dry run
 #-----------------------------------------------------------------------
 if [ $DRY_RUN -eq $GD_TRUE ]; then
@@ -671,8 +663,6 @@ if [ $DRY_RUN -eq $GD_TRUE ]; then
   sleep 1
 fi
 
-
-#-----------------------------------------------------------------------
 # Initializes UNATTENDED use
 #-----------------------------------------------------------------------
 if [ $GD_UNATTENDED -eq $GD_TRUE ]; then
@@ -680,7 +670,6 @@ if [ $GD_UNATTENDED -eq $GD_TRUE ]; then
   sleep 1
 fi
 
-#-----------------------------------------------------------------------
 # Initializes RECURSIVE use
 #-----------------------------------------------------------------------
 if [ $GD_RECURSIVE -eq $GD_TRUE ]; then
@@ -689,9 +678,9 @@ if [ $GD_RECURSIVE -eq $GD_TRUE ]; then
 fi
 
 
-
-
-
+#-#-#-#-#-#-#-#-#-------------------------------------------------------
+# FUNCTIONS SET
+#-----------------------------------------------------------------------
 
 
 #===  FUNCTION  ================================================================
