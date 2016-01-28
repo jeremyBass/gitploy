@@ -466,7 +466,7 @@ __update_gitploy(){
 	local now=$(date +"%Y%m%d%H%M%S")
 	local _url=https://raw.githubusercontent.com/jeremyBass/gitploy/dev/gitploy
 
-	local GD_MODE=$GD_FALSE
+	local GD_MODE=0
 	while getopts "m" opt; do
 	  case $opt in
 		m) GD_MODE="$OPTARG"
@@ -476,8 +476,8 @@ __update_gitploy(){
 	done
 	shift $(($OPTIND-1))
 
-	if [ $GD_MODE -ne $GD_FALSE ]; then
-		if ! [[ $GD_MODE =~ '^[0-9.]+$' ]] ; then
+	if [ "x$GD_MODE" != "x$GD_FALSE" ]; then
+		if ! [[ $GD_MODE =~ '^[0-9]+([.][0-9]+)?$' ]] ; then
 			_url=https://github.com/jeremyBass/gitploy/releases/download/$GD_MODE/gitploy
 		else
 			_url=https://raw.githubusercontent.com/jeremyBass/gitploy/$GD_MODE/gitploy
