@@ -275,8 +275,6 @@ fi
 REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
 if [[ "$1" =~ $REGEX_ACTION ]]; then
 	ACTION="$1"; shift
-else
-	echoerr "Missing an action, seek the help" && usage && exit 1
 fi
 
 #  read ahead and get repo name
