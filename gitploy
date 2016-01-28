@@ -215,7 +215,7 @@ echofin() {
 	fi
 }
 
-#-----------------------------------------------------------------------
+
 #  Show help there is nothing but the command or action is "help"
 #-----------------------------------------------------------------------
 if [[ $# -eq 0 ]];then
@@ -262,11 +262,34 @@ __update_gitploy(){
 	return 0
 }
 
+#  test if we need to do an update first off
+#-----------------------------------------------------------------------
 if [ "$1" = "update_gitploy" ]; then
         __update_gitploy
         echoinfo "Updated gitploy"
         exit 0
 fi
+
+#  Accept action as first argument or as add | note: add is default
+#-----------------------------------------------------------------------
+REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
+if [[ "$1" =~ $REGEX_ACTION ]]; then
+	ACTION="$1"; shift
+else
+	echoerr "Missing an action, seek the help" && usage && exit 1
+fi
+
+#  read ahead and get repo name
+#-----------------------------------------------------------------------
+while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do #fastforward the head
+	case "$opt" in
+	esac
+done
+
+index="$((OPTIND))"
+GD_REPO="${!index}"; # set repo
+OPTIND=1 #reset the head
+
 
 
 #===  FUNCTION  ================================================================
@@ -535,28 +558,7 @@ state_agr() {
 	$(echo "$1">$_root/current/$2.gitploy);
 }
 
-#-----------------------------------------------------------------------
-#  Accept action as first argument or as add | note: add is default
-#-----------------------------------------------------------------------
-REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
-if [[ "$1" =~ $REGEX_ACTION ]]; then
-	ACTION="$1"; shift
-fi
 
-
-
-#-----------------------------------------------------------------------
-#  read ahead and get repo name
-#-----------------------------------------------------------------------
-# Handle options
-while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
-	case "$opt" in
-	esac
-done
-
-inc="$((OPTIND))"
-GD_REPO="${!inc}";
-OPTIND=1
 
 #-----------------------------------------------------------------------
 #  Handle command line arguments
