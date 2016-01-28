@@ -241,7 +241,7 @@ __update_gitploy(){
 	while getopts "m" opt; do
 	  case $opt in
 		m) GD_MODE="$OPTARG"
-		  shift $((OPTIND-1)); OPTIND=1
+		  shift "$((OPTIND-1))"; OPTIND=1
 		  ;;
 	  esac
 	done
@@ -586,45 +586,45 @@ while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do
 
 	#callback------------------
 	c) queue_callback "$OPTARG"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 
 	#data----------------------
 	i) merge_include "$OPTARG"
 	  state_agr "$OPTARG" "i"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 	e) merge_exclude "$OPTARG"
 	  state_agr "$OPTARG" "e"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 	p) _INSTALL_PATH=$( echo $OPTARG | sed -e 's:^/*::' -e 's:/*$::')"/" #trim /
 	  echoinfo "Installing to $_INSTALL_PATH"
 	  state_agr "$_INSTALL_PATH" "p"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 
 	#git options---------------
 	o ) _OWNER=$OPTARG
 	  state_agr "$OPTARG" "o"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 	b ) _BRANCH=$OPTARG
 	  state_agr "$_BRANCH" "b"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  echostd "set -b $_BRANCH"
 	  ;;
 	t ) _TAG=$OPTARG
 	  state_agr "$_TAG" "t"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 	f) _ROOTFOLDER=$OPTARG
 	  state_agr "$_ROOTFOLDER" "f"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 	g) GD_GROUP=$OPTARG
 	  state_agr "$GD_GROUP" "g"
-	  shift $((OPTIND-1)); OPTIND=1
+	  shift "$((OPTIND-1))"; OPTIND=1
 	  ;;
 
 
