@@ -228,6 +228,48 @@ if [[ "$1" = "help" ]];then
 fi
 
 #===  FUNCTION  ================================================================
+#          NAME:  __update_gitploy
+#   DESCRIPTION:  update the gitploy script
+#===============================================================================
+__update_gitploy(){
+	shift #removing the action update_gitploy
+	echostd "from $__ScriptVersion";
+	local now=$(date +"%Y%m%d%H%M%S")
+	local _url=https://raw.githubusercontent.com/jeremyBass/gitploy/dev/gitploy
+
+	local GD_MODE=0
+	while getopts "m" opt; do
+	  case $opt in
+		m) GD_MODE="$OPTARG"
+		  shift $((OPTIND-1)); OPTIND=1
+		  ;;
+	  esac
+	done
+	shift $(($OPTIND-1))
+
+	if [ "x$GD_MODE" != "x$GD_FALSE" ]; then
+		if ! [[ $GD_MODE =~ '^[0-9]+([.][0-9]+)?$' ]] ; then
+			_url=https://github.com/jeremyBass/gitploy/releases/download/$GD_MODE/gitploy
+		else
+			_url=https://raw.githubusercontent.com/jeremyBass/gitploy/$GD_MODE/gitploy
+		fi
+	fi
+
+	echostd "Updating gitploy from $_url"
+	curl "$_url?$(echo $now|md5sum)" | sudo sh -s -- install
+	current_version=$(gitploy -v)
+	echostd "to $current_version";
+	return 0
+}
+
+if [ "$1" = "update_gitploy" ]; then
+        __update_gitploy
+        echoinfo "Updated gitploy"
+        exit 0
+fi
+
+
+#===  FUNCTION  ================================================================
 #          NAME:  merge_include
 #   DESCRIPTION:  Merge the INCLUDES with agrs for stuff not needed.
 #===============================================================================
@@ -454,45 +496,6 @@ applyaliases() {
 	exit 1
 }
 
-
-
-#===  FUNCTION  ================================================================
-#          NAME:  __update_gitploy
-#   DESCRIPTION:  update the gitploy script
-#===============================================================================
-__update_gitploy(){
-	shift #removing the action update_gitploy
-	echostd "from $__ScriptVersion";
-	local now=$(date +"%Y%m%d%H%M%S")
-	local _url=https://raw.githubusercontent.com/jeremyBass/gitploy/dev/gitploy
-
-	local GD_MODE=0
-	while getopts "m" opt; do
-	  case $opt in
-		m) GD_MODE="$OPTARG"
-		  shift $((OPTIND-1)); OPTIND=1
-		  ;;
-	  esac
-	done
-	shift $(($OPTIND-1))
-
-	if [ "x$GD_MODE" != "x$GD_FALSE" ]; then
-		if ! [[ $GD_MODE =~ '^[0-9]+([.][0-9]+)?$' ]] ; then
-			_url=https://github.com/jeremyBass/gitploy/releases/download/$GD_MODE/gitploy
-		else
-			_url=https://raw.githubusercontent.com/jeremyBass/gitploy/$GD_MODE/gitploy
-		fi
-	fi
-
-	echostd "Updating gitploy from $_url"
-	curl "$_url?$(echo $now|md5sum)" | sudo sh -s -- install
-	current_version=$(gitploy -v)
-	echostd "to $current_version";
-	return 0
-}
-
-
-
 #===  FUNCTION  ================================================================
 #          NAME:  __init_gitploy
 #   DESCRIPTION:  sets up gitploy as user and system executable.
@@ -504,15 +507,6 @@ __install_gitploy(){
 	return 0
 }
 
-
-#===  FUNCTION  ================================================================
-#          NAME:  require_mods
-#   DESCRIPTION:  checks that there are mods.
-#===============================================================================
-require_mods() {
-  count=$(ls -A "$GD_DIR" | wc -l | sed 's/ //g')
-  [ $count -eq 0 ] && echoerr "There is no module installed"
-}
 
 
 #-----------------------------------------------------------------------
@@ -534,11 +528,7 @@ if [ "$1" = "install" ]; then
 	fi
 fi
 
-if [ "$1" = "update_gitploy" ]; then
-        __update_gitploy
-        echoinfo "Updated gitploy"
-        exit 0
-fi
+
 
 state_agr() {
 	local _root="$GD_DIR/$GD_REPO"
@@ -1294,6 +1284,15 @@ update_mod() {
 		fi
 
 	fi
+}
+
+#===  FUNCTION  ================================================================
+#          NAME:  require_mods
+#   DESCRIPTION:  checks that there are mods.
+#===============================================================================
+require_mods() {
+  count=$(ls -A "$GD_DIR" | wc -l | sed 's/ //g')
+  [ $count -eq 0 ] && echoerr "There is no module installed"
 }
 
 #===  FUNCTION  ================================================================
