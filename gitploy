@@ -275,15 +275,17 @@ fi
 
 #  read ahead and get repo name
 #-----------------------------------------------------------------------
-while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do #fastforward the head
-	case "$opt" in
-	esac
-done
+REGEX_ACTION="(clone|add|update|up|remove|rm|re|refresh)"
+if [[ "$ACTION" =~ $REGEX_ACTION ]]; then
+	while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do #fastforward the head
+		case "$opt" in
+		esac
+	done
 
-index="$((OPTIND))"
-GD_REPO="${!index}"; # set repo
-OPTIND=1 #reset the head
-
+	index="$((OPTIND))"
+	GD_REPO="${!index}"; # set repo
+	OPTIND=1 #reset the head
+if
 
 
 #===  FUNCTION  ================================================================
