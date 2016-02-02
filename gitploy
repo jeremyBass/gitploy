@@ -540,6 +540,7 @@ if [ "$ACTION" = "install" ]; then
 			echoerr "gitploy file was missing failed install"
 		fi
 	fi
+	exit 0
 fi
 
 
