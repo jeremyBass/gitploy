@@ -266,35 +266,7 @@ if [ "$1" = "update_gitploy" ]; then
         exit 0
 fi
 
-#  Accept action as first argument or as add | note: add is default
-#-----------------------------------------------------------------------
-REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
-if [[ "$1" =~ $REGEX_ACTION ]]; then
-	ACTION="$1"; shift
-fi
 
-# Assume if there are options, that it was not help or init that it's
-# the add action.  We should be only left with that possiblity by now
-#-----------------------------------------------------------------------
-if [ -z $ACTION ];then
-	if [[ $# -gt 0 ]];then
-		ACTION="add"
-	fi
-fi
-
-#  read ahead and get repo name
-#-----------------------------------------------------------------------
-REGEX_ACTION="(clone|add|update|up|remove|rm|re|refresh)"
-if [[ "$ACTION" =~ $REGEX_ACTION ]]; then
-	while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do #fastforward the head
-		case "$opt" in
-		esac
-	done
-
-	index="$((OPTIND))"
-	GD_REPO="${!index}"; # set repo
-	OPTIND=1 #reset the head
-fi
 
 
 #===  FUNCTION  ================================================================
@@ -535,7 +507,7 @@ __install_gitploy(){
 #-----------------------------------------------------------------------
 #  If not installed, do so
 #-----------------------------------------------------------------------
-if [ "$ACTION" = "install" ]; then
+if [ "$1" = "install" ]; then
 	PKG_MANAGER=$( command -v yum || command -v apt-get ) || echo "Neither yum nor apt-get found"
 	$(git -v 2>&1 | grep -qi "command not found") && $PKG_MANAGER install -y git
 	if [ $(gitploy -v 2>&1 | grep -qi "Version") ];then
@@ -552,7 +524,35 @@ if [ "$ACTION" = "install" ]; then
 	exit 0
 fi
 
+#  Accept action as first argument or as add | note: add is default
+#-----------------------------------------------------------------------
+REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
+if [[ "$1" =~ $REGEX_ACTION ]]; then
+	ACTION="$1"; shift
+fi
 
+# Assume if there are options, that it was not help or init that it's
+# the add action.  We should be only left with that possiblity by now
+#-----------------------------------------------------------------------
+if [ -z $ACTION ];then
+	if [[ $# -gt 0 ]];then
+		ACTION="add"
+	fi
+fi
+
+#  read ahead and get repo name
+#-----------------------------------------------------------------------
+REGEX_ACTION="(clone|add|update|up|remove|rm|re|refresh)"
+if [[ "$ACTION" =~ $REGEX_ACTION ]]; then
+	while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do #fastforward the head
+		case "$opt" in
+		esac
+	done
+
+	index="$((OPTIND))"
+	GD_REPO="${!index}"; # set repo
+	OPTIND=1 #reset the head
+fi
 
 state_agr() {
 	local _root="$GD_DIR/$GD_REPO"
