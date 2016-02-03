@@ -273,6 +273,15 @@ if [[ "$1" =~ $REGEX_ACTION ]]; then
 	ACTION="$1"; shift
 fi
 
+# Assume if there are options, that it was not help or init that it's
+# the add action.  We should be only left with that possiblity by now
+#-----------------------------------------------------------------------
+if [ -z $ACTION ];then
+	if [[ $# -gt 0 ]];then
+		ACTION="add"
+	fi
+fi
+
 #  read ahead and get repo name
 #-----------------------------------------------------------------------
 REGEX_ACTION="(clone|add|update|up|remove|rm|re|refresh)"
@@ -644,14 +653,7 @@ shift $(($OPTIND-1))
 
 
 
-# Assume if there are options, that it was not help or init that it's
-# the add action.  We should be only left with that possiblity by now
-#-----------------------------------------------------------------------
-if [ -z $ACTION ];then
-	if [[ $# -gt 0 ]];then
-		ACTION="add"
-	fi
-fi
+
 
 # Initializes Dry run
 #-----------------------------------------------------------------------
