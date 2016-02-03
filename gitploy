@@ -536,7 +536,10 @@ fi
 #-----------------------------------------------------------------------
 if [ -z $ACTION ];then
 	if [[ $# -gt 0 ]];then
-		ACTION="add"
+		REGEX_ACTION="(v|h)"
+		if [[ ! "$1" =~ $REGEX_ACTION ]]; then
+			ACTION="add"
+		fi
 	fi
 fi
 
