@@ -140,11 +140,20 @@ faq.*
 modman
 composer\.json"
 
-#- repo settings
+#- current repo settings
 _OWNER="washingtonstateuniversity"
 _BRANCH="master"
 _TAG=""
 _ROOTFOLDER=""
+
+#- working
+_w_OWNER="washingtonstateuniversity"
+_w_ROOTFOLDER
+_w_BRANCH="master"
+_w_TAG=""
+_w_INSTALL_ROOT=""
+_w_EXELUDES=""
+_w_INCLUDES=""
 
 
 cur_file=""
@@ -266,26 +275,7 @@ if [ "$1" = "update_gitploy" ]; then
         exit 0
 fi
 
-#  Accept action as first argument or as add | note: add is default
-#-----------------------------------------------------------------------
-REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
-if [[ "$1" =~ $REGEX_ACTION ]]; then
-	ACTION="$1"; shift
-fi
 
-#  read ahead and get repo name
-#-----------------------------------------------------------------------
-REGEX_ACTION="(clone|add|update|up|remove|rm|re|refresh)"
-if [[ "$ACTION" =~ $REGEX_ACTION ]]; then
-	while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do #fastforward the head
-		case "$opt" in
-		esac
-	done
-
-	index="$((OPTIND))"
-	GD_REPO="${!index}"; # set repo
-	OPTIND=1 #reset the head
-if
 
 
 #===  FUNCTION  ================================================================
@@ -540,9 +530,41 @@ if [ "$1" = "install" ]; then
 			echoerr "gitploy file was missing failed install"
 		fi
 	fi
+	exit 0
 fi
 
+#  Accept action as first argument or as add | note: add is default
+#-----------------------------------------------------------------------
+REGEX_ACTION="(init|list|ls|info|files|clone|add|update|up|remove|rm|proxy|re|refresh)"
+if [[ "$1" =~ $REGEX_ACTION ]]; then
+	ACTION="$1"; shift
+fi
 
+# Assume if there are options, that it was not help or init that it's
+# the add action.  We should be only left with that possiblity by now
+#-----------------------------------------------------------------------
+if [ -z $ACTION ];then
+	if [[ $# -gt 0 ]];then
+		REGEX_ACTION="(v|h)"
+		if [[ ! "$1" =~ $REGEX_ACTION ]]; then
+			ACTION="add"
+		fi
+	fi
+fi
+
+#  read ahead and get repo name
+#-----------------------------------------------------------------------
+REGEX_ACTION="(clone|add|update|up|remove|rm|re|refresh)"
+if [[ "$ACTION" =~ $REGEX_ACTION ]]; then
+	while getopts "zhvdurqw:c:i:e:o:b:t:f:p:g" opt; do #fastforward the head
+		case "$opt" in
+		esac
+	done
+
+	index="$((OPTIND))"
+	GD_REPO="${!index}"; # set repo
+	OPTIND=1 #reset the head
+fi
 
 state_agr() {
 	local _root="$GD_DIR/$GD_REPO"
@@ -643,14 +665,7 @@ shift $(($OPTIND-1))
 
 
 
-# Assume if there are options, that it was not help or init that it's
-# the add action.  We should be only left with that possiblity by now
-#-----------------------------------------------------------------------
-if [ -z $ACTION ];then
-	if [[ $# -gt 0 ]];then
-		ACTION="add"
-	fi
-fi
+
 
 # Initializes Dry run
 #-----------------------------------------------------------------------
@@ -1081,7 +1096,21 @@ build_deploy_file() {
 	done
 	return 0
 }
+#===  FUNCTION  ================================================================
+#          NAME:  update_mod
+#   DESCRIPTION:  Updates a module
+#===============================================================================
+collection_repo_information(){
+	local module_dir="$GD_DIR/$GD_REPO"
 
+	[ -s "$module_dir/rooted.gitploy" ] && _w_ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
+	[ -s "$module_dir/branch.gitploy" ] && _w_BRANCH=$(cat "$module_dir/branch.gitploy")
+	[ -s "$module_dir/tag.gitploy" ] && _w_TAG=$(cat "$module_dir/tag.gitploy")
+	[ -s "$module_dir/install_root.gitploy" ] && _w_INSTALL_ROOT=$(cat "$module_dir/install_root.gitploy")
+	[ -s "$module_dir/excludes.gitploy" ] && _w_EXELUDES=$(cat "$module_dir/excludes.gitploy")
+	[ -s "$module_dir/includes.gitploy" ] && _w_INCLUDES=$(cat "$module_dir/includes.gitploy")
+
+}
 
 #===  FUNCTION  ================================================================
 #          NAME:  update_mod
@@ -1097,6 +1126,7 @@ update_mod() {
 	[ -s "$module_dir/rooted.gitploy" ] && _ROOTFOLDER=$(cat "$module_dir/rooted.gitploy")
 
 	require_mod_dir
+	collection_repo_information
 
 	if [ $GD_REFRESH = $GD_TRUE ]; then
 		echoinfo "Refreshing '$module' module..."
@@ -1505,6 +1535,7 @@ case "$ACTION" in
 			GD_REPO=$module
 			check_group
 			resolve_install_root
+
 			[ -d "$GD_DIR/$GD_REPO" ] || continue;
 			if ! update_mod; then
 				echoinfo "-e" "Error occurred while updating '$GD_REPO'"
