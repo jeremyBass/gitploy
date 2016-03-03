@@ -148,7 +148,7 @@ _ROOTFOLDER=""
 
 #- working
 _w_OWNER="washingtonstateuniversity"
-_w_ROOTFOLDER
+_w_ROOTFOLDER=""
 _w_BRANCH="master"
 _w_TAG=""
 _w_INSTALL_ROOT=""
