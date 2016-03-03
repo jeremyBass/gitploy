@@ -17,7 +17,7 @@ touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x >
 #       CREATED: 1/1/2014
 #===============================================================================
 set -o nounset                              # Treat unset variables as an error
-__ScriptVersion="0.4.13"
+__ScriptVersion="0.4.14"
 __ScriptName="gitploy"
 
 #===  FUNCTION  ================================================================
@@ -148,7 +148,7 @@ _ROOTFOLDER=""
 
 #- working
 _w_OWNER="washingtonstateuniversity"
-_w_ROOTFOLDER
+_w_ROOTFOLDER=""
 _w_BRANCH="master"
 _w_TAG=""
 _w_INSTALL_ROOT=""
