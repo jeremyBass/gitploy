@@ -17,7 +17,7 @@ touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x >
 #       CREATED: 1/1/2014
 #===============================================================================
 set -o nounset                              # Treat unset variables as an error
-__ScriptVersion="0.4.15"
+__ScriptVersion="0.4.16"
 __ScriptName="gitploy"
 
 #===  FUNCTION  ================================================================
@@ -568,7 +568,7 @@ fi
 
 state_agr() {
     local _root="$GD_DIR/$GD_REPO"
-    [ -f $_root/current/$2.gitploy ] || mkdir $_root/current/$2.gitploy
+    [ -f $_root/current/$2.gitploy ] || touch $_root/current/$2.gitploy
     $(echo "$1">$_root/current/$2.gitploy);
 }
 #-----------------------------------------------------------------------
@@ -720,6 +720,7 @@ resolve_install_root(){
     #at this point we are reading a user input
     if ! [ -z "$_INSTALL_PATH" ]; then
         _INSTALL_PATH=$( echo $_INSTALL_PATH | sed -e 's:^/*::' -e 's:/*$::')"/"
+        [ -f $install ] || touch $install
         echo "$_INSTALL_PATH" > $install #save value
         return 0
     fi
