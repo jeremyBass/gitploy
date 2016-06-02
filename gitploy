@@ -17,7 +17,7 @@ touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x >
 #       CREATED: 1/1/2014
 #===============================================================================
 set -o nounset                              # Treat unset variables as an error
-__ScriptVersion="0.4.17"
+__ScriptVersion="0.4.18"
 __ScriptName="gitploy"
 
 #===  FUNCTION  ================================================================
@@ -708,7 +708,7 @@ default_folders(){
     files=("install_root" "update" "delete" "deployed" "diff" "includes" "excludes" "tag" "branch" "repository" "rooted" "group" "current/e" "current/i" "current/p" "current/o" "current/b" "current/t" "current/f" "current/g")
     [ -d "$_root/current" ] || mkdir "$_root/current" || echoerr "Could not create .gitploy directory"
     for file in "${files[@]}"; do
-        echo "checking $file.gitploy"
+        #echo "checking $file.gitploy"
         [ ! -f "$_root/$file.gitploy" ] && > "$_root/$file.gitploy" && echo "made $file.gitploy"
     done
 }
