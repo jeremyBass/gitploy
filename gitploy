@@ -17,7 +17,7 @@ touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x >
 #       CREATED: 1/1/2014
 #===============================================================================
 set -o nounset                              # Treat unset variables as an error
-__ScriptVersion="0.4.16"
+__ScriptVersion="0.4.17"
 __ScriptName="gitploy"
 
 #===  FUNCTION  ================================================================
@@ -562,7 +562,11 @@ if [[ "$ACTION" =~ $REGEX_ACTION ]]; then
     done
 
     index="$((OPTIND))"
-    GD_REPO="${!index}"; # set repo
+    if (true $index)&>/dev/null; then
+       GD_REPO="";
+    else
+       GD_REPO="${!index}"; # set repo
+    fi
     OPTIND=1 #reset the head
 fi
 
