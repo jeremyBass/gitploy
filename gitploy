@@ -17,7 +17,7 @@ touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x >
 #       CREATED: 1/1/2014
 #===============================================================================
 set -o nounset                              # Treat unset variables as an error
-__ScriptVersion="0.4.18"
+__ScriptVersion="0.4.19"
 __ScriptName="gitploy"
 
 #===  FUNCTION  ================================================================
@@ -1538,6 +1538,13 @@ case "$ACTION" in
         require_mods
         errors=0
         for module in $(ls -1 "$GD_DIR"); do
+            _BRANCH=""
+            _TAG=""
+            _ROOTFOLDER=""
+            _INSTALL_PATH=""
+            _OWNER=""
+            GD_GROUP=""
+
             GD_REPO=$module
             check_group
             resolve_install_root
