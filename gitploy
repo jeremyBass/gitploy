@@ -17,7 +17,7 @@ touch /tmp/x && tee –i /tmp/x > /dev/null && echo "#!/bin/bash"|cat - /tmp/x >
 #       CREATED: 1/1/2014
 #===============================================================================
 set -o nounset                              # Treat unset variables as an error
-__ScriptVersion="0.4.19"
+__ScriptVersion="0.4.20"
 __ScriptName="gitploy"
 
 #===  FUNCTION  ================================================================
@@ -135,8 +135,14 @@ copyright.*
 changelog.*
 credit.*
 faq.*
+\.editorconfig
+\.gitattributes
+\.gitignore
+\.vscode
 \.travis.*
 \.git.*
+\.git.*
+\.src
 modman
 composer\.json"
 
